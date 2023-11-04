@@ -35,13 +35,10 @@ const requester = async (method, url, data) => {
     };
 }
 
+const get = requester.bind(null, 'GET');
+const post = requester.bind(null, 'POST');
+// const put = requester.bind(null, 'PUT');
+// const patch = requester.bind(null, 'PATCH');
+const del = requester.bind(null, 'DELETE');
 
-export const requestFactory = () => {
-    return {
-        get: requester.bind(null, 'GET'),
-        post: requester.bind(null, 'POST'),
-        // put: requester.bind(null, 'PUT'),
-        // patch: requester.bind(null, 'PATCH'),
-        delete: requester.bind(null, 'DELETE'),
-    }
-};
+export { get, post, del };

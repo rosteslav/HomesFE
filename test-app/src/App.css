@@ -1,33 +1,34 @@
 .App {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-content: space-between;
-  align-items: flex-start;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: space-between;
+    align-items: flex-start;
 }
 
 .App>div {
-  margin: 2em;
+    margin: 2em;
 }
 
 .itemsContainer ul {
-  padding: 0;
+    padding: 0;
 }
 
 .itemsContainer li {
-  text-align: left;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0.5em;
-  border-bottom: 1px solid #ccc;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.5em;
+    border-bottom: 1px solid #ccc;
 }
 
 button,
 input {
-  border-radius: 10px;
+    border-radius: 10px;
 }
 
 button {
-  background-color: #ccc;
+    background-color: #ccc;
+    cursor: pointer;
 }
