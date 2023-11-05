@@ -1,12 +1,12 @@
 import './App.css';
-import CrudOperations from './components/CrudOperations';
+import HomePage from "./pages/HomePage";
 
-function App() {
-  return (
-    <div className="App">
-      <CrudOperations />
-    </div>
-  );
+const App = () => {
+    return (
+        <div className="App">
+            <HomePage />
+        </div>
+    );
 }
 
 export default App;
