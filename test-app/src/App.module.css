@@ -1,0 +1,7 @@
+.container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: space-between;
+    align-items: flex-start;
+}

@@ -1,0 +1,25 @@
+.topNav {
+    background-color: dimgray;
+    overflow: hidden;
+}
+
+.topNav ul {
+    list-style-type: none;
+    display: inline-flex;
+    padding: 0%;
+}
+
+.topNav a {
+    margin: 20px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+}
+
+.topNav a:hover {
+    background-color: gray;
+}
+
+.active {
+    border: double;
+}

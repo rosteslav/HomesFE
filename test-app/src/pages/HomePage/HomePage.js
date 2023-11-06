@@ -1,23 +1,25 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { useForm } from "../hooks/useForm";
-import { useItems } from "../hooks/useItems";
+import { useForm } from "../../hooks/useForm";
+import { useItems } from "../../hooks/useItems";
 
-import { ListData } from "../components/ListData";
-import { AuthContext } from "../contexts/AuthContext";
+import { ListData } from "../../components/ListData";
+import { AuthContext } from "../../contexts/AuthContext";
+
+import styles from "./HomePage.module.css";
 
 export const HomePage = () => {
     const [disableButton, setDisableButton] = useState(false);
     const { items, loadItems, addItem, deleteItem } = useItems();
     const { form, setForm, formChangeHandler } = useForm({ name: '' });
-    const { user } = useContext(AuthContext);
+    const { user, removeUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
     if (user && !items) {
         loadItems()
             .catch(() => {
-                alert('You need to log in first!');
+                removeUser();
                 navigate('/login');
             });
     }
@@ -42,7 +44,7 @@ export const HomePage = () => {
 
             {items
                 ? items.length > 0
-                    ? <div className="itemsContainer">
+                    ? <div className={styles.itemsContainer}>
                         <ListData data={items} showDeleteBtn={user.isAdmin} onDelete={deleteItem} />
                     </div>
                     : <h2>There are no items!</h2>
@@ -57,6 +59,7 @@ export const HomePage = () => {
                         value={form.name}
                         onChange={formChangeHandler}
                         placeholder="Insert item name..."
+                        required
                     />
 
                     <button type='submit' disabled={disableButton}>Add Item</button>

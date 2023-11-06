@@ -1,10 +1,20 @@
 import { createContext, useState } from "react";
-import { decodeToken } from "react-jwt";
+import { decodeToken, isExpired } from "react-jwt";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+    const [user, setUser] = useState(null);
+
+    if (!user) {
+        const auth = JSON.parse(localStorage.getItem('user'));
+
+        if (auth) {
+            isExpired(auth.token)
+                ? localStorage.removeItem('user')
+                : setUser(auth);
+        }
+    }
 
     const addUser = credentials => {
         const user = {
