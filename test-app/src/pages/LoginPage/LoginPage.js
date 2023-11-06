@@ -20,8 +20,8 @@ export const LoginPage = () => {
         setDisableButton(true);
 
         try {
-            const user = await post('/login', form);
-            addUser(user);
+            const credentials = await post('/login', form);
+            addUser(credentials);
             navigate('/');
         } catch (error) {
             setShowMessage(true);

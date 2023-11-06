@@ -17,6 +17,7 @@ export const Header = () => {
                         ? <>
                             <li><NavLink to={"/"} className={setActiveClass}>Items</NavLink></li>
                             {user.isAdmin && <li><NavLink to={'/register-admin'} className={setActiveClass}>Register Admin</NavLink></li>}
+                            <li>Hello, {user.claims.name}</li>
                             <li><Link to={'/'} onClick={removeUser}>Logout</Link></li>
                         </>
                         : <>

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useForm } from "../../hooks/useForm";
 import { useFetch } from "../../hooks/useFetch";
 
 import { RegisterForm } from "../../components/RegisterForm/RegisterForm";
+import { AuthContext } from "../../contexts/AuthContext";
 
 import styles from "./RegisterPage.module.css";
 
@@ -13,6 +14,7 @@ export const RegisterPage = () => {
     const [message, setMessage] = useState({ text: '', show: false, className: {} });
     const { form, formChangeHandler } = useForm({ username: '', email: '', password: '' });
     const { post } = useFetch();
+    const { addUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const submitHandler = async e => {
@@ -20,8 +22,9 @@ export const RegisterPage = () => {
         setDisableButton(true);
 
         try {
-            const response = await post('/register', form);
-            alert(`${response.status}! ${response.message}`);
+            await post('/register', form);
+            const user = await post('/login', { username: form.username, password: form.password });
+            addUser(user);
             navigate('/');
         } catch (error) {
             setMessage({

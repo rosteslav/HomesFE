@@ -16,6 +16,12 @@
     color: white;
 }
 
+.topNav li {
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+}
+
 .topNav a:hover {
     background-color: gray;
 }
