@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
-import { get, post, del } from "../services/requester"
+import { useState } from "react";
+import { useFetch } from "./useFetch";
 
-const useItems = () => {
+export const useItems = () => {
     const [items, setItems] = useState(null);
+    const { get, post, del } = useFetch();
 
     const loadItems = async () => {
         const items = await get("/Items");
         setItems(items);
     };
-    
+
     const addItem = async form => {
         await post("/Items", form);
         loadItems();
@@ -18,14 +19,11 @@ const useItems = () => {
         await del(`/Items?id=${itemId}`);
         loadItems();
     };
-    
-    useEffect(() => { loadItems() }, []);
 
     return {
         items,
+        loadItems,
         addItem,
         deleteItem,
     };
 };
-
-export default useItems;
