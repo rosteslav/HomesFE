@@ -7,9 +7,25 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const cookies = new Cookies();
+    const tokenKey = 'authToken';
 
     if (!user) {
-        const token = cookies.get('AuthCookie');
+        let token;
+        const credentials = JSON.parse(localStorage.getItem(tokenKey));
+
+        if (credentials) {
+            const expiration = new Date(credentials.expiration);
+            const currDate = new Date();
+
+            if (expiration > currDate) {
+                token = credentials.token;
+            } else {
+                localStorage.removeItem(tokenKey);
+            }
+        } else {
+            token = cookies.get(tokenKey);
+        }
+
         if (token) {
             const userContext = createUserContext(token);
             setUser(userContext);
@@ -19,7 +35,10 @@ export const AuthProvider = ({ children }) => {
     const addUser = credentials => {
         const userContext = createUserContext(credentials.token);
         setUser(userContext);
-        cookies.set('AuthCookie', credentials.token, {
+
+        localStorage.setItem(tokenKey, JSON.stringify(credentials));
+
+        cookies.set(tokenKey, credentials.token, {
             expires: new Date(credentials.expiration),
             secure: true
         });
@@ -27,7 +46,8 @@ export const AuthProvider = ({ children }) => {
 
     const removeUser = () => {
         setUser(null);
-        cookies.remove('AuthCookie');
+        localStorage.removeItem(tokenKey);
+        cookies.remove(tokenKey);
     };
 
     const context = {
