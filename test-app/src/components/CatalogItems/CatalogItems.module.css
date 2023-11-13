@@ -11,12 +11,12 @@
     border-bottom: 1px solid #ccc;
 }
 
-button,
-input {
-    border-radius: 10px;
-}
-
 button {
     background-color: #ccc;
     cursor: pointer;
+}
+
+.logoTitle {
+    color: rgb(96, 84, 198);
+    font-size: 32px;
 }

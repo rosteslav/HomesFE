@@ -1,32 +1,54 @@
-import { useContext } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { AuthContext } from "../../contexts/AuthContext";
+import { selectedUser } from '../../store/slices/authSlice';
+import { useAuth } from '../../hooks/useAuth';
 
-import styles from "./Header.module.css";
+import styles from './Header.module.css';
 
 export const Header = () => {
-    const { user, removeUser } = useContext(AuthContext);
-    const setActiveClass = ({ isActive }) => isActive ? styles.active : "";
+    const user = useSelector(selectedUser);
+    const { removeUser } = useAuth();
 
     return (
-        <header>
-            <nav className={styles.topNav}>
-                <ul>
-                    {user
-                        ? <>
-                            <li><NavLink to={"/"} className={setActiveClass}>Items</NavLink></li>
-                            {user.isAdmin && <li><NavLink to={'/register-admin'} className={setActiveClass}>Register Admin</NavLink></li>}
-                            <li>Hello, {user.claims.name}</li>
-                            <li><Link to={'/'} onClick={removeUser}>Logout</Link></li>
-                        </>
-                        : <>
-                            <li><NavLink to={'/login'} className={setActiveClass}>Login</NavLink></li>
-                            <li><NavLink to={'/register'} className={setActiveClass}>Register</NavLink></li>
-                        </>
-                    }
-                </ul>
-            </nav>
-        </header>
+        <>
+            <header>
+                <nav className={styles['navigation']}>
+                    <div className={styles['logoContainer']}>
+                        <Link to={'/'} className="link">
+                            <h1 className={styles['logoTitle']}>HomeFE</h1>
+                        </Link>
+                    </div>
+                    <ul className={styles['listNav']} >
+                        {user ? (
+                            <>
+                                <li>
+                                    <span className={styles['link']}>
+                                        Hello, {user.claims.name}
+                                    </span>
+                                </li>
+                                <li>
+                                    <Link to={'/'} className={styles['link']} onClick={removeUser}>
+                                        <span className="btn">Logout</span>
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <Link className={styles['link']} to={'/login'}>
+                                    <button className="btn">Login</button>
+                                </Link>
+                                <Link className={styles['link']} to={'/register'}>
+                                    <button className="btn">Register</button>
+                                </Link>
+                                <Link className={styles['link']} to={'/register-admin'}>
+                                    <button className="btn">Admin</button>
+                                </Link>
+                            </>
+                        )}
+                    </ul>
+                </nav>
+            </header>
+        </>
     );
 };

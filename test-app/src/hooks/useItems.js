@@ -1,29 +1,51 @@
-import { useState } from "react";
-import { useFetch } from "./useFetch";
+import { useNavigate } from 'react-router-dom';
+import { useFetch1 } from '../services/useFetch1';
+import { useDispatch, useSelector } from 'react-redux';
+import { setItems, selectedItems } from '../store/slices/itemsSlice';
 
 export const useItems = () => {
-    const [items, setItems] = useState(null);
-    const { get, post, del } = useFetch();
+    const { getAllItems, createItem, removeItem } = useFetch1();
+    const dispatch = useDispatch();
+    const items = useSelector(selectedItems);
+    const navigate = useNavigate();
 
-    const loadItems = async () => {
-        const items = await get("/Items");
-        setItems(items);
+    if(items.length === 0) {
+        getAllItems().then((res) => {
+            dispatch(setItems(res));
+        });
+    }
+
+    const onCreateItem = async (data) => {
+        // create new item on server
+        await createItem(data);
+
+        // update App state
+        const newState = await getAllItems();
+        dispatch(setItems(newState));
+
+        // redirect to catalog
+        navigate('/');
     };
 
-    const addItem = async form => {
-        await post("/Items", form);
-        loadItems();
-    };
+    const onDeleteItem = async (detailsId) => {
+        const choice = window.confirm('Are you sure you want to delete this!');
 
-    const deleteItem = async itemId => {
-        await del(`/Items?id=${itemId}`);
-        loadItems();
+        if (choice) {
+            // Delet from server
+            await removeItem(detailsId);
+
+            // Delete from State
+            const filterItems = items.filter((r) => r.id !== detailsId);
+            dispatch(setItems(filterItems));
+            
+            // redirect to catalog
+            navigate('/');
+        }
     };
 
     return {
         items,
-        loadItems,
-        addItem,
-        deleteItem,
+        onCreateItem,
+        onDeleteItem
     };
 };
