@@ -1,27 +1,35 @@
-import { Route, Routes } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { Header } from './components/Header/Header';
 import { LoginPage } from './components/LoginPage/LoginPage';
 import { RegisterPage } from './components/RegisterPage/RegisterPage';
 import { RegisterAdminPage } from './components/RegisterPage/RegisterAdminPage';
 
-import styles from './App.module.css';
 import { CatalogItems } from './components/CatalogItems/CatalogItems';
+import RootLayout from './components/RootLayout/RootLayout';
+import ErrorPage from './components/Error/ErrorPage';
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        id: 'root',
+        errorElement: <ErrorPage />,
+        element: <RootLayout />,
+        children: [
+            { index: true, element: <CatalogItems /> },
+            {
+                path: 'auth',
+                children: [
+                    { path: 'register', element: <RegisterPage /> },
+                    { path: 'login', element: <LoginPage /> },
+                    { path: 'register-admin', element: <RegisterAdminPage /> },
+                ],
+            },
+        ],
+    },
+]);
 
 const App = () => {
-    return (
-        <>
-            <Header />
-            <div className={styles.container}>
-                <Routes>
-                    <Route path="/" element={<CatalogItems />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/register-admin" element={<RegisterAdminPage />} />
-                </Routes>
-            </div>
-        </>
-    );
+    return <RouterProvider router={router} />;
 };
 
 export default App;
