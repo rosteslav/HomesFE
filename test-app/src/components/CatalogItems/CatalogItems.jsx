@@ -53,6 +53,6 @@ export const CatalogItems = () => {
             )}
         </div>
     ) : (
-        <Navigate to="/login" />
+        <Navigate to="/auth/login" />
     );
 };

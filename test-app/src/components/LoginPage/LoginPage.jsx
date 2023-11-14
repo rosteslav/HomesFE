@@ -52,7 +52,7 @@ export const LoginPage = () => {
                         {errorInfo.show && <p className={styles.message}>{errorInfo.text}</p>}
                     </span>
                     <span>
-                        If you don't have profile click <Link to="/register">Here!</Link>
+                        If you don't have profile click <Link to="/auth/register">Here!</Link>
                     </span>
                 </p>
             </section>

@@ -63,7 +63,7 @@ export const RegisterPage = () => {
                         {errorInfo.show && <p className={styles.message}>{errorInfo.text}</p>}
                     </span>
                     <span>
-                        If you already have profile click <Link to="/login">Here!</Link>
+                        If you already have profile click <Link to="/auth/login">Here!</Link>
                     </span>
                 </p>
             </section>
