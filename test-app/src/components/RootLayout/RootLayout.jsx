@@ -1,15 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 
-import styles from './RootLayout.module.css';
-
 const RootLayout = () => {
     return (
         <>
             <Header />
-            <div className={styles.container}>
+            <main className='m-auto max-w-screen-2xl flex-1'>
                 <Outlet />
-            </div>
+            </main>
         </>
     );
 };

@@ -4,8 +4,6 @@ import { deleteUser, selectedUser } from '../store/slices/authSlice';
 
 import Cookies from 'universal-cookie';
 
-const host = 'http://localhost:5222';
-
 export const useRequester = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectedUser);
@@ -14,7 +12,7 @@ export const useRequester = () => {
 
     const requester = async (url, options) => {
         try {
-            const response = await fetch(host + url, options);
+            const response = await fetch(url, options);
             if (response.ok !== true) {
                 if (response.status === 403) {
                     dispatch(deleteUser(null));
@@ -30,7 +28,7 @@ export const useRequester = () => {
                 return response.json();
             }
         } catch (err) {
-            throw err;
+            throw new Error(err);
         }
     };
 
