@@ -3,13 +3,16 @@ import { useRequester } from './useRequester.js';
 export const useFetch1 = () => {
     const { get, post, del } = useRequester();
 
+    const hostAuth = 'http://localhost:5222';
+    const hostProperties = 'http://localhost:5220'
+
     const endpoints = {
-        login: '/login',
-        register: '/register',
-        adminRegister: '/admin/register',
-        getItems: '/Items',
-        addItem: '/Items',
-        deleteItem: '/Items?id='
+        login: `${hostAuth}/login`,
+        register: `${hostAuth}/register`,
+        adminRegister: `${hostAuth}/admin/register`,
+        getItems: `${hostProperties}/properties`,
+        addItem: `${hostProperties}/items`,
+        deleteItem: `${hostProperties}/items?id=`
     };
 
     // AUTH FETCH
