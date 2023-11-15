@@ -12,6 +12,8 @@ export const CatalogItems = () => {
     const { items, onCreateItem, onDeleteItem } = useItems();
     const { user } = useAuth();
     const { formData, onChangeHandler, onSubmit } = useForm({ name: '' }, onCreateItem);
+
+    console.log(items)
     
     return user ? (
         <div>

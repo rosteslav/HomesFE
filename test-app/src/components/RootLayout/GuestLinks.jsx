@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom';
 
-import styles from './Header.module.css';
-
 const GuestLinks = () => {
     return (
         <>
-            <Link className={styles['link']} to={'/auth/login'}>
+            <Link
+                className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                to={'/auth/login'}
+            >
                 <button className='btn'>Login</button>
             </Link>
-            <Link className={styles['link']} to={'/auth/register'}>
+            <Link
+                className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                to={'/auth/register'}
+            >
                 <button className='btn'>Register</button>
             </Link>
-            <Link className={styles['link']} to={'/auth/register-admin'}>
+            <Link
+                className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                to={'/auth/register-admin'}
+            >
                 <button className='btn'>Admin</button>
             </Link>
         </>

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import styles from './Header.module.css';
 import { useAuth } from '../../hooks/useAuth';
 
 const UserLinks = ({ user }) => {
@@ -8,13 +7,19 @@ const UserLinks = ({ user }) => {
     return (
         <>
             <li>
-                <span className={styles['link']}>Hello, {user.claims.name}</span>
+                <span className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'>
+                    Hello, {user.claims.name}
+                </span>
             </li>
             <li>
-                <Link to={'/'} className={styles['link']} onClick={removeUser}>
-                    <span className='btn'>Logout</span>
+                <Link
+                    to={'/'}
+                    className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                    onClick={removeUser}
+                >
+                    <span>Logout</span>
                 </Link>
-            </li>{' '}
+            </li>
         </>
     );
 };

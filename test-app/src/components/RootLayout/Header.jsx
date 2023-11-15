@@ -2,8 +2,6 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { selectedUser } from '../../store/slices/authSlice';
-
-import styles from './Header.module.css';
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
 
@@ -12,16 +10,17 @@ export const Header = () => {
 
     return (
         <>
-            <header>
-                <nav className={styles['navigation']}>
-                    <div className={styles['logoContainer']}>
-                        <Link to={'/'} className='link'>
-                            <h1 className={styles['logoTitle']}>HomeFE</h1>
+            <header className='bg-gray-200'>
+                <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
+                    <div className=''>
+                        <Link
+                            to={'/'}
+                            className=' text-2xl font-bold tracking-widest transition-colors duration-500 hover:text-gray-400'
+                        >
+                            LOGO
                         </Link>
                     </div>
-                    <ul className={styles['listNav']}>
-                        {user ? <UserLinks user={user} /> : <GuestLinks />}
-                    </ul>
+                    <ul>{user ? <UserLinks user={user} /> : <GuestLinks />}</ul>
                 </nav>
             </header>
         </>
