@@ -1,0 +1,22 @@
+.itemsContainer ul {
+    padding: 0;
+}
+
+.itemsContainer li {
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.5em;
+    border-bottom: 1px solid #ccc;
+}
+
+button {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.logoTitle {
+    color: rgb(96, 84, 198);
+    font-size: 32px;
+}

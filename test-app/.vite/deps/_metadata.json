@@ -1,0 +1,59 @@
+{
+  "hash": "babbb8e5",
+  "browserHash": "76ddd382",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b6c0b741",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "bae2ccba",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "8682cdd4",
+      "needsInterop": false
+    },
+    "react-redux": {
+      "src": "../../node_modules/react-redux/es/index.js",
+      "file": "react-redux.js",
+      "fileHash": "a82be3b0",
+      "needsInterop": false
+    },
+    "@reduxjs/toolkit": {
+      "src": "../../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js",
+      "file": "@reduxjs_toolkit.js",
+      "fileHash": "db38cb21",
+      "needsInterop": false
+    },
+    "universal-cookie": {
+      "src": "../../node_modules/universal-cookie/es6/index.js",
+      "file": "universal-cookie.js",
+      "fileHash": "5f4433f5",
+      "needsInterop": false
+    },
+    "react-jwt": {
+      "src": "../../node_modules/react-jwt/dist/index.modern.js",
+      "file": "react-jwt.js",
+      "fileHash": "71f113bd",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-DZXRV6RW": {
+      "file": "chunk-DZXRV6RW.js"
+    },
+    "chunk-ZAUFE7H7": {
+      "file": "chunk-ZAUFE7H7.js"
+    },
+    "chunk-UXIASGQL": {
+      "file": "chunk-UXIASGQL.js"
+    }
+  }
+}
