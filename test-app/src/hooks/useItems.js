@@ -9,11 +9,13 @@ export const useItems = () => {
     const items = useSelector(selectedItems);
     const navigate = useNavigate();
 
-    if(items.length === 0) {
-        getAllItems().then((res) => {
-            dispatch(setItems(res));
-        });
-    }
+    //This is wrong amd needs to be fixed because if there is empty array will be infinite loop
+
+    // if(items.length === 0) {
+    //     getAllItems().then((res) => {
+    //         dispatch(setItems(res));
+    //     });
+    // }
 
     const onCreateItem = async (data) => {
         // create new item on server
@@ -37,7 +39,7 @@ export const useItems = () => {
             // Delete from State
             const filterItems = items.filter((r) => r.id !== detailsId);
             dispatch(setItems(filterItems));
-            
+
             // redirect to catalog
             navigate('/');
         }
@@ -46,6 +48,6 @@ export const useItems = () => {
     return {
         items,
         onCreateItem,
-        onDeleteItem
+        onDeleteItem,
     };
 };
