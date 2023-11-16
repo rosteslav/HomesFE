@@ -20,7 +20,7 @@ export const Header = () => {
                             LOGO
                         </Link>
                     </div>
-                    <ul>{user ? <UserLinks user={user} /> : <GuestLinks />}</ul>
+                    <ul className='flex'>{user ? <UserLinks user={user} /> : <GuestLinks />}</ul>
                 </nav>
             </header>
         </>
