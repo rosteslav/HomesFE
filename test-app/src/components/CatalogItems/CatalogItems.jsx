@@ -1,60 +1,27 @@
-import { Navigate } from 'react-router-dom';
-
 import { useItems } from '../../hooks/useItems';
-import { useAuth } from '../../hooks/useAuth';
-import { useForm } from '../../hooks/useForm';
-
 import { CatalogItem } from './CatalogItem/CatalogItem';
 
-import styles from './CatalogItems.module.css';
-
 export const CatalogItems = () => {
-    const { items, onCreateItem, onDeleteItem } = useItems();
-    const { user } = useAuth();
-    const { formData, onChangeHandler, onSubmit } = useForm({ name: '' }, onCreateItem);
+    const { items, isLoading } = useItems();
 
-    console.log(items)
-    
-    return user ? (
-        <div>
-            <h1 className={styles['logoTitle']}>Items</h1>
-            {items ? (
-                items.length > 0 ? (
-                    <div className={styles.itemsContainer}>
-                        <ul>
-                            {items.map((i) => (
-                                <CatalogItem
-                                    key={i.id}
-                                    item={i}
-                                    onDelete={onDeleteItem}
-                                    showDeleteBtn={user.isAdmin}
-                                />
-                            ))}
-                        </ul>
-                    </div>
-                ) : (
-                    <h2>Loading items...</h2>
-                )
-            ) : (
-                <h2>There are no items!</h2>
+    return (
+        <>
+            {isLoading && (
+                <div className='z-50 mt-64 flex justify-center'>
+                    <span className='relative flex h-20 w-20'>
+                        <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75'></span>
+                        <span className='relative inline-flex h-20 w-20 rounded-full bg-sky-500'></span>
+                    </span>
+                </div>
             )}
-
-            {user.isAdmin && (
-                <form onSubmit={onSubmit}>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={onChangeHandler}
-                        placeholder="Insert item name..."
-                        required
-                    />
-
-                    <button className="btn" type="submit">Add Item</button>
-                </form>
+            <section className='mx-10 mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
+                {items.map((i) => (
+                    <CatalogItem key={i.id} property={i} />
+                ))}
+            </section>
+            {(items.length === 0 && !isLoading) && (
+                <h1 className='mt-10 text-center text-xl font-bold'>Properties not found</h1>
             )}
-        </div>
-    ) : (
-        <Navigate to="/auth/login" />
+        </>
     );
 };

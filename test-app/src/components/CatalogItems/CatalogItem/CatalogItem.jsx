@@ -1,8 +1,13 @@
-export const CatalogItem = ({ item, showDeleteBtn, onDelete }) => {
+import { getRandomImage } from '../../../mock/mock';
+import CardFooter from './CardFooter';
+import CardHeader from './CardHeader';
+
+export const CatalogItem = ({ property }) => {
     return (
-            <li key={item.id}>
-                <span>{item.name}</span>
-                {showDeleteBtn && <button className="btn" onClick={() => onDelete(item.id)}>&times;</button>}
-            </li>
+        <div>
+            <CardHeader property={property} />
+            <img className='h-56 w-full cursor-pointer object-cover' src={getRandomImage()}></img>
+            <CardFooter property={property} />
+        </div>
     );
 };
