@@ -3,13 +3,15 @@ import  numberReducer from './slices/numberSlice';
 import authReducer from './slices/authSlice';
 import errorMsgReducer from './slices/errorMsgSlice';
 import itemsReducer from './slices/itemsSlice';
+import getPropertieReducer from './slices/getPropertieSlice';
 
 const store = configureStore({
     reducer: {
         numberCounter: numberReducer,
         auth: authReducer,
         errorMsg: errorMsgReducer,
-        items: itemsReducer
+        items: itemsReducer,
+        propertie: getPropertieReducer
     }
 });
 

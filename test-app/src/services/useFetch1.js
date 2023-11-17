@@ -4,7 +4,7 @@ export const useFetch1 = () => {
     const { get, post, del } = useRequester();
 
     const hostAuth = 'http://localhost:5222';
-    const hostProperties = 'http://localhost:5220'
+    const hostProperties = 'http://localhost:5220';
 
     const endpoints = {
         login: `${hostAuth}/login`,

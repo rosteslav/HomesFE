@@ -1,13 +1,12 @@
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { selectedUser } from '../../store/slices/authSlice';
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Header = () => {
-    const user = useSelector(selectedUser);
-
+    const { user } = useAuth();
+    
     return (
         <>
             <header className='bg-gray-200'>
@@ -15,7 +14,7 @@ export const Header = () => {
                     <div className=''>
                         <Link
                             to={'/'}
-                            className=' text-2xl font-bold tracking-widest transition-colors duration-500 hover:text-gray-400'
+                            className='hidden md:block text-2xl font-bold transition-colors duration-500 hover:text-gray-400 leading-9 tracking-widest text-gray-900'
                         >
                             LOGO
                         </Link>
