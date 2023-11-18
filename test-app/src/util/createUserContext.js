@@ -7,7 +7,7 @@ export const createUserContext = token => {
         isAdmin: false
     };
     
-    const decodedToken = decodeToken(token);
+    const decodedToken = decodeToken(token.token);
     for (const key in decodedToken) {
         if (key.includes('claims/role')) {
             const roles = decodedToken[key];

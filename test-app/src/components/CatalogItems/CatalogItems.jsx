@@ -1,60 +1,21 @@
-import { Navigate } from 'react-router-dom';
-
-import { useItems } from '../../hooks/useItems';
-import { useAuth } from '../../hooks/useAuth';
-import { useForm } from '../../hooks/useForm';
-
+import Loader from '../../UI/Loader';
+import { useProperties } from '../../hooks/useProperties';
 import { CatalogItem } from './CatalogItem/CatalogItem';
 
-import styles from './CatalogItems.module.css';
-
 export const CatalogItems = () => {
-    const { items, onCreateItem, onDeleteItem } = useItems();
-    const { user } = useAuth();
-    const { formData, onChangeHandler, onSubmit } = useForm({ name: '' }, onCreateItem);
+    const { properties, isLoading } = useProperties();
 
-    console.log(items)
-    
-    return user ? (
-        <div>
-            <h1 className={styles['logoTitle']}>Items</h1>
-            {items ? (
-                items.length > 0 ? (
-                    <div className={styles.itemsContainer}>
-                        <ul>
-                            {items.map((i) => (
-                                <CatalogItem
-                                    key={i.id}
-                                    item={i}
-                                    onDelete={onDeleteItem}
-                                    showDeleteBtn={user.isAdmin}
-                                />
-                            ))}
-                        </ul>
-                    </div>
-                ) : (
-                    <h2>Loading items...</h2>
-                )
-            ) : (
-                <h2>There are no items!</h2>
+    return (
+        <>
+            {isLoading && <Loader />}
+            <section className='mx-10 mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
+                {properties.map((i) => (
+                    <CatalogItem key={i.id} property={i} />
+                ))}
+            </section>
+            {properties.length === 0 && !isLoading && (
+                <h1 className='mt-10 text-center text-xl font-bold'>Properties not found</h1>
             )}
-
-            {user.isAdmin && (
-                <form onSubmit={onSubmit}>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={onChangeHandler}
-                        placeholder="Insert item name..."
-                        required
-                    />
-
-                    <button className="btn" type="submit">Add Item</button>
-                </form>
-            )}
-        </div>
-    ) : (
-        <Navigate to="/auth/login" />
+        </>
     );
 };

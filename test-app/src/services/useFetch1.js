@@ -4,13 +4,13 @@ export const useFetch1 = () => {
     const { get, post, del } = useRequester();
 
     const hostAuth = 'http://localhost:5222';
-    const hostProperties = 'http://localhost:5220'
+    const hostProperties = 'http://localhost:5220';
 
     const endpoints = {
         login: `${hostAuth}/login`,
         register: `${hostAuth}/register`,
         adminRegister: `${hostAuth}/admin/register`,
-        getItems: `${hostProperties}/properties`,
+        getAllProperties: `${hostProperties}/properties/all`,
         addItem: `${hostProperties}/items`,
         deleteItem: `${hostProperties}/items?id=`
     };
@@ -21,7 +21,7 @@ export const useFetch1 = () => {
     const adminRegister = async (data) => post(endpoints.adminRegister, data);
 
     // ITEM FETCH
-    const getAllItems = async () => get(endpoints.getItems);
+    const getAllItems = async () => get(endpoints.getAllProperties);
     const createItem = async (data) => post(endpoints.addItem, data);
     const removeItem = async (id) => del(endpoints.deleteItem + id);
 
