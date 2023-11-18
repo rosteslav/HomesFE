@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import  numberReducer from './slices/numberSlice';
-import authReducer from './slices/authSlice';
-import errorMsgReducer from './slices/errorMsgSlice';
-import itemsReducer from './slices/itemsSlice';
-import getPropertieReducer from './slices/getPropertieSlice';
+// import numberReducer from './slices/numberSlice';
+import authReducer from './slices/auth/authSlice';
+// import errorMsgReducer from './slices/errorMsgSlice';
+// import itemsReducer from './slices/itemsSlice';
+import propertiesSlice from './slices/properties/propertiesSlice';
 
 const store = configureStore({
     reducer: {
-        numberCounter: numberReducer,
         auth: authReducer,
-        errorMsg: errorMsgReducer,
-        items: itemsReducer,
-        propertie: getPropertieReducer
-    }
+        properties: propertiesSlice,
+        // numberCounter: numberReducer,
+        // errorMsg: errorMsgReducer,
+        // items: itemsReducer,
+    },
 });
 
 export default store;

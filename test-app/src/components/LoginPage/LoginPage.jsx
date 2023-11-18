@@ -1,18 +1,31 @@
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useForm } from '../../hooks/useForm';
-import { useAuth } from '../../hooks/useAuth';
+import { validationLoginSchema } from '../../services/validationSchema';
+import useThunk from '../../hooks/use-thunk';
+import { loginUser } from '../../store/slices/auth/authThunk';
+import Loader from '../../UI/Loader';
 
 export const LoginPage = () => {
-    const { errorInfo, onLoginSubmit } = useAuth();
-    const { formData, onChangeHandler, onSubmit } = useForm(
-        { username: '', password: '' },
-        onLoginSubmit
-    );
+    const [onLogin, isLoading] = useThunk(loginUser);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(validationLoginSchema),
+    });
+
+    const onSubmit = (formData) => {
+        onLogin(formData);
+    };
 
     return (
         <>
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+            {isLoading && <Loader />}
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
                         Login
@@ -20,7 +33,7 @@ export const LoginPage = () => {
                 </div>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-                    <form onSubmit={onSubmit} className='space-y-6' action='#' method='POST'>
+                    <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
                         <div>
                             <label
                                 htmlFor='username'
@@ -31,14 +44,14 @@ export const LoginPage = () => {
                             <div className='mt-2'>
                                 <input
                                     id='username'
-                                    value={formData.username}
-                                    onChange={onChangeHandler}
+                                    {...register('username')}
                                     type='text'
                                     name='username'
-                                    // autoComplete='username'
-                                    required
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
+                                {errors.username && (
+                                    <p className='text-red-500'>{errors.username.message}</p>
+                                )}
                             </div>
                         </div>
 
@@ -53,35 +66,29 @@ export const LoginPage = () => {
                             </div>
                             <div className='mt-2'>
                                 <input
+                                    {...register('password')}
                                     id='password'
-                                    value={formData.password}
-                                    onChange={onChangeHandler}
+                                    {...register('password')}
                                     type='password'
                                     name='password'
-                                    required
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
+                                {errors.password && (
+                                    <p className='text-red-500'>{errors.password.message}</p>
+                                )}
                             </div>
                         </div>
 
-                        <div className='text-sm'>
-                            <span className='font-semibold text-indigo-600 hover:text-indigo-500'>
-                                {errorInfo.show && <p className='text-red-500'>{errorInfo.text}</p>}
-                            </span>
-                        </div>
-
-                        <div>
-                            <button
-                                type='submit'
-                                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                            >
-                                Login
-                            </button>
-                        </div>
+                        <button
+                            type='submit'
+                            className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                        >
+                            Login
+                        </button>
                     </form>
 
                     <p className='mt-10 text-center text-sm text-gray-500'>
-                        If you do not have profile click
+                        If you do not have a profile click
                         <Link
                             className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
                             to='/auth/register'

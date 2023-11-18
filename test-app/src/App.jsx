@@ -8,7 +8,7 @@ import { CatalogItems } from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
 import { restrictLoginRegister } from './UI/auth';
-import { PropertieDetails } from './components/CatalogItems/PropertieDetails/PropertieDetails';
+import { PropertiesDetails } from './components/CatalogItems/PropertieDetails/PropertieDetails';
 
 const router = createBrowserRouter([
     {
@@ -24,10 +24,14 @@ const router = createBrowserRouter([
                 children: [
                     { path: 'register', element: <RegisterPage />, loader: restrictLoginRegister },
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
-                    { path: 'register-admin', element: <RegisterAdminPage />, loader: restrictLoginRegister },
+                    {
+                        path: 'register-admin',
+                        element: <RegisterAdminPage />,
+                        loader: restrictLoginRegister,
+                    },
                 ],
             },
-            {path: ':detailsId', element: <PropertieDetails />}
+            { path: ':detailsId', element: <PropertiesDetails /> },
         ],
     },
 ]);

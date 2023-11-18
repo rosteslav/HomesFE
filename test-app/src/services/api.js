@@ -13,11 +13,15 @@ const endpoints = {
 };
 
 // AUTH FETCH
-export const login = async (data) => post(endpoints.login, data);
+export const login = async (data) => {
+    const res = post(endpoints.login, data)
+    console.log('api',res)
+    return res
+};
 export const register = async (data) => post(endpoints.register, data);
 export const adminRegister = async (data) => post(endpoints.adminRegister, data);
 
 // ITEM FETCH
-export const getAllItems = async () => get(endpoints.getAllProperties);
+export const getAllProp = async () => get(endpoints.getAllProperties);
 export const createItem = async (data) => post(endpoints.addItem, data);
 export const removeItem = async (id) => del(endpoints.deleteItem + id);

@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
-import { useAuth } from '../../hooks/useAuth';
+import { useSelector } from 'react-redux';
 
 export const Header = () => {
-    const { user } = useAuth();
-    
+    const user = useSelector((state) => state.auth.data);
     return (
         <>
             <header className='bg-gray-200'>
@@ -14,12 +13,12 @@ export const Header = () => {
                     <div className=''>
                         <Link
                             to={'/'}
-                            className='hidden md:block text-2xl font-bold transition-colors duration-500 hover:text-gray-400 leading-9 tracking-widest text-gray-900'
+                            className='hidden text-2xl font-bold leading-9 tracking-widest text-gray-900 transition-colors duration-500 hover:text-gray-400 md:block'
                         >
                             LOGO
                         </Link>
                     </div>
-                    <ul className='flex'>{user ? <UserLinks user={user} /> : <GuestLinks />}</ul>
+                    <ul className='flex'>{user.claims ? <UserLinks user={user} /> : <GuestLinks />}</ul>
                 </nav>
             </header>
         </>

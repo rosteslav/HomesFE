@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
-import { useProperties } from '../../../hooks/useProperties';
-import { getRandomImage } from '../../../mock/mock';
 
-export const PropertieDetails = () => {
+import { getRandomImage } from '../../../mock/mock';
+import { useSelector } from 'react-redux';
+
+export const PropertiesDetails = () => {
     const { detailsId } = useParams();
-    const { properties } = useProperties();
-    const p = properties.find((p) => Number(p.id) === Number(detailsId));
+    const allProperties = useSelector((state) => state.properties.data.all);
+    const p = allProperties.find((p) => Number(p.id) === Number(detailsId));
 
     return (
         <>

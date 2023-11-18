@@ -1,63 +1,17 @@
-import { useNavigate } from 'react-router-dom';
-import { useFetch1 } from '../services/useFetch1';
-import { useDispatch, useSelector } from 'react-redux';
-import { setItems, selectedItems } from '../store/slices/itemsSlice';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { addAllProperties } from '../store/slices/properties/propertiesThunk';
+import useThunk from './use-thunk';
+import { useSelector } from 'react-redux';
 
 export const useProperties = () => {
-    const { getAllItems, createItem, removeItem } = useFetch1();
-    const dispatch = useDispatch();
-    const [dataFetched, setDataFetched] = useState(false);
-    //TODO When notification redux is ready this useState and and setLoading needs to be removed
-    const [isLoading, setIsLoading] = useState(false);
-    const properties = useSelector(selectedItems);
-    const navigate = useNavigate();
+    const [doAddAllProperties, isLoading, error] = useThunk(addAllProperties);
+    const properties = useSelector((state) => state.properties.data.all);
 
-    // Fetch data only if items array is empty and data hasn't been fetched yet
     useEffect(() => {
-        if (properties.length === 0 && !dataFetched) {
-            //TODO setIsLoading needs to be replace with notification redux
-            setIsLoading(true);
-            getAllItems().then((res) => {
-                dispatch(setItems(res));
-                setDataFetched(true);
-                setIsLoading(false);
-            });
+        if (properties.length === 0) {
+            doAddAllProperties();
         }
-    }, [properties, dataFetched, dispatch, getAllItems]);
+    }, [doAddAllProperties, properties]);
 
-    const onCreateItem = async (data) => {
-        // create new item on server
-        await createItem(data);
-
-        // update App state
-        const newState = await getAllItems();
-        dispatch(setItems(newState));
-
-        // redirect to catalog
-        navigate('/');
-    };
-
-    const onDeleteItem = async (detailsId) => {
-        const choice = window.confirm('Are you sure you want to delete this!');
-
-        if (choice) {
-            // Delet from server
-            await removeItem(detailsId);
-
-            // Delete from State
-            const filterItems = properties.filter((r) => r.id !== detailsId);
-            dispatch(setItems(filterItems));
-
-            // redirect to catalog
-            navigate('/');
-        }
-    };
-
-    return {
-        properties,
-        onCreateItem,
-        onDeleteItem,
-        isLoading,
-    };
+    return { properties, isLoading, error };
 };

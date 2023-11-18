@@ -1,9 +1,12 @@
+import { toast } from 'react-hot-toast';
+import notificationMessages from './notificationMessages';
 const request = async (url, options) => {
     try {
         const response = await fetch(url, options);
         if (response.ok !== true) {
-            const error = await response.json();
-            throw new Error(error.message);
+            // const error = await response.json();
+
+            throw new Error(notificationMessages(response.status));
         }
         if (response.status === 204) {
             return {};
@@ -11,7 +14,8 @@ const request = async (url, options) => {
             return response.json();
         }
     } catch (err) {
-        throw new Error(err);
+        toast.error(err.message);
+        throw new Error(err.message);
     }
 };
 

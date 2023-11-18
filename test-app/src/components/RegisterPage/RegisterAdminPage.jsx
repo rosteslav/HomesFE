@@ -1,13 +1,14 @@
 import { useForm } from '../../hooks/useForm';
-import { useAuth } from '../../hooks/useAuth';
+// import { useAuth } from '../../hooks/useAuthOld';
 
 import { Link } from 'react-router-dom';
 
 export const RegisterAdminPage = () => {
-    const { errorInfo, onRegisterAdminSubmit } = useAuth();
+    const errorInfo = {}
+    // const { errorInfo, onRegisterAdminSubmit } = useAuth();
     const { formData, onChangeHandler, onSubmit } = useForm(
         { username: '', email: '', password: '' },
-        onRegisterAdminSubmit
+        // onRegisterAdminSubmit
     );
 
     return (
