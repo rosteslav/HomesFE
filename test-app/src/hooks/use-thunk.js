@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useResolvedPath } from 'react-router-dom';
+import { formReset } from '../store/slices/registerUserSlice/registerUserSlice';
 
 const useThunk = (thunk) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,12 @@ const useThunk = (thunk) => {
                 await dispatch(thunk(arg)).unwrap();
                 if (path.pathname === '/auth/login') {
                     navigate('/');
-                } else if (path.pathname === '/auth/register') {
+                } else if (
+                    path.pathname === '/auth/register/step3' ||
+                    path.pathname === '/auth/register/step2'
+                    
+                ) {
+                    dispatch(formReset())
                     navigate('/auth/login');
                 }
             } catch (err) {
