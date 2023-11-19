@@ -4,11 +4,13 @@ import authReducer from './slices/auth/authSlice';
 // import errorMsgReducer from './slices/errorMsgSlice';
 // import itemsReducer from './slices/itemsSlice';
 import propertiesSlice from './slices/properties/propertiesSlice';
+import registerUserSlice from './slices/registerUserSlice/registerUserSlice';
 
 const store = configureStore({
     reducer: {
         auth: authReducer,
         properties: propertiesSlice,
+        registerUserForm: registerUserSlice,
         // numberCounter: numberReducer,
         // errorMsg: errorMsgReducer,
         // items: itemsReducer,

@@ -1,7 +1,8 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { LoginPage } from './components/LoginPage/LoginPage';
-import { RegisterPage } from './components/RegisterPage/RegisterPage';
+// import { RegisterPage } from './components/RegisterPage/RegisterPage';
+import RegisterUser from './components/RegisterPage/RegisterUser/RegisterUser'
 import { RegisterAdminPage } from './components/RegisterPage/RegisterAdminPage';
 
 import { CatalogItems } from './components/CatalogItems/CatalogItems';
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
                 path: 'auth',
                 loader: restrictLoginRegister,
                 children: [
-                    { path: 'register', element: <RegisterPage />, loader: restrictLoginRegister },
+                    { path: 'register/*', element: <RegisterUser />, loader: restrictLoginRegister },
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',
