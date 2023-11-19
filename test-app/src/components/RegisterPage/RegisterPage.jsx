@@ -16,7 +16,7 @@ export const RegisterPage = () => {
     } = useForm({
         resolver: yupResolver(validationRegisterSchema),
     });
-
+    console.log(register);
     const onSubmit = (formData) => {
         onRegister(formData);
     };

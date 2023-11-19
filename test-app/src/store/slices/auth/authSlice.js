@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser } from './authThunk';
+import { loginUser, registerAdmin, registerUser } from './authThunk';
 import Cookies from 'universal-cookie';
 import { createUserContext } from '../../../util/createUserContext';
 
@@ -46,6 +46,7 @@ const authSlice = createSlice({
             state.error = action.error;
             state.data = {};
         });
+        
         builder.addCase(registerUser.pending, (state) => {
             state.isLoading = true;
         });
@@ -55,6 +56,20 @@ const authSlice = createSlice({
             state.data = {};
         });
         builder.addCase(registerUser.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+            state.data = {};
+        });
+
+        builder.addCase(registerAdmin.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(registerAdmin.fulfilled, (state) => {
+            state.isLoading = false;
+            state.error = null;
+            state.data = {};
+        });
+        builder.addCase(registerAdmin.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
             state.data = {};

@@ -17,6 +17,8 @@ const useThunk = (thunk) => {
                     navigate('/');
                 } else if (path.pathname === '/auth/register') {
                     navigate('/auth/login');
+                } else if (path.pathname === '/auth/admin/register') {
+                    navigate('/auth/login');
                 }
             } catch (err) {
                 setError(err);

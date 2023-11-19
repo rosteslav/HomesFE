@@ -1,7 +1,12 @@
 import { get, post, del } from './requester';
 
-const hostAuth = 'http://localhost:5222';
-const hostProperties = 'http://localhost:5220';
+// const hostAuth = 'http://localhost:5222';
+// const hostProperties = 'http://localhost:5220';
+
+const hostAuth = 'http://localhost:5220';
+const hostProperties = 'http://localhost:5221';
+// const hostAdmins = 'http://localhost:5222';
+// const hostImages = 'http://localhost:5223';
 
 const endpoints = {
     login: `${hostAuth}/login`,
@@ -14,12 +19,15 @@ const endpoints = {
 
 // AUTH FETCH
 export const login = async (data) => {
-    const res = post(endpoints.login, data)
-    console.log('api',res)
-    return res
+    const res = post(endpoints.login, data);
+    console.log('api', res);
+    return res;
 };
 export const register = async (data) => post(endpoints.register, data);
-export const adminRegister = async (data) => post(endpoints.adminRegister, data);
+export const adminRegister = async (data) => {
+    const res = post(endpoints.adminRegister, data);
+    console.log('api', res);
+};
 
 // ITEM FETCH
 export const getAllProp = async () => get(endpoints.getAllProperties);
