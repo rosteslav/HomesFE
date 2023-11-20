@@ -14,7 +14,7 @@ export const CatalogItems = () => {
                 ))}
             </section>
             {properties.length === 0 && !isLoading && (
-                <h1 className='mt-10 text-center text-xl font-bold'>Properties not found</h1>
+                <h1 className='mt-10 text-center text-xl font-bold'>Не са намерени имоти</h1>
             )}
         </>
     );

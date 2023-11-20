@@ -13,7 +13,7 @@ export const CatalogItem = ({ property }) => {
             </Link>
             <CardFooter property={property} />
             <Link to={`/${property.id}`} className='link'>
-                <ButtonSecondary>Details</ButtonSecondary>
+                <ButtonSecondary>Детайли</ButtonSecondary>
             </Link>
         </div>
     );

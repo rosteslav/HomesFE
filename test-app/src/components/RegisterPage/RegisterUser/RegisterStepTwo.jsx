@@ -61,7 +61,7 @@ const RegisterStepTwo = () => {
                         htmlFor='username'
                         className='block text-sm font-medium leading-6 text-gray-900'
                     >
-                        Username
+                        Потребителско име
                     </label>
                     <div className='mt-2'>
                         <input
@@ -83,7 +83,7 @@ const RegisterStepTwo = () => {
                         htmlFor='email'
                         className='block text-sm font-medium leading-6 text-gray-900'
                     >
-                        Email
+                        Електронна поща
                     </label>
                     <div className='mt-2'>
                         <input
@@ -104,7 +104,7 @@ const RegisterStepTwo = () => {
                             htmlFor='password'
                             className='block text-sm font-medium leading-6 text-gray-900'
                         >
-                            Password
+                            Парола
                         </label>
                     </div>
                     <div className='mt-2'>
@@ -128,7 +128,7 @@ const RegisterStepTwo = () => {
                             htmlFor='repPassword'
                             className='block text-sm font-medium leading-6 text-gray-900'
                         >
-                            Repeat password
+                            Потвърждение на парола
                         </label>
                     </div>
                     <div className='mt-2'>
@@ -148,11 +148,11 @@ const RegisterStepTwo = () => {
                 </div>
                 <div className='flex justify-between gap-10'>
                     <Link className='flex-1' onClick={goBackHandler}>
-                        <ButtonSecondary>Go Back</ButtonSecondary>
+                        <ButtonSecondary>Назад</ButtonSecondary>
                     </Link>
                     <div className='flex-1'>
                         <ButtonPrimary>
-                            {currRegisterFormValues.role === 'Buyer' ? 'Register' : 'Next'}
+                            {currRegisterFormValues.role === 'Buyer' ? 'Регистрация' : 'Напред'}
                         </ButtonPrimary>
                     </div>
                 </div>
