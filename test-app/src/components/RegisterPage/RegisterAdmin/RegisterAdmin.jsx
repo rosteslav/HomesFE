@@ -70,7 +70,7 @@ export const RegisterAdmin = () => {
                                     name='username'
                                     value={values.username}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.username && (
                                     <p className='text-red-500'>{errors.username.message}</p>
@@ -92,7 +92,7 @@ export const RegisterAdmin = () => {
                                     name='email'
                                     value={values.email}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.email && (
                                     <p className='text-red-500'>{errors.email.message}</p>
@@ -116,7 +116,7 @@ export const RegisterAdmin = () => {
                                     name='password'
                                     value={values.password}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.password && (
                                     <p className='text-red-500'>{errors.password.message}</p>
@@ -138,7 +138,7 @@ export const RegisterAdmin = () => {
                                     name='firstName'
                                     value={values.firstName}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.firstName && (
                                     <p className='text-red-500'>{errors.firstName.message}</p>
@@ -160,7 +160,7 @@ export const RegisterAdmin = () => {
                                     name='lastName'
                                     value={values.lastName}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.lastName && (
                                     <p className='text-red-500'>{errors.lastName.message}</p>
@@ -182,7 +182,7 @@ export const RegisterAdmin = () => {
                                     name='phoneNumber'
                                     value={values.phoneNumber}
                                     onChange={onChangeHandler}
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                    className='formInput'
                                 />
                                 {errors.phoneNumber && (
                                     <p className='text-red-500'>{errors.phoneNumber.message}</p>
