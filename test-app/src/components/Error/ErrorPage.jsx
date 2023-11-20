@@ -8,8 +8,8 @@ const ErrorPage = () => {
             <h1>{error.statusText}</h1>
             <h3 className='text-red-500'>{error.data}</h3>
             <p>
-                back to:
-                <Link href='/'> Home Page</Link>
+                Назад към::
+                <Link href='/'> Началната страница</Link>
             </p>
         </div>
     );

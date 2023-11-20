@@ -52,7 +52,7 @@ const RegisterStepThree = () => {
                         htmlFor='firstName'
                         className='block text-sm font-medium leading-6 text-gray-900'
                     >
-                        First name
+                        Първо име
                     </label>
                     <div className='mt-2'>
                         <input
@@ -74,7 +74,7 @@ const RegisterStepThree = () => {
                         htmlFor='lastName'
                         className='block text-sm font-medium leading-6 text-gray-900'
                     >
-                        Last name
+                        Фамилно име
                     </label>
                     <div className='mt-2'>
                         <input
@@ -96,7 +96,7 @@ const RegisterStepThree = () => {
                         htmlFor='phoneNumber'
                         className='block text-sm font-medium leading-6 text-gray-900'
                     >
-                        Phone number
+                        Телефонен номер
                     </label>
                     <div className='mt-2'>
                         <input
@@ -115,10 +115,10 @@ const RegisterStepThree = () => {
                 </div>
                 <div className='flex justify-between gap-10'>
                     <Link className='flex-1' onClick={goBackHandler}>
-                        <ButtonSecondary>Go Back</ButtonSecondary>
+                        <ButtonSecondary>Назад</ButtonSecondary>
                     </Link>
                     <div className='flex-1'>
-                        <ButtonPrimary>Register</ButtonPrimary>
+                        <ButtonPrimary>Регистрация</ButtonPrimary>
                     </div>
                 </div>
             </form>

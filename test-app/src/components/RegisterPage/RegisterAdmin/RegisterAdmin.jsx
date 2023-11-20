@@ -48,7 +48,7 @@ export const RegisterAdmin = () => {
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-                        Admin Register
+                        Регистрация на админ
                     </h2>
                 </div>
 
@@ -60,7 +60,7 @@ export const RegisterAdmin = () => {
                                 htmlFor='username'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Username
+                                Потребителско име
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -82,7 +82,7 @@ export const RegisterAdmin = () => {
                                 htmlFor='email'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Email
+                                Електронна поща
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -105,7 +105,7 @@ export const RegisterAdmin = () => {
                                     htmlFor='password'
                                     className='block text-sm font-medium leading-6 text-gray-900'
                                 >
-                                    Password
+                                    Парола
                                 </label>
                             </div>
                             <div className='mt-2'>
@@ -128,7 +128,7 @@ export const RegisterAdmin = () => {
                                 htmlFor='firstName'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                First name
+                                Първо име
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -150,7 +150,7 @@ export const RegisterAdmin = () => {
                                 htmlFor='lastName'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Last name
+                                Фамилно име
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -172,7 +172,7 @@ export const RegisterAdmin = () => {
                                 htmlFor='phoneNumber'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Phone number
+                                Телефонен номер
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -189,16 +189,16 @@ export const RegisterAdmin = () => {
                                 )}
                             </div>
                         </div>
-                        <ButtonPrimary>Register</ButtonPrimary>
+                        <ButtonPrimary>Регистрация</ButtonPrimary>
                     </form>
 
                     <p className='mt-10 text-center text-sm text-gray-500'>
-                        If you have a profile click
+                        Ако вече сте регистрирани използвайте линка
                         <Link
-                            className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+                            className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
                             to='/auth/login'
                         >
-                            Here!
+                            Вход
                         </Link>
                     </p>
                 </div>

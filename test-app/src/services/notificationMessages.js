@@ -1,17 +1,17 @@
 const notificationMessages = (statusCode) => {
     const messagesObj = {
-        400: 'Sorry, something happened. Please try again.',
-        500: "Something went wrong on our end. Our team has been notified, and we're working to fix it. Please try again later.",
-        404: "We couldn't find what you're looking for.",
-        403: 'Sorry, you do not have permission to access this page.',
-        401: 'Username or password is wrong',
-        409: 'Username already exist'
+        400: 'Съжалявам, нещо се случи. Моля, опитайте отново.',
+        500: "Нещо се обърка от наша страна. Екипът ни беше уведомен и работим по отстраняването му. Моля, опитайте отново по-късно.",
+        404: "Не успяхме да намерим това, което търсите.",
+        403: 'За съжаление нямате разрешение за достъп до тази страница.',
+        401: 'Потребителското име или паролата са грешни',
+        409: 'Потребителското име е заето'
     };
 
     if (statusCode in messagesObj) {
         return messagesObj[statusCode];
     } else {
-        return `Unhandled status code: ${statusCode}`;
+        return `Необработена грешка: ${statusCode}`;
     }
 };
 

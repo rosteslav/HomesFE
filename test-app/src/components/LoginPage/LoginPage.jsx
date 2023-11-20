@@ -29,7 +29,7 @@ export const LoginPage = () => {
                 {isLoading && <Loader />}
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-                        Login
+                        Вход
                     </h2>
                 </div>
 
@@ -40,7 +40,7 @@ export const LoginPage = () => {
                                 htmlFor='username'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Username
+                                Потребителско име
                             </label>
                             <div className='mt-2'>
                                 <input
@@ -62,7 +62,7 @@ export const LoginPage = () => {
                                     htmlFor='password'
                                     className='block text-sm font-medium leading-6 text-gray-900'
                                 >
-                                    Password
+                                    Парола
                                 </label>
                             </div>
                             <div className='mt-2'>
@@ -79,16 +79,16 @@ export const LoginPage = () => {
                             </div>
                         </div>
 
-                        <ButtonPrimary>Login</ButtonPrimary>
+                        <ButtonPrimary>Вход</ButtonPrimary>
                     </form>
 
                     <p className='mt-10 text-center text-sm text-gray-500'>
-                        If you do not have a profile click
+                        Ако нямате регистрация? Използвайте линка
                         <Link
-                            className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+                            className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
                             to='/auth/register'
                         >
-                            Here!
+                            Регистрация
                         </Link>
                     </p>
                 </div>
