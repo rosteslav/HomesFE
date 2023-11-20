@@ -1,15 +1,13 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { LoginPage } from './components/LoginPage/LoginPage';
-// import { RegisterPage } from './components/RegisterPage/RegisterPage';
-import RegisterUser from './components/RegisterPage/RegisterUser/RegisterUser'
-import { RegisterAdminPage } from './components/RegisterPage/RegisterAdminPage';
-
+import RegisterUser from './components/RegisterPage/RegisterUser/RegisterUser';
 import { CatalogItems } from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
 import { restrictLoginRegister } from './UI/auth';
 import { PropertiesDetails } from './components/CatalogItems/PropertieDetails/PropertieDetails';
+import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
 
 const router = createBrowserRouter([
     {
@@ -27,7 +25,7 @@ const router = createBrowserRouter([
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',
-                        element: <RegisterAdminPage />,
+                        element: <RegisterAdmin />,
                         loader: restrictLoginRegister,
                     },
                 ],

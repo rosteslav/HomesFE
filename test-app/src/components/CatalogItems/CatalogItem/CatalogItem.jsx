@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { getRandomImage } from '../../../mock/mock';
 import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
+import { ButtonSecondary } from '../../../UI';
 
 export const CatalogItem = ({ property }) => {
     return (
@@ -12,7 +13,7 @@ export const CatalogItem = ({ property }) => {
             </Link>
             <CardFooter property={property} />
             <Link to={`/${property.id}`} className='link'>
-                <button className='btn'>Details</button>
+                <ButtonSecondary>Details</ButtonSecondary>
             </Link>
         </div>
     );

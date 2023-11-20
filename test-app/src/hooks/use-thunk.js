@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useResolvedPath } from 'react-router-dom';
 import { formReset } from '../store/slices/registerUserSlice/registerUserSlice';
+import { formAdminReset } from '../store/slices/registerAdminSlice/registerAdminSlice';
 
 const useThunk = (thunk) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +20,11 @@ const useThunk = (thunk) => {
                 } else if (
                     path.pathname === '/auth/register/step3' ||
                     path.pathname === '/auth/register/step2'
-                    
                 ) {
-                    dispatch(formReset())
+                    dispatch(formReset());
+                    navigate('/auth/login');
+                } else if (path.pathname === '/auth/register-admin') {
+                    dispatch(formAdminReset());
                     navigate('/auth/login');
                 }
             } catch (err) {
