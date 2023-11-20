@@ -1,14 +1,30 @@
-import useThunk from '../../hooks/use-thunk';
+import useThunk from '../../../hooks/use-thunk';
 import { useForm } from 'react-hook-form';
-// import { useAuth } from '../../hooks/useAuthOld';
 
 import { Link } from 'react-router-dom';
-import { registerAdmin } from '../../store/slices/auth/authThunk';
-import { validationRegisterAdminSchema } from '../../services/validationSchema';
+import { registerAdmin } from '../../../store/slices/auth/authThunk';
+import { validationRegisterAdminSchema } from '../../../services/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Loader from '../../UI/Loader';
+import Loader from '../../../UI/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import {
+    selectedAdmin,
+    setData,
+} from '../../../store/slices/registerAdminSlice/registerAdminSlice';
+import { ButtonPrimary } from '../../../UI';
 
-export const RegisterAdminPage = () => {
+export const RegisterAdmin = () => {
+    const currRegisterAdminFormValues = useSelector(selectedAdmin);
+    const dispatch = useDispatch();
+    const [values, setValues] = useState({
+        username: currRegisterAdminFormValues.firstName,
+        email: currRegisterAdminFormValues.lastName,
+        password: currRegisterAdminFormValues.phoneNumber,
+        firstName: currRegisterAdminFormValues.phoneNumber,
+        lastName: currRegisterAdminFormValues.phoneNumber,
+        phoneNumber: currRegisterAdminFormValues.phoneNumber,
+    });
     const [onRegisterAdmin, isLoading] = useThunk(registerAdmin);
     const {
         register,
@@ -17,15 +33,19 @@ export const RegisterAdminPage = () => {
     } = useForm({
         resolver: yupResolver(validationRegisterAdminSchema),
     });
-    
+
     const onSubmit = (formData) => {
-        onRegisterAdmin(formData);
+        dispatch(setData(formData));
+        onRegisterAdmin({ ...currRegisterAdminFormValues, ...formData });
+    };
+
+    const onChangeHandler = (e) => {
+        setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
     };
 
     return (
         <>
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
-                {isLoading && <Loader />}
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
                         Admin Register
@@ -33,6 +53,7 @@ export const RegisterAdminPage = () => {
                 </div>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+                    {isLoading && <Loader />}
                     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
                         <div>
                             <label
@@ -47,6 +68,8 @@ export const RegisterAdminPage = () => {
                                     {...register('username')}
                                     type='text'
                                     name='username'
+                                    value={values.username}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.username && (
@@ -67,6 +90,8 @@ export const RegisterAdminPage = () => {
                                     {...register('email')}
                                     type='text'
                                     name='email'
+                                    value={values.email}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.email && (
@@ -87,9 +112,10 @@ export const RegisterAdminPage = () => {
                                 <input
                                     {...register('password')}
                                     id='password'
-                                    {...register('password')}
                                     type='password'
                                     name='password'
+                                    value={values.password}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.password && (
@@ -110,6 +136,8 @@ export const RegisterAdminPage = () => {
                                     {...register('firstName')}
                                     type='text'
                                     name='firstName'
+                                    value={values.firstName}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.firstName && (
@@ -130,6 +158,8 @@ export const RegisterAdminPage = () => {
                                     {...register('lastName')}
                                     type='text'
                                     name='lastName'
+                                    value={values.lastName}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.lastName && (
@@ -150,6 +180,8 @@ export const RegisterAdminPage = () => {
                                     {...register('phoneNumber')}
                                     type='text'
                                     name='phoneNumber'
+                                    value={values.phoneNumber}
+                                    onChange={onChangeHandler}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                                 {errors.phoneNumber && (
@@ -157,12 +189,7 @@ export const RegisterAdminPage = () => {
                                 )}
                             </div>
                         </div>
-                        <button
-                            type='submit'
-                            className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                        >
-                            Register
-                        </button>
+                        <ButtonPrimary>Register</ButtonPrimary>
                     </form>
 
                     <p className='mt-10 text-center text-sm text-gray-500'>
