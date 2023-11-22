@@ -5,7 +5,9 @@ const request = async (url, options) => {
         const response = await fetch(url, options);
         if (response.ok !== true) {
             // const error = await response.json();
-
+            console.log(response);
+            const error = await response.json();
+            console.log(error);
             throw new Error(notificationMessages(response.status));
         }
         if (response.status === 204) {
@@ -28,9 +30,9 @@ function createOptions(method = 'get', data) {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
     }
-    const userData = localStorage.getItem('authToken');
+    const userData = JSON.parse(localStorage.getItem('authToken'));
     if (userData != null) {
-        options.headers['Authorization'] = `Bearer ${userData.token}`;
+        options.headers['Authorization'] = `Bearer ${userData.token.token}`;
     }
     return options;
 }

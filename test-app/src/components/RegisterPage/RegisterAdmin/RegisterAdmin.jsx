@@ -18,11 +18,11 @@ export const RegisterAdmin = () => {
     const currRegisterAdminFormValues = useSelector(selectedAdmin);
     const dispatch = useDispatch();
     const [values, setValues] = useState({
-        username: currRegisterAdminFormValues.firstName,
-        email: currRegisterAdminFormValues.lastName,
-        password: currRegisterAdminFormValues.phoneNumber,
-        firstName: currRegisterAdminFormValues.phoneNumber,
-        lastName: currRegisterAdminFormValues.phoneNumber,
+        username: currRegisterAdminFormValues.username,
+        email: currRegisterAdminFormValues.email,
+        password: currRegisterAdminFormValues.password,
+        firstName: currRegisterAdminFormValues.firstName,
+        lastName: currRegisterAdminFormValues.lastName,
         phoneNumber: currRegisterAdminFormValues.phoneNumber,
     });
     const [onRegisterAdmin, isLoading] = useThunk(registerAdmin);
