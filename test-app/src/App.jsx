@@ -8,6 +8,7 @@ import ErrorPage from './components/Error/ErrorPage';
 import { restrictLoginRegister } from './UI/auth';
 import { PropertiesDetails } from './components/CatalogItems/PropertieDetails/PropertieDetails';
 import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
+import { CreateProperty } from './components/CreateProperty/CreateProperty';
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
                 ],
             },
             { path: ':detailsId', element: <PropertiesDetails /> },
+            { path: 'createProperty', element: <CreateProperty />}
         ],
     },
 ]);
