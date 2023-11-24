@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addAllProperties, createProperty } from './propertiesThunk';
+import { addAllProperties, addSelectedProperty, createProperty } from './propertiesThunk';
 
 const initialState = {
     isLoading: false,
     data: {
         all: [],
+        selectedProperty: {},
     },
     error: null,
 };
@@ -35,6 +36,18 @@ const propertiesSlice = createSlice({
             state.data.all.push(action.payload);
         });
         builder.addCase(createProperty.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+        builder.addCase(addSelectedProperty.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(addSelectedProperty.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = null;
+            state.data.selectedProperty = action.payload;
+        });
+        builder.addCase(addSelectedProperty.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         });
