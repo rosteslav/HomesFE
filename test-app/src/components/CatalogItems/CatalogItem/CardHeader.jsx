@@ -1,10 +1,8 @@
 const CardHeader = ({ property }) => {
-    const time = property?.time || 'Няма дата';
-    const address = property?.district || 'Няма адрес';
     return (
         <div className='flex items-center justify-between'>
-            <h2>{time}</h2>
-            <h2>{address}</h2>
+            <h2>Днес</h2>
+            <h2>{property?.neighbourhood}</h2>
         </div>
     );
 };

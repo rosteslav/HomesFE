@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { createProp, getAllProp } from '../../../services/api';
+import { createProp, getAllProp, getSelectedProperty } from '../../../services/api';
 
 export const addAllProperties = createAsyncThunk('propertiesAll/get', async () => {
     return getAllProp();
@@ -7,3 +7,7 @@ export const addAllProperties = createAsyncThunk('propertiesAll/get', async () =
 export const createProperty = createAsyncThunk('createProperty/post', async (data) => {
     return createProp(data);
 });
+
+export const addSelectedProperty = createAsyncThunk('selectedProperty/get', async (id) =>
+    getSelectedProperty(id)
+);

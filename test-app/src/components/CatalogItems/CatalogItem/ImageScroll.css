@@ -1,0 +1,7 @@
+.card-buttons {
+    visibility: hidden;
+}
+
+.container:hover .card-buttons {
+    visibility: visible;
+}
