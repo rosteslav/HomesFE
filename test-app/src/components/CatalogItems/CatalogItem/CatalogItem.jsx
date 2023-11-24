@@ -1,20 +1,13 @@
-import { Link } from 'react-router-dom';
-import { getRandomImage } from '../../../mock/mock';
 import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
-import { ButtonSecondary } from '../../../UI';
+import ImageScroll from './ImageScroll';
 
-export const CatalogItem = ({ property }) => {
+export const CatalogItem = ({ property, images }) => {
     return (
         <div>
             <CardHeader property={property} />
-            <Link to={`/${property.id}`} className='link'>
-                <img className='h-56 w-full cursor-pointer object-cover' src={getRandomImage()} />
-            </Link>
+            <ImageScroll images={images} propertyId={property.id} />
             <CardFooter property={property} />
-            <Link to={`/${property.id}`} className='link'>
-                <ButtonSecondary>Детайли</ButtonSecondary>
-            </Link>
         </div>
     );
 };
