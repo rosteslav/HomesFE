@@ -18,6 +18,7 @@ const endpoints = {
     getAdminsProperties: `${hostProperties}/admin/properties`,
     addProperty: `${hostProperties}/properties`,
     getPropertyById: `${hostProperties}/properties/`,
+    getPropertyOptions: `${hostProperties}/PropertyOptions`,
 
     // hostAdmins
     getBrokers: `${hostAdmins}/admins/brokers`,
@@ -36,6 +37,7 @@ export const getAllRoles = async () => get(endpoints.getRoles);
 
 // ITEM FETCH
 export const getAllProp = async () => get(endpoints.getAllProperties);
+export const getAllPropertyOptions = async () => get(endpoints.getPropertyOptions);
 export const createProp = async (data) => post(endpoints.addProperty, data);
 export const removeItem = async (id) => del(endpoints.deleteItem + id);
-export const getSelectedProperty = async (id) => get(endpoints.getPropertyById + id)
+export const getSelectedProperty = async (id) => get(endpoints.getPropertyById + id);
