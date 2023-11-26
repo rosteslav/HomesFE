@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerAdmin, registerUser } from './authThunk';
 import Cookies from 'universal-cookie';
+
+import { loginUser, registerAdmin, registerUser } from './authThunk';
 import { createUserContext } from '../../../util/createUserContext';
 
 const tokenKey = 'authToken';
@@ -16,6 +17,17 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        autoLogin(state, action) {
+            const userContext = createUserContext(action.payload);
+
+            localStorage.setItem('authToken', JSON.stringify(userContext));
+
+            cookies.set(tokenKey, userContext.token.token, {
+                expires: new Date(userContext.token.expiration),
+                secure: true,
+            });
+            state.data = userContext;
+        },
         removeUser(state) {
             state.isLoading = false;
             state.data = {};
@@ -46,7 +58,7 @@ const authSlice = createSlice({
             state.error = action.error;
             state.data = {};
         });
-        
+
         builder.addCase(registerUser.pending, (state) => {
             state.isLoading = true;
         });
@@ -78,4 +90,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { removeUser } = authSlice.actions;
+export const { removeUser, autoLogin } = authSlice.actions;
