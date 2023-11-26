@@ -38,7 +38,7 @@ const RegisterStepTwo = () => {
     const onSubmitHandler = (data) => {
         dispatch(stepTwo(data));
 
-        if (currRegisterFormValues.role !== 'Buyer') {
+        if (currRegisterFormValues.role !== 'Купувач') {
             navigate('/auth/register/step3');
         } else {
             onRegister({
@@ -152,7 +152,7 @@ const RegisterStepTwo = () => {
                     </Link>
                     <div className='flex-1'>
                         <ButtonPrimary>
-                            {currRegisterFormValues.role === 'Buyer' ? 'Регистрация' : 'Напред'}
+                            {currRegisterFormValues.role === 'Купувач' ? 'Регистрация' : 'Напред'}
                         </ButtonPrimary>
                     </div>
                 </div>
