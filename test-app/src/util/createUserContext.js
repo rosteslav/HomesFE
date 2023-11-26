@@ -13,7 +13,7 @@ export const createUserContext = token => {
             const roles = decodedToken[key];
             userContext.claims.roles = roles;
 
-            if (roles.includes('Admin')) {
+            if (roles.includes('Администратор')) {
                 userContext.isAdmin = true;
             }
         } else if (key.includes('claims/name')) {
