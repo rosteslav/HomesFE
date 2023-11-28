@@ -71,7 +71,7 @@ export const validationRegisterAdminSchema = yup.object().shape({
 });
 
 export const validationCreatePropertySchema = yup.object().shape({
-    numberOfRooms: yup.number().positive(errors.positive.numberOfRooms).required(errors.required.numberOfRooms),
+    numberOfRooms: yup.string().required(errors.required.numberOfRooms),
     space: yup.number().positive(errors.positive.space).required(errors.required.space),
     description: yup.string().min(10, errors.min.description).required(errors.required.description),
     price: yup.number().positive(errors.positive.price).required(errors.required.price),

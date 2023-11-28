@@ -9,11 +9,14 @@ import useThunk from '../../hooks/use-thunk';
 import { getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
+import { useDispatch } from 'react-redux';
+import { addOwnProperties } from '../../store/slices/properties/propertiesSlice';
 
 export const CreateProperty = () => {
     const [propertyOptions, setPropertyOptions] = useState([]);
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchOptions = async () => {
@@ -55,7 +58,11 @@ export const CreateProperty = () => {
     });
 
     const onSubmit = async (formData) => {
+        const date = new Date();
+        formData.createdOnLocalTime = date.toISOString();
+        formData.images = [];
         onCreateProperty(formData);
+        dispatch(addOwnProperties({ ...formData, ...response }));
     };
 
     const onChangeHandler = (e) => {
@@ -269,16 +276,28 @@ export const CreateProperty = () => {
                         <div className='mt-2'>
                             <input
                                 {...register('numberOfRooms')}
-                                id='numberOfRooms'
-                                type='number'
+                                type='text'
                                 name='numberOfRooms'
                                 value={values.numberOfRooms}
-                                onChange={onChangeHandler}
+                                onClick={onToggleOptions}
                                 className='formInput'
+                                readOnly
                             />
                             {errors.numberOfRooms && (
                                 <p className='text-red-500'>{errors.numberOfRooms.message}</p>
                             )}
+                        </div>
+                        <div
+                            id='numberOfRooms'
+                            onClick={onSubmitContent}
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                toggleButtons === 'numberOfRooms' ? '' : 'visibility: hidden'
+                            }`}
+                        >
+                            {propertyOptions.numberOfRooms &&
+                                propertyOptions.numberOfRooms.map((option) => (
+                                    <ButtonOptions key={option}>{option}</ButtonOptions>
+                                ))}
                         </div>
                     </div>
                     <div>
@@ -301,7 +320,7 @@ export const CreateProperty = () => {
                             {errors.space && <p className='text-red-500'>{errors.space.message}</p>}
                         </div>
                     </div>
-                   
+
                     <div>
                         <label
                             htmlFor='price'
@@ -400,7 +419,7 @@ export const CreateProperty = () => {
                                 ))}
                         </div>
                     </div>
-                    
+
                     <div>
                         <label
                             htmlFor='description'

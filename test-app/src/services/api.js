@@ -41,3 +41,4 @@ export const getAllPropertyOptions = async () => get(endpoints.getPropertyOption
 export const createProp = async (data) => post(endpoints.addProperty, data);
 export const removeItem = async (id) => del(endpoints.deleteItem + id);
 export const getSelectedProperty = async (id) => get(endpoints.getPropertyById + id);
+export const getOwnProperties = async () => get(endpoints.ownProperties)
