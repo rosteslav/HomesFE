@@ -1,18 +1,45 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addAllProperties, addSelectedProperty, createProperty } from './propertiesThunk';
+import {
+    addAllProperties,
+    addOwnProperty,
+    addSelectedProperty,
+    createProperty,
+} from './propertiesThunk';
 
 const initialState = {
     isLoading: false,
     data: {
         all: [],
         selectedProperty: {},
+        ownProperties: [],
     },
     error: null,
+    fetcher: {
+        all: false,
+        ownProperties: false,
+    },
 };
 
 const propertiesSlice = createSlice({
     name: 'properties',
     initialState,
+    reducers: {
+        clearOwnProperties: (state) => {
+            state.data.ownProperties = [];
+        },
+        addOwnProperties: (state, action) => {
+            state.data.ownProperties.push(action.payload);
+        },
+        fetchAllProperties: (state) => {
+            state.fetcher.all = true;
+        },
+        fetchOwnProperties: (state) => {
+            state.fetcher.ownProperties = true;
+        },
+        resetFetcher: (state) => {
+            state.fetcher.ownProperties = false;
+        },
+    },
     extraReducers(builder) {
         builder.addCase(addAllProperties.pending, (state) => {
             state.isLoading = true;
@@ -51,8 +78,27 @@ const propertiesSlice = createSlice({
             state.isLoading = false;
             state.error = action.error;
         });
+        builder.addCase(addOwnProperty.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(addOwnProperty.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = null;
+            state.data.ownProperties = action.payload;
+        });
+        builder.addCase(addOwnProperty.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
     },
 });
 
 export default propertiesSlice.reducer;
+export const {
+    clearOwnProperties,
+    fetchAllProperties,
+    fetchOwnProperties,
+    resetFetcher,
+    addOwnProperties,
+} = propertiesSlice.actions;
 export const selectedProperties = (state) => state.properties;
