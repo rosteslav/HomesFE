@@ -263,12 +263,45 @@ export const CreateProperty = () => {
                         </div>
                     </div>
                     <div>
+                        <label
+                            htmlFor='buildingType'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                        >
+                            Вид строителството
+                        </label>
+                        <div className='mt-2'>
+                            <input
+                                {...register('buildingType')}
+                                type='text'
+                                name='buildingType'
+                                value={values.buildingType}
+                                className='formInput'
+                                readOnly
+                            />
+                            {errors.buildingType && (
+                                <p className='text-red-500'>{errors.buildingType.message}</p>
+                            )}
+                        </div>
+                        <div
+                            id='buildingType'
+                            onClick={onSubmitContent}
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                toggleButtons === 'buildingType' ? '' : 'visibility: hidden'
+                            }`}
+                        >
+                            {propertyOptions.buildingType &&
+                                propertyOptions.buildingType.map((option) => (
+                                    <ButtonOptions key={option}>{option}</ButtonOptions>
+                                ))}
+                        </div>
+                    </div>
+                    <div>
                         <div className='flex items-center justify-between'>
                             <label
                                 htmlFor='numberOfRooms'
                                 className='block text-sm font-medium leading-6 text-gray-900'
                             >
-                                Брой стаи в имота
+                                Тип
                             </label>
                         </div>
                         <div className='mt-2'>
@@ -297,6 +330,7 @@ export const CreateProperty = () => {
                                 ))}
                         </div>
                     </div>
+
                     <div>
                         <label
                             htmlFor='space'
@@ -380,39 +414,6 @@ export const CreateProperty = () => {
                                     {errors.totalFloorsInBuilding.message}
                                 </p>
                             )}
-                        </div>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor='buildingType'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                        >
-                            Вид на строителството
-                        </label>
-                        <div className='mt-2'>
-                            <input
-                                {...register('buildingType')}
-                                type='text'
-                                name='buildingType'
-                                value={values.buildingType}
-                                className='formInput'
-                                readOnly
-                            />
-                            {errors.buildingType && (
-                                <p className='text-red-500'>{errors.buildingType.message}</p>
-                            )}
-                        </div>
-                        <div
-                            id='buildingType'
-                            onClick={onSubmitContent}
-                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
-                                toggleButtons === 'buildingType' ? '' : 'visibility: hidden'
-                            }`}
-                        >
-                            {propertyOptions.buildingType &&
-                                propertyOptions.buildingType.map((option) => (
-                                    <ButtonOptions key={option}>{option}</ButtonOptions>
-                                ))}
                         </div>
                     </div>
 
