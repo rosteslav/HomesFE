@@ -93,7 +93,10 @@ export const CreateProperty = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className={`${toggleForms === 'text' ? '' : 'visibility: hidden'}`}
             >
-                <div className='mx-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3'>
+                <div
+                    onClick={onToggleOptions}
+                    className='mx-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3'
+                >
                     <div>
                         <label
                             htmlFor='neighbourhood'
@@ -108,7 +111,6 @@ export const CreateProperty = () => {
                                 name='neighbourhood'
                                 value={values.neighbourhood}
                                 className='formInput'
-                                onClick={onToggleOptions}
                                 readOnly
                             />
                             {errors.neighbourhood && (
@@ -141,7 +143,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='finish'
                                 value={values.finish}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -175,7 +176,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='furnishment'
                                 value={values.furnishment}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -209,7 +209,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='garage'
                                 value={values.garage}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -243,7 +242,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='heating'
                                 value={values.heating}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -279,7 +277,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='numberOfRooms'
                                 value={values.numberOfRooms}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -398,7 +395,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='buildingType'
                                 value={values.buildingType}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
