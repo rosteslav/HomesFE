@@ -344,6 +344,8 @@ export const CreateProperty = () => {
                                 {...register('space')}
                                 type='number'
                                 name='space'
+                                min={20}
+                                max={300}
                                 value={values.space}
                                 onChange={onChangeHandler}
                                 className='formInput'
@@ -365,6 +367,8 @@ export const CreateProperty = () => {
                                 {...register('price')}
                                 type='number'
                                 name='price'
+                                min={0}
+                                max={5000000}
                                 value={values.price}
                                 onChange={onChangeHandler}
                                 className='formInput'
@@ -385,6 +389,8 @@ export const CreateProperty = () => {
                                 {...register('floor')}
                                 type='number'
                                 name='floor'
+                                min={1}
+                                max={20}
                                 value={values.floor}
                                 onChange={onChangeHandler}
                                 className='formInput'
@@ -405,6 +411,8 @@ export const CreateProperty = () => {
                                 {...register('totalFloorsInBuilding')}
                                 type='number'
                                 name='totalFloorsInBuilding'
+                                min={1}
+                                max={20}
                                 value={values.totalFloorsInBuilding}
                                 onChange={onChangeHandler}
                                 className='formInput'
