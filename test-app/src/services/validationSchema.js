@@ -16,28 +16,34 @@ const errors = {
         heating: 'Моля въведете начин на отопление на имота',
         neighbourhood: 'Моля въведете квартал в който се намира имота',
         // brokerId: 'Моля въведете информация за брокера',
-        numberOfRooms:'Моля въведете боря на стаите в имота',
-        space:'Моля въведете квадратурата на имота',
-        price:'Моля въведете цената на имота',
-        floor:'Моля въведете етажа на имота',
-        totalFloorsInBuilding:'Моля въведете броя етажи на сградата',
+        numberOfRooms: 'Моля въведете боря на стаите в имота',
+        space: 'Моля въведете квадратурата на имота',
+        price: 'Моля въведете цената на имота',
+        floor: 'Моля въведете етажа на имота',
+        totalFloorsInBuilding: 'Моля въведете броя етажи на сградата',
         description: 'Моля въведете описание на имота',
     },
     positive: {
-        numberOfRooms:'Моля въведете позитивно число',
-        space:'Моля въведете позитивно число',
-        price:'Моля въведете позитивно число',
-        floor:'Моля въведете позитивно число',
-        totalFloorsInBuilding:'Моля въведете позитивно число',
+        numberOfRooms: 'Моля въведете позитивно число',
+        space: 'Моля въведете позитивно число',
+        price: 'Моля въведете позитивно число',
+        floor: 'Моля въведете позитивно число',
+        totalFloorsInBuilding: 'Моля въведете позитивно число',
     },
     min: {
         password: 'Паролата трябва да е минимум 3 символа.',
-        description: 'Описанието на имота трябва да е минимум 10 символа'
+        description: 'Описанието на имота трябва да е минимум 10 символа',
     },
     oneOf: {
         password: 'Паролите не съвпадат.',
     },
-    
+    number: {
+        space: 'Големината на имота трябва да съдържа цифри',
+        price: 'Цената трябва да съдържа само цифри',
+        floor: 'Етаж трябва да съдържа само цифри',
+        totalFloorsInBuilding: 'Брой етажи трябва да съдържа само цифри',
+        all: 'Моля въведете номер',
+    },
 };
 
 export const validationLoginSchema = yup.object().shape({
@@ -72,11 +78,27 @@ export const validationRegisterAdminSchema = yup.object().shape({
 
 export const validationCreatePropertySchema = yup.object().shape({
     numberOfRooms: yup.string().required(errors.required.numberOfRooms),
-    space: yup.number().positive(errors.positive.space).required(errors.required.space),
+    space: yup
+        .number()
+        .typeError(errors.number.space)
+        .positive(errors.positive.space)
+        .required(errors.required.space),
     description: yup.string().min(10, errors.min.description).required(errors.required.description),
-    price: yup.number().positive(errors.positive.price).required(errors.required.price),
-    floor: yup.number().positive(errors.positive.floor).required(errors.required.floor),
-    totalFloorsInBuilding: yup.number().positive(errors.positive.totalFloorsInBuilding).required(errors.required.totalFloorsInBuilding),
+    price: yup
+        .number()
+        .typeError(errors.number.price)
+        .positive(errors.positive.price)
+        .required(errors.required.price),
+    floor: yup
+        .number()
+        .typeError(errors.number.floor)
+        .positive(errors.positive.floor)
+        .required(errors.required.floor),
+    totalFloorsInBuilding: yup
+        .number()
+        .typeError(errors.number.totalFloorsInBuilding)
+        .positive(errors.positive.totalFloorsInBuilding)
+        .required(errors.required.totalFloorsInBuilding),
     buildingType: yup.string().required(errors.required.buildingType),
     finish: yup.string().required(errors.required.finish),
     furnishment: yup.string().required(errors.required.furnishment),
