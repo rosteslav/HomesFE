@@ -6,14 +6,14 @@ const DetailsImages = ({ images }) => {
     useEffect(() => {
         if (images && images.length > 0) {
             setMainImage(images[0]);
+        } else {
+            setMainImage(['/src/assets/images/noImage.jpg']);
         }
     }, [images]);
 
     return (
         <div>
-            {images && images.length > 0 && (
-                <img src={mainImage} className='h-60 w-full  object-cover lg:h-96' />
-            )}
+            <img src={mainImage} className='h-60 w-full  object-cover lg:h-96' />
             <div className='mt-4 grid grid-cols-4 gap-4'>
                 {images &&
                     images.length > 0 &&
