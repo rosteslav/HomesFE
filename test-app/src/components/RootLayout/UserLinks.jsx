@@ -30,6 +30,7 @@ const UserLinks = ({ user }) => {
             <span className='text-1xl text-center font-bold leading-9 tracking-tight text-gray-900'>
                 Здравей, {user.claims.name}
             </span>
+            <img className='h-10 w-10 bg-white rounded-full mx-2' src="/src/assets/images/profile.svg" alt="" />
 
             <Link
                 to={'/'}

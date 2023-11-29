@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { getRandomImage } from '../../../mock/mock';
+// import { getRandomImage } from '../../../mock/mock';
 import { useSelectedProperties } from '../../../hooks/useProperties';
 import Loader from '../../../UI/Loader';
 import DetailsImages from './DetailsImages';
@@ -9,14 +9,6 @@ export const PropertiesDetails = () => {
     const { detailsId } = useParams();
 
     const { property, isLoading } = useSelectedProperties(detailsId);
-    const images = [
-        getRandomImage(),
-        getRandomImage(),
-        getRandomImage(),
-        getRandomImage(),
-        getRandomImage(),
-    ];
-    console.log(property);
 
     const pricePerSqm = property?.price / property?.space;
 
@@ -28,7 +20,7 @@ export const PropertiesDetails = () => {
                 <sup>2</sup>
             </h1>
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
-                <DetailsImages images={images} />
+                <DetailsImages images={property.images} />
                 <div className='text-xl'>
                     <div className='flex justify-between'>
                         <p className='font-semibold'>{property?.neighbourhood}</p>
@@ -38,13 +30,12 @@ export const PropertiesDetails = () => {
                     </div>
                     <div className='flex justify-between'>
                         <p>{property?.neighbourhood}</p>
-                        <p>
-                            {pricePerSqm && (
-                                <h2>
-                                    ({pricePerSqm.toFixed(3)} EUR/m<sup>2</sup>)
-                                </h2>
-                            )}
-                        </p>
+
+                        {pricePerSqm && (
+                            <h2>
+                                ({pricePerSqm.toFixed(3)} EUR/m<sup>2</sup>)
+                            </h2>
+                        )}
                     </div>
                     <p className='pt-4'>
                         <span className='font-bold'>Обзавеждане: </span>
@@ -70,6 +61,21 @@ export const PropertiesDetails = () => {
                         Допълнителна информация
                     </p>
                     <p>{property?.description}</p>
+                    <p className='border-b-2 border-black pt-4 font-bold'>Контакти</p>
+                    {property && property.contactInfo && (
+                        <>
+                            <p className='pt-1'>
+                                Име: {property.contactInfo?.firstName}{' '}
+                                {property.contactInfo?.lastName}
+                            </p>
+                            <p className='pt-1'>
+                                Телефонен номер: {property.contactInfo?.phoneNumber}
+                            </p>
+                            <a href={`mailto:${property?.contactInfo.email}`} className='pt-1'>
+                               Електронна поща: {property.contactInfo?.email}
+                            </a>
+                        </>
+                    )}
                 </div>
             </div>
         </section>
