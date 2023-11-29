@@ -33,6 +33,9 @@ const errors = {
     min: {
         password: 'Паролата трябва да е минимум 3 символа.',
         description: 'Описанието на имота трябва да е минимум 10 символа',
+        space: 'Големината на имота трябва да е минимум 20',
+        floor: 'Етажа трябва да е минимум 1',
+        totalFloorsInBuilding: 'Брой етажи трябва да е минимум 1',
     },
     oneOf: {
         password: 'Паролите не съвпадат.',
@@ -43,6 +46,16 @@ const errors = {
         floor: 'Етаж трябва да съдържа само цифри',
         totalFloorsInBuilding: 'Брой етажи трябва да съдържа само цифри',
         all: 'Моля въведете номер',
+    },
+    max: {
+        space: 'Максималната големина може да е 300',
+        price: 'Максималната цена е 5 000 000',
+        floor: 'Максималния етаж може да е 20',
+        totalFloorsInBuilding: 'Максималния етаж може да е 20',
+    },
+    integer: {
+        floor: 'Етажа трябва да е цяло число',
+        totalFloorsInBuilding: 'Етажа трябва да е цяло число',
     },
 };
 
@@ -82,23 +95,31 @@ export const validationCreatePropertySchema = yup.object().shape({
         .number()
         .typeError(errors.number.space)
         .positive(errors.positive.space)
-        .required(errors.required.space),
+        .required(errors.required.space)
+        .min(20, errors.min.space)
+        .max(300, errors.max.space),
     description: yup.string().min(10, errors.min.description).required(errors.required.description),
     price: yup
         .number()
         .typeError(errors.number.price)
         .positive(errors.positive.price)
-        .required(errors.required.price),
+        .required(errors.required.price)
+        .max(5000000, errors.max.price),
     floor: yup
         .number()
         .typeError(errors.number.floor)
+        .integer(errors.integer.floor)
         .positive(errors.positive.floor)
-        .required(errors.required.floor),
+        .required(errors.required.floor)
+        .min(1, errors.min.floor)
+        .max(20, errors.max.floor),
     totalFloorsInBuilding: yup
         .number()
         .typeError(errors.number.totalFloorsInBuilding)
-        .positive(errors.positive.totalFloorsInBuilding)
-        .required(errors.required.totalFloorsInBuilding),
+        .integer(errors.integer.totalFloorsInBuilding)
+        .required(errors.required.totalFloorsInBuilding)
+        .min(1, errors.min.totalFloorsInBuilding)
+        .max(20, errors.max.totalFloorsInBuilding),
     buildingType: yup.string().required(errors.required.buildingType),
     finish: yup.string().required(errors.required.finish),
     furnishment: yup.string().required(errors.required.furnishment),
