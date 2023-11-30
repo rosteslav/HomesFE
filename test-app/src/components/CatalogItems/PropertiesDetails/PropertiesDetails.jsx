@@ -16,7 +16,7 @@ export const PropertiesDetails = () => {
         <section className='m-4 mt-10'>
             {isLoading && <Loader />}
             <h1 className='text-3xl font-semibold'>
-                {property?.numberOfRooms}-стаен апартамент за продажба, {property?.space} m
+                {property?.numberOfRooms} апартамент за продажба, {property?.space} m
                 <sup>2</sup>
             </h1>
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
