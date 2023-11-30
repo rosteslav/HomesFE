@@ -24,13 +24,19 @@ const CardFooter = ({ property }) => {
                 <p>Отопление: {property?.heating}</p>
             </div>
             <p>Допълнителна информация: {property?.description}</p>
-            <p className='mt-1'>
-                Име: {property?.contactInfo.firstName} {property.contactInfo.lastName}
-            </p>
-            <div className='flex items-center justify-between italic'>
-                <p>{property?.contactInfo.phoneNumber}</p>
-                <a href={`mailto:${property?.contactInfo.email}`}>{property?.contactInfo.email}</a>
-            </div>
+            {property && property.contactInfo && (
+                <>
+                    <p className='mt-1'>
+                        Име: {property?.contactInfo.firstName} {property.contactInfo.lastName}
+                    </p>
+                    <div className='flex items-center justify-between italic'>
+                        <p>{property?.contactInfo.phoneNumber}</p>
+                        <a href={`mailto:${property?.contactInfo.email}`}>
+                            {property?.contactInfo.email}
+                        </a>
+                    </div>
+                </>
+            )}
         </>
     );
 };
