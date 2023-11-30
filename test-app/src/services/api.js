@@ -11,6 +11,7 @@ const endpoints = {
     login: `${hostAuth}/login`,
     register: `${hostAuth}/register`,
     adminRegister: `${hostAuth}/admin/register`,
+    getAllBrokersList: `${hostAuth}/AuthOptions/brokers`,
 
     // hostProperties
     getAllProperties: `${hostProperties}/properties/all`,
@@ -41,4 +42,5 @@ export const getAllPropertyOptions = async () => get(endpoints.getPropertyOption
 export const createProp = async (data) => post(endpoints.addProperty, data);
 export const removeItem = async (id) => del(endpoints.deleteItem + id);
 export const getSelectedProperty = async (id) => get(endpoints.getPropertyById + id);
-export const getOwnProperties = async () => get(endpoints.ownProperties)
+export const getOwnProperties = async () => get(endpoints.ownProperties);
+export const getAllBrokersList = async () => get(endpoints.getAllBrokersList);
