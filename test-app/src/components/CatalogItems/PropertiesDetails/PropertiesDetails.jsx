@@ -33,7 +33,7 @@ export const PropertiesDetails = () => {
 
                         {pricePerSqm && (
                             <h2>
-                                ({pricePerSqm.toFixed(3)} EUR/m<sup>2</sup>)
+                                ({pricePerSqm.toFixed(2)} EUR/m<sup>2</sup>)
                             </h2>
                         )}
                     </div>
