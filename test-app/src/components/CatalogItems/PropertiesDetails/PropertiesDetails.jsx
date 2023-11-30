@@ -22,9 +22,8 @@ export const PropertiesDetails = () => {
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
                 <DetailsImages images={property.images} />
                 <div className='text-xl'>
-                    <p className='font-bold text-2xl mb-4'>София</p>
                     <div className='flex justify-between'>
-                        <p className='font-semibold'>{property?.neighbourhood}</p>
+                        <p className='font-semibold'>София</p>
                         <p>
                             <span className='font-semibold'>{property?.price}</span> EUR
                         </p>
