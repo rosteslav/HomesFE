@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ImageScroll.css';
 
-const ImageScroll = ({ images, propertyId }) => {
+const ImageScroll = ({ images: img, propertyId }) => {
+    const [images, setImages] = useState([]);
     const [startIndex, setStartIndex] = useState();
     const [endIndex, setEndIndex] = useState();
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (img.length > 0) {
+            setImages(img);
+        } else {
+            setImages(['src/assets/images/noImage.jpg']);
+        }
+    }, [img]);
 
     const handleTouchStart = (e) => {
         setEndIndex('');
@@ -57,11 +66,13 @@ const ImageScroll = ({ images, propertyId }) => {
 
     return (
         <div
-            className='container relative h-64 w-full cursor-pointer overflow-hidden'
+            className={`container relative h-64 w-full ${
+                propertyId ? 'cursor-pointer' : ''
+            } overflow-hidden`}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            onClick={navigationHandler}
+            onClick={propertyId ? navigationHandler : undefined}
         >
             <div className='relative flex h-full overflow-hidden'>
                 <img
@@ -69,28 +80,38 @@ const ImageScroll = ({ images, propertyId }) => {
                     src={images[currentIndex]}
                     alt={`Image ${currentIndex + 1}`}
                 />
-                <div className='card-buttons action-buttons absolute flex h-full w-full items-center justify-between px-7'>
-                    <button onClick={handleOnClick} className='h-10 w-10 rounded-full bg-white'>
-                        &lt;
-                    </button>
-                    <button onClick={handleOnClick} className='h-10 w-10 rounded-full bg-white'>
-                        &gt;
-                    </button>
-                </div>
-
-                <div className='card-buttons absolute bottom-4 flex w-full justify-center'>
-                    {images.map((_, inx) => {
-                        return (
+                {images.length > 1 && (
+                    <>
+                        <div className='card-buttons action-buttons absolute flex h-full w-full items-center justify-between px-7'>
                             <button
-                                key={inx}
-                                onClick={() => setCurrentIndex(inx)}
-                                className={`m-1 h-4 w-4 cursor-pointer rounded-full  ${
-                                    currentIndex === inx ? 'bg-white' : 'bg-black'
-                                }`}
-                            ></button>
-                        );
-                    })}
-                </div>
+                                onClick={handleOnClick}
+                                className='h-10 w-10 rounded-full bg-white'
+                            >
+                                &lt;
+                            </button>
+                            <button
+                                onClick={handleOnClick}
+                                className='h-10 w-10 rounded-full bg-white'
+                            >
+                                &gt;
+                            </button>
+                        </div>
+
+                        <div className='card-buttons absolute bottom-4 flex w-full justify-center'>
+                            {images.map((_, inx) => {
+                                return (
+                                    <button
+                                        key={inx}
+                                        onClick={() => setCurrentIndex(inx)}
+                                        className={`m-1 h-4 w-4 cursor-pointer rounded-full  ${
+                                            currentIndex === inx ? 'bg-white' : 'bg-black'
+                                        }`}
+                                    ></button>
+                                );
+                            })}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

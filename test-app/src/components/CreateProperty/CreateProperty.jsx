@@ -6,23 +6,18 @@ import { validationCreatePropertySchema } from '../../services/validationSchema'
 import { ButtonPrimary } from '../../UI';
 import { createProperty } from '../../store/slices/properties/propertiesThunk';
 import useThunk from '../../hooks/use-thunk';
-import { getAllPropertyOptions } from '../../services/api';
+import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
+import { useDispatch } from 'react-redux';
+import { addOwnProperties } from '../../store/slices/properties/propertiesSlice';
 
 export const CreateProperty = () => {
     const [propertyOptions, setPropertyOptions] = useState([]);
+    const [brokersList, setBrokersList] = useState([]);
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
-
-    useEffect(() => {
-        const fetchOptions = async () => {
-            const options = await getAllPropertyOptions();
-            setPropertyOptions(options);
-        };
-        fetchOptions();
-    }, []);
-
+    const dispatch = useDispatch();
     const [values, setValues] = useState({
         numberOfRooms: '',
         space: '',
@@ -37,6 +32,23 @@ export const CreateProperty = () => {
         heating: '',
         neighbourhood: '',
     });
+    const [brokerValues, setBrokerValues] = useState({
+        content: '',
+        id: null,
+    });
+
+    useEffect(() => {
+        const fetchOptions = async () => {
+            const options = await getAllPropertyOptions();
+            const brokers = await getAllBrokersList();
+            setPropertyOptions(options);
+            setBrokersList(brokers);
+        };
+        fetchOptions();
+    }, []);
+
+    // console.log(values);
+
     const [onCreateProperty, isLoading, response] = useThunk(createProperty);
 
     useEffect(() => {
@@ -55,7 +67,13 @@ export const CreateProperty = () => {
     });
 
     const onSubmit = async (formData) => {
-        onCreateProperty(formData);
+        const date = new Date();
+        formData.createdOnLocalTime = date.toISOString();
+        formData.images = [];
+        formData.brokerId = brokerValues.id
+        console.log(formData)
+        // onCreateProperty(formData);
+        dispatch(addOwnProperties({ ...formData, ...response }));
     };
 
     const onChangeHandler = (e) => {
@@ -76,6 +94,14 @@ export const CreateProperty = () => {
         }
     };
 
+    const onSubmitBrokerContent = (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const dataId = e.target.getAttribute('data-info');
+            const content = e.target.textContent;
+            setBrokerValues({content: content, id: dataId})
+            setValue(e.target.parentElement.id, content);
+        }
+    };
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -86,7 +112,10 @@ export const CreateProperty = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className={`${toggleForms === 'text' ? '' : 'visibility: hidden'}`}
             >
-                <div className='mx-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3'>
+                <div
+                    onClick={onToggleOptions}
+                    className='mx-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3'
+                >
                     <div>
                         <label
                             htmlFor='neighbourhood'
@@ -101,7 +130,6 @@ export const CreateProperty = () => {
                                 name='neighbourhood'
                                 value={values.neighbourhood}
                                 className='formInput'
-                                onClick={onToggleOptions}
                                 readOnly
                             />
                             {errors.neighbourhood && (
@@ -134,7 +162,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='finish'
                                 value={values.finish}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -168,7 +195,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='furnishment'
                                 value={values.furnishment}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -202,7 +228,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='garage'
                                 value={values.garage}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -236,7 +261,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='heating'
                                 value={values.heating}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -258,120 +282,11 @@ export const CreateProperty = () => {
                         </div>
                     </div>
                     <div>
-                        <div className='flex items-center justify-between'>
-                            <label
-                                htmlFor='numberOfRooms'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Брой стаи в имота
-                            </label>
-                        </div>
-                        <div className='mt-2'>
-                            <input
-                                {...register('numberOfRooms')}
-                                id='numberOfRooms'
-                                type='number'
-                                name='numberOfRooms'
-                                value={values.numberOfRooms}
-                                onChange={onChangeHandler}
-                                className='formInput'
-                            />
-                            {errors.numberOfRooms && (
-                                <p className='text-red-500'>{errors.numberOfRooms.message}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor='space'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                        >
-                            Големина на имота
-                        </label>
-                        <div className='mt-2'>
-                            <input
-                                id='space'
-                                {...register('space')}
-                                type='number'
-                                name='space'
-                                value={values.space}
-                                onChange={onChangeHandler}
-                                className='formInput'
-                            />
-                            {errors.space && <p className='text-red-500'>{errors.space.message}</p>}
-                        </div>
-                    </div>
-                   
-                    <div>
-                        <label
-                            htmlFor='price'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                        >
-                            Цена на имота
-                        </label>
-                        <div className='mt-2'>
-                            <input
-                                id='price'
-                                {...register('price')}
-                                type='number'
-                                name='price'
-                                value={values.price}
-                                onChange={onChangeHandler}
-                                className='formInput'
-                            />
-                            {errors.price && <p className='text-red-500'>{errors.price.message}</p>}
-                        </div>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor='floor'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                        >
-                            Етаж на имота
-                        </label>
-                        <div className='mt-2'>
-                            <input
-                                id='floor'
-                                {...register('floor')}
-                                type='number'
-                                name='floor'
-                                value={values.floor}
-                                onChange={onChangeHandler}
-                                className='formInput'
-                            />
-                            {errors.floor && <p className='text-red-500'>{errors.floor.message}</p>}
-                        </div>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor='totalFloorsInBuilding'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                        >
-                            Общо етажи в сградата
-                        </label>
-                        <div className='mt-2'>
-                            <input
-                                id='totalFloorsInBuilding'
-                                {...register('totalFloorsInBuilding')}
-                                type='number'
-                                name='totalFloorsInBuilding'
-                                value={values.totalFloorsInBuilding}
-                                onChange={onChangeHandler}
-                                className='formInput'
-                            />
-                            {errors.totalFloorsInBuilding && (
-                                <p className='text-red-500'>
-                                    {errors.totalFloorsInBuilding.message}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                    <div>
                         <label
                             htmlFor='buildingType'
                             className='block text-sm font-medium leading-6 text-gray-900'
                         >
-                            Вид на строителството
+                            Вид строителството
                         </label>
                         <div className='mt-2'>
                             <input
@@ -379,7 +294,6 @@ export const CreateProperty = () => {
                                 type='text'
                                 name='buildingType'
                                 value={values.buildingType}
-                                onClick={onToggleOptions}
                                 className='formInput'
                                 readOnly
                             />
@@ -400,7 +314,183 @@ export const CreateProperty = () => {
                                 ))}
                         </div>
                     </div>
-                    
+                    <div>
+                        <div className='flex items-center justify-between'>
+                            <label
+                                htmlFor='numberOfRooms'
+                                className='block text-sm font-medium leading-6 text-gray-900'
+                            >
+                                Тип
+                            </label>
+                        </div>
+                        <div className='mt-2'>
+                            <input
+                                {...register('numberOfRooms')}
+                                type='text'
+                                name='numberOfRooms'
+                                value={values.numberOfRooms}
+                                className='formInput'
+                                readOnly
+                            />
+                            {errors.numberOfRooms && (
+                                <p className='text-red-500'>{errors.numberOfRooms.message}</p>
+                            )}
+                        </div>
+                        <div
+                            id='numberOfRooms'
+                            onClick={onSubmitContent}
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                toggleButtons === 'numberOfRooms' ? '' : 'visibility: hidden'
+                            }`}
+                        >
+                            {propertyOptions.numberOfRooms &&
+                                propertyOptions.numberOfRooms.map((option) => (
+                                    <ButtonOptions key={option}>{option}</ButtonOptions>
+                                ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            htmlFor='space'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                        >
+                            Големина на имота
+                        </label>
+                        <div className='mt-2'>
+                            <input
+                                id='space'
+                                {...register('space')}
+                                type='number'
+                                name='space'
+                                min={20}
+                                max={300}
+                                value={values.space}
+                                onChange={onChangeHandler}
+                                className='formInput'
+                            />
+                            {errors.space && <p className='text-red-500'>{errors.space.message}</p>}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            htmlFor='price'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                        >
+                            Цена на имота
+                        </label>
+                        <div className='mt-2'>
+                            <input
+                                id='price'
+                                {...register('price')}
+                                type='number'
+                                name='price'
+                                min={0}
+                                max={5000000}
+                                value={values.price}
+                                onChange={onChangeHandler}
+                                className='formInput'
+                            />
+                            {errors.price && <p className='text-red-500'>{errors.price.message}</p>}
+                        </div>
+                    </div>
+                    <div>
+                        <div className='flex items-center justify-between'>
+                            <label
+                                htmlFor='brokerId'
+                                className='block text-sm font-medium leading-6 text-gray-900'
+                            >
+                                Брокери
+                            </label>
+                        </div>
+                        <div className='mt-2'>
+                            <input
+                                {...register('brokerId')}
+                                type='text'
+                                name='brokerId'
+                                value={brokerValues.content}
+                                className='formInput'
+                                readOnly
+                            />
+                            {/* {errors.brokers && (
+                                <p className='text-red-500'>{errors.numberOfRooms.message}</p>
+                            )} */}
+                        </div>
+                        <div
+                            id='brokerId'
+                            onClick={onSubmitBrokerContent}
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                toggleButtons === 'brokerId' ? '' : 'visibility: hidden'
+                            }`}
+                        >
+                            {brokersList && (
+                                <>
+                                    <button type='button' className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'>
+                                        Без брокер
+                                    </button>
+                                    {brokersList.map((option) => (
+                                        <ButtonOptions key={option.id} dataInfo={option.id}>
+                                            {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
+                                        </ButtonOptions>
+                                    ))}
+                                </>
+                            )}
+                        </div>
+                    </div>
+                    <div className='flex gap-4'>
+                        <div className='flex-1'>
+                            <label
+                                htmlFor='floor'
+                                className='block text-sm font-medium leading-6 text-gray-900'
+                            >
+                                Етаж на имота
+                            </label>
+                            <div className='mt-2'>
+                                <input
+                                    id='floor'
+                                    {...register('floor')}
+                                    type='number'
+                                    name='floor'
+                                    min={1}
+                                    max={20}
+                                    value={values.floor}
+                                    onChange={onChangeHandler}
+                                    className='formInput'
+                                />
+                                {errors.floor && (
+                                    <p className='text-red-500'>{errors.floor.message}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className='flex-1'>
+                            <label
+                                htmlFor='totalFloorsInBuilding'
+                                className='block text-sm font-medium leading-6 text-gray-900'
+                            >
+                                Общо етажи в сградата
+                            </label>
+                            <div className='mt-2'>
+                                <input
+                                    id='totalFloorsInBuilding'
+                                    {...register('totalFloorsInBuilding')}
+                                    type='number'
+                                    name='totalFloorsInBuilding'
+                                    min={1}
+                                    max={20}
+                                    value={values.totalFloorsInBuilding}
+                                    onChange={onChangeHandler}
+                                    className='formInput'
+                                />
+                                {errors.totalFloorsInBuilding && (
+                                    <p className='text-red-500'>
+                                        {errors.totalFloorsInBuilding.message}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <label
                             htmlFor='description'
