@@ -26,8 +26,9 @@ const endpoints = {
     postAdminProperties: `${hostAdmins}/admins/properties`,
 
     // hostImages
-    image: `${hostImages}/image`,
+    postImage: `${hostImages}/Image?propertyId=`,
     deleteImage: `${hostImages}/`, // :id
+    getAllImages: `${hostImages}/`, // :id
 };
 
 // AUTH FETCH
@@ -44,3 +45,8 @@ export const removeItem = async (id) => del(endpoints.deleteItem + id);
 export const getSelectedProperty = async (id) => get(endpoints.getPropertyById + id);
 export const getOwnProperties = async () => get(endpoints.ownProperties);
 export const getAllBrokersList = async () => get(endpoints.getAllBrokersList);
+
+// IMAGE FETCH
+export const uploadImg = async(id, data, file) => post(endpoints.postImage + id, data, file);
+export const delImg = async(id) => del(endpoints.deleteImage + id);
+export const getAllImg = async(id) => get(endpoints.getAllImages + id);

@@ -21,7 +21,7 @@ const request = async (url, options) => {
     }
 };
 
-function createOptions(method = 'get', data) {
+function createOptions(method = 'get', data, file) {
     const options = {
         method,
         headers: {},
@@ -30,6 +30,11 @@ function createOptions(method = 'get', data) {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
     }
+    
+    if (file !== undefined) {
+        options.body = file;
+    }
+
     const userData = JSON.parse(localStorage.getItem('authToken'));
     if (userData != null) {
         options.headers['Authorization'] = `Bearer ${userData.token.token}`;
@@ -40,8 +45,8 @@ function createOptions(method = 'get', data) {
 export const get = async (url) => {
     return request(url, createOptions());
 };
-export const post = async (url, data) => {
-    return request(url, createOptions('post', data));
+export const post = async (url, data, file) => {
+    return request(url, createOptions('post', data, file));
 };
 
 export const del = async (url) => {

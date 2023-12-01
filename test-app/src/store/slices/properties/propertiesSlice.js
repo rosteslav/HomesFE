@@ -4,6 +4,7 @@ import {
     addOwnProperty,
     addSelectedProperty,
     createProperty,
+    uploadImage,
 } from './propertiesThunk';
 
 const initialState = {
@@ -87,6 +88,17 @@ const propertiesSlice = createSlice({
             state.data.ownProperties = action.payload;
         });
         builder.addCase(addOwnProperty.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+        builder.addCase(uploadImage.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(uploadImage.fulfilled, (state) => {
+            state.isLoading = false;
+            state.error = null;
+        });
+        builder.addCase(uploadImage.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         });
