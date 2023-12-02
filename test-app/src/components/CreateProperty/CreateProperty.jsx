@@ -10,7 +10,7 @@ import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
 import { useDispatch } from 'react-redux';
-import { addOwnProperties } from '../../store/slices/properties/propertiesSlice';
+import { addOwnProperties, addProperty } from '../../store/slices/properties/propertiesSlice';
 import { AddImages } from './AddImages';
 
 export const CreateProperty = () => {
@@ -64,15 +64,15 @@ export const CreateProperty = () => {
     } = useForm({
         resolver: yupResolver(validationCreatePropertySchema),
     });
-
+    // addOwnProperty
     const onSubmit = async (formData) => {
         const date = new Date();
         formData.createdOnLocalTime = date.toISOString();
         formData.images = [];
         formData.brokerId = brokerValues.id;
         formData.exposure = null;
-        console.log(formData);
         onCreateProperty(formData);
+        dispatch(addProperty({...formData, ...responseId}));
         dispatch(addOwnProperties({ ...formData, ...responseId }));
     };
 

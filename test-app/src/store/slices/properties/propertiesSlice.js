@@ -26,6 +26,9 @@ const propertiesSlice = createSlice({
     name: 'properties',
     initialState,
     reducers: {
+        addProperty: (state, action) => {
+            state.data.all.push(action.payload);
+        },
         clearOwnProperties: (state) => {
             state.data.ownProperties = [];
         },
@@ -43,12 +46,19 @@ const propertiesSlice = createSlice({
         },
         addImageOwnProperties: (state, action) => {
             const lastProp = state.data.ownProperties.length - 1;
-            console.log(lastProp);
             state.data.ownProperties[lastProp].images.push(action.payload.imageUrl);
+        },
+        addImageAllProperties: (state, action) => {
+            const lastProp = state.data.all.length - 1;
+            state.data.all[lastProp].images.push(action.payload.imageUrl);
         },
         delImageOwnProperties: (state, action) => {
             const lastProp = state.data.ownProperties.length - 1;
             state.data.ownProperties[lastProp].images = action.payload.filter((i) => i !== 'del') || [];
+        },
+        delImageAllProperties: (state, action) => {
+            const lastProp = state.data.all.length - 1;
+            state.data.all[lastProp].images = action.payload.filter((i) => i !== 'del') || [];
         }
     },
     extraReducers(builder) {
@@ -68,10 +78,9 @@ const propertiesSlice = createSlice({
         builder.addCase(createProperty.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(createProperty.fulfilled, (state, action) => {
+        builder.addCase(createProperty.fulfilled, (state) => {
             state.isLoading = false;
             state.error = null;
-            state.data.all.push(action.payload);
         });
         builder.addCase(createProperty.rejected, (state, action) => {
             state.isLoading = false;
@@ -92,10 +101,9 @@ const propertiesSlice = createSlice({
         builder.addCase(addOwnProperty.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(addOwnProperty.fulfilled, (state, action) => {
+        builder.addCase(addOwnProperty.fulfilled, (state) => {
             state.isLoading = false;
             state.error = null;
-            state.data.ownProperties = action.payload;
         });
         builder.addCase(addOwnProperty.rejected, (state, action) => {
             state.isLoading = false;
@@ -132,8 +140,11 @@ export const {
     fetchAllProperties,
     fetchOwnProperties,
     resetFetcher,
+    addProperty,
     addOwnProperties,
     addImageOwnProperties,
-    delImageOwnProperties
+    delImageOwnProperties,
+    addImageAllProperties,
+    delImageAllProperties
 } = propertiesSlice.actions;
 export const selectedProperties = (state) => state.properties;
