@@ -526,6 +526,7 @@ export const CreateProperty = () => {
                 responseId={responseId}
                 setToggleForms={setToggleForms}
                 toggleForms={toggleForms}
+                setValues={setValues}
             />
         </>
     );

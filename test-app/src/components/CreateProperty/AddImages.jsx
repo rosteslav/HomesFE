@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-// import { post } from '../../services/requester';
-import { uploadImage } from '../../store/slices/properties/propertiesThunk';
+import { deleteImage, uploadImage } from '../../store/slices/properties/propertiesThunk';
 import useThunk from '../../hooks/use-thunk';
-// import Loader from '../../UI/Loader';
-//{ responseId }
-export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
-    // const userData = JSON.parse(localStorage.getItem('authToken'));
+import { useDispatch } from 'react-redux';
+import { addImageOwnProperties, delImageOwnProperties } from '../../store/slices/properties/propertiesSlice';
+
+export const AddImages = ({ responseId, setToggleForms, toggleForms, setValues }) => {
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
+    const [uploadedImages, setUploadedImages] = useState([]);
     // const navigate = useNavigate();
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
+    const dispatch = useDispatch();
 
-    // const [uploadedImages, setUploadedImages] = useState([]);
 
     const [onUploadImage, isLoading, response] = useThunk(uploadImage);
+    const [onDeleteImage] = useThunk(deleteImage);
     useEffect(() => {
-        console.log(response);
-    }, [response]);
+        if(response !== null) {
+            dispatch(addImageOwnProperties(response));
+            setUploadedImages(state => ([...state, response]));
+            console.log(response);
+        }
+    }, [response, dispatch]);
 
     const handleImageChange = (e, id) => {
         console.log(imageInputs);
@@ -36,12 +40,21 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
             return;
         }
 
+        imageInputs.forEach((input) => {
+            if (input.id === id) {
+                const formData = new FormData();
+                formData.append('image', e.target.files[0]);
+                onUploadImage({responseId: responseId.id, undefined, formData});
+                console.log(uploadedImages);
+            }
+        });
+
         const updatedInputs = imageInputs.map((input) => {
             if (input.id === id) {
-                console.log(input);
-
+                
                 const formData = new FormData();
-                formData.set('image', e.target.files[0]);
+                formData.append('image', e.target.files[0]);
+                    
                 return { ...input, file: e.target.files[0] };
             }
             return input;
@@ -51,35 +64,40 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
 
     const handleAddImageInput = () => {
         const newId = imageInputs.length + 1;
+        console.log(newId);
         setImageInputs([...imageInputs, { id: newId, file: null }]);
     };
 
     const handleRemoveImageInput = (id) => {
         const updatedInputs = imageInputs.filter((input) => input.id !== id);
+        const filterArrayUpload = [...uploadedImages];
+        
+        const delEL = filterArrayUpload.splice(id - 1, 1, {...filterArrayUpload[id - 1], imageUrl: 'del'});
+        const delId = delEL[0].id;
+        onDeleteImage(delId);
+
+        setUploadedImages(filterArrayUpload);
         setImageInputs(updatedInputs);
+        dispatch(delImageOwnProperties(filterArrayUpload.map((i) => i.imageUrl)));
     };
 
     const handleSubmitImage = async (e) => {
         e.preventDefault();
-        try {
-            imageInputs.forEach(async (i) => {
-                const formData = new FormData();
-                if (i.file) {
-                    console.log(i.file);
-                    formData.append('image', i.file);
-                    const res = await onUploadImage({responseId: responseId.id, undefined, formData});
-                    // const res = await post(
-                    //     `http://localhost:5223/Image?propertyId=${responseId.id}`,
-                    //     undefined,
-                    //     formData
-                    // );
-                    console.log(res);
-                }
-            });
-        } catch (err) {
-            console.log(`ERROR catch ${err.message}`);
-        }
         setToggleForms('text');
+        setValues({
+            numberOfRooms: '',
+            space: '',
+            description: '',
+            price: '',
+            floor: '',
+            totalFloorsInBuilding: '',
+            buildingType: '',
+            finish: '',
+            furnishment: '',
+            garage: '',
+            heating: '',
+            neighbourhood: '',
+        });
         // navigate('/');
     };
     return (

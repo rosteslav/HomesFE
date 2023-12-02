@@ -27,7 +27,7 @@ const endpoints = {
 
     // hostImages
     postImage: `${hostImages}/Image?propertyId=`,
-    deleteImage: `${hostImages}/`, // :id
+    deleteImage: `${hostImages}/Image/`, // :id
     getAllImages: `${hostImages}/`, // :id
 };
 

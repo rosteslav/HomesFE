@@ -4,6 +4,7 @@ import {
     addOwnProperty,
     addSelectedProperty,
     createProperty,
+    deleteImage,
     uploadImage,
 } from './propertiesThunk';
 
@@ -40,6 +41,15 @@ const propertiesSlice = createSlice({
         resetFetcher: (state) => {
             state.fetcher.ownProperties = false;
         },
+        addImageOwnProperties: (state, action) => {
+            const lastProp = state.data.ownProperties.length - 1;
+            console.log(lastProp);
+            state.data.ownProperties[lastProp].images.push(action.payload.imageUrl);
+        },
+        delImageOwnProperties: (state, action) => {
+            const lastProp = state.data.ownProperties.length - 1;
+            state.data.ownProperties[lastProp].images = action.payload.filter((i) => i !== 'del') || [];
+        }
     },
     extraReducers(builder) {
         builder.addCase(addAllProperties.pending, (state) => {
@@ -102,6 +112,17 @@ const propertiesSlice = createSlice({
             state.isLoading = false;
             state.error = action.error;
         });
+        builder.addCase(deleteImage.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(deleteImage.fulfilled, (state) => {
+            state.isLoading = false;
+            state.error = null;
+        });
+        builder.addCase(deleteImage.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
     },
 });
 
@@ -112,5 +133,7 @@ export const {
     fetchOwnProperties,
     resetFetcher,
     addOwnProperties,
+    addImageOwnProperties,
+    delImageOwnProperties
 } = propertiesSlice.actions;
 export const selectedProperties = (state) => state.properties;
