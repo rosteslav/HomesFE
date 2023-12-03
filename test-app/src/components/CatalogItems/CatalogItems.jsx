@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Loader from '../../UI/Loader';
 import { CatalogItem } from './CatalogItem/CatalogItem';
@@ -10,11 +10,15 @@ import {
     fetchAllProperties,
     fetchOwnProperties,
 } from '../../store/slices/properties/propertiesSlice';
-import { useFetchAllPropertiesQuery } from '../../services/propertiesApi';
-
+import {
+    useFetchAllPropertiesQuery,
+    useFetchOwnPropertiesQuery,
+} from '../../services/propertiesApi';
 
 export const CatalogItems = () => {
+    const [skip, setSkip] = useState(true);
     const { data: properties } = useFetchAllPropertiesQuery();
+    const { data: clientProperties } = useFetchOwnPropertiesQuery(undefined, { skip });
     // const properties = useSelector((state) => state.properties.data.all);
     const ownProp = useSelector((state) => state.properties.data.ownProperties);
     const fetcher = useSelector((state) => state.properties.fetcher);
@@ -23,6 +27,12 @@ export const CatalogItems = () => {
     const dispatch = useDispatch();
     const role = useSelector((state) => state.auth.data.claims?.roles);
     const ownPropertiesRef = useRef(ownProp);
+
+    useEffect(() => {
+        if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
+            setSkip(false);
+        }
+    }, [role]);
 
     useEffect(() => {
         if (!fetcher.all) {
@@ -46,7 +56,7 @@ export const CatalogItems = () => {
         <section>
             {isLoading && <Loader />}
 
-            {ownPropertiesRef.current.length > 0 && (
+            {clientProperties && clientProperties.length > 0 && (
                 <>
                     <h2 className='mt-4 text-center text-2xl font-semibold'>Вашите Обяви</h2>
                     <div className='mx-10 mt-4 grid gap-10 border-b-2 border-black pb-10 md:grid-cols-2 lg:grid-cols-3'>
@@ -61,10 +71,7 @@ export const CatalogItems = () => {
                     <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
                     <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                         {properties.map((i) => (
-                            <CatalogItem
-                                key={i.id}
-                                property={i}
-                            />
+                            <CatalogItem key={i.id} property={i} />
                         ))}
                     </div>
                 </>
