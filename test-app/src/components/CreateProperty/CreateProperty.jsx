@@ -4,20 +4,18 @@ import { useEffect, useState } from 'react';
 
 import { validationCreatePropertySchema } from '../../services/validationSchema';
 import { ButtonPrimary } from '../../UI';
-import { createProperty } from '../../store/slices/properties/propertiesThunk';
-import useThunk from '../../hooks/use-thunk';
 import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
-import { useDispatch } from 'react-redux';
-import { addOwnProperties } from '../../store/slices/properties/propertiesSlice';
+import { useAddPropertyInfoMutation } from '../../services/propertiesApi';
 
 export const CreateProperty = () => {
+    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
+        useAddPropertyInfoMutation();
     const [propertyOptions, setPropertyOptions] = useState([]);
     const [brokersList, setBrokersList] = useState([]);
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
-    const dispatch = useDispatch();
     const [values, setValues] = useState({
         numberOfRooms: '',
         space: '',
@@ -47,16 +45,11 @@ export const CreateProperty = () => {
         fetchOptions();
     }, []);
 
-    // console.log(values);
-
-    const [onCreateProperty, isLoading, response] = useThunk(createProperty);
-
     useEffect(() => {
-        if (response != null) {
+        if (isSuccess) {
             setToggleForms('images');
-            console.log(response);
         }
-    }, [response]);
+    }, [isSuccess]);
     const {
         register,
         handleSubmit,
@@ -70,10 +63,10 @@ export const CreateProperty = () => {
         const date = new Date();
         formData.createdOnLocalTime = date.toISOString();
         formData.images = [];
-        formData.brokerId = brokerValues.id
-        console.log(formData)
-        // onCreateProperty(formData);
-        dispatch(addOwnProperties({ ...formData, ...response }));
+        formData.brokerId = brokerValues.id;
+        // temporary there is not input field for exposure
+        formData.exposure = null;
+        addPropertyInfo(formData);
     };
 
     const onChangeHandler = (e) => {
@@ -98,7 +91,7 @@ export const CreateProperty = () => {
         if (e.target.tagName === 'BUTTON') {
             const dataId = e.target.getAttribute('data-info');
             const content = e.target.textContent;
-            setBrokerValues({content: content, id: dataId})
+            setBrokerValues({ content: content, id: dataId });
             setValue(e.target.parentElement.id, content);
         }
     };
@@ -426,7 +419,10 @@ export const CreateProperty = () => {
                         >
                             {brokersList && (
                                 <>
-                                    <button type='button' className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'>
+                                    <button
+                                        type='button'
+                                        className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+                                    >
                                         Без брокер
                                     </button>
                                     {brokersList.map((option) => (
