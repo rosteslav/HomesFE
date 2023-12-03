@@ -8,6 +8,7 @@ import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
 import { useAddPropertyInfoMutation } from '../../services/propertiesApi';
+import { AddImages } from './AddImages';
 
 export const CreateProperty = () => {
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
@@ -514,6 +515,11 @@ export const CreateProperty = () => {
                     <ButtonPrimary>Напред</ButtonPrimary>
                 </div>
             </form>
+            <AddImages
+                responseId={addPropertyInfoResult}
+                setToggleForms={setToggleForms}
+                toggleForms={toggleForms}
+            />
         </>
     );
 };
