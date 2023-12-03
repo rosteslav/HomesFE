@@ -24,5 +24,5 @@ const propertiesApi = createApi({
     },
 });
 
-export const { useFetchAllPropertiesQuery } = propertiesApi;
+export const { useFetchAllPropertiesQuery, useFetchOwnPropertiesQuery } = propertiesApi;
 export { propertiesApi };
