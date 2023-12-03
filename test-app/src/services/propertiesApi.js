@@ -20,9 +20,40 @@ const propertiesApi = createApi({
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
             }),
+            addPropertyInfo: builder.mutation({
+                query: (formData) => {
+                    return {
+                        url: '/properties',
+                        method: 'POST',
+                        body: formData,
+                    };
+                },
+                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                    try {
+                        const { data: id } = await queryFulfilled;
+                        data.id = id.id;
+
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchOwnProperties',
+                                undefined,
+                                (draftData) => {
+                                    draftData?.push(data);
+                                }
+                            )
+                        );
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+            }),
         };
     },
 });
 
-export const { useFetchAllPropertiesQuery, useFetchOwnPropertiesQuery } = propertiesApi;
+export const {
+    useFetchAllPropertiesQuery,
+    useFetchOwnPropertiesQuery,
+    useAddPropertyInfoMutation,
+} = propertiesApi;
 export { propertiesApi };
