@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const imagesApi = createApi({
     reducerPath: 'imagesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5221',
+        baseUrl: 'http://localhost:5223',
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().auth.data.token?.token;
             if (token) {
