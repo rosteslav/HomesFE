@@ -17,6 +17,9 @@ const propertiesApi = createApi({
             fetchAllProperties: builder.query({
                 query: () => ({ url: '/properties/all' }),
             }),
+            fetchOwnProperties: builder.query({
+                query: () => ({ url: '/properties' }),
+            }),
         };
     },
 });
