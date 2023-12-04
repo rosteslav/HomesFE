@@ -14,7 +14,7 @@ export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
     const { data: properties, isLoading } = useFetchAllPropertiesQuery();
     const { data: clientProperties } = useFetchOwnPropertiesQuery(undefined, { skip });
-    const role = useSelector((state) => state.auth.data.claims?.roles);
+    const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     useEffect(() => {
         if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
