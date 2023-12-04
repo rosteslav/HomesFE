@@ -5,7 +5,7 @@ const propertiesApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5221',
         prepareHeaders: async (headers, { getState }) => {
-            const token = await getState().auth.data.token?.token;
+            const token = await getState().authUser.data?.token?.token;
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }
