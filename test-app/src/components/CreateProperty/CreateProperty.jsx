@@ -4,16 +4,19 @@ import { useEffect, useState } from 'react';
 
 import { validationCreatePropertySchema } from '../../services/validationSchema';
 import { ButtonPrimary } from '../../UI';
-import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
+import { getAllBrokersList } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
-import { useAddPropertyInfoMutation } from '../../services/propertiesApi';
+import {
+    useAddPropertyInfoMutation,
+    useFetchPropertyOptionsQuery,
+} from '../../services/propertiesApi';
 import { AddImages } from './AddImages';
 
 export const CreateProperty = () => {
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
-    const [propertyOptions, setPropertyOptions] = useState([]);
+    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
     const [brokersList, setBrokersList] = useState([]);
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
@@ -38,9 +41,7 @@ export const CreateProperty = () => {
 
     useEffect(() => {
         const fetchOptions = async () => {
-            const options = await getAllPropertyOptions();
             const brokers = await getAllBrokersList();
-            setPropertyOptions(options);
             setBrokersList(brokers);
         };
         fetchOptions();
@@ -137,7 +138,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'neighbourhood' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.neighbourhood &&
+                            {propertyOptions && propertyOptions.neighbourhood &&
                                 propertyOptions.neighbourhood.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -170,7 +171,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'finish' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.finish &&
+                            {propertyOptions && propertyOptions.finish &&
                                 propertyOptions.finish.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -203,7 +204,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'furnishment' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.furnishment &&
+                            {propertyOptions && propertyOptions.furnishment &&
                                 propertyOptions.furnishment.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -236,7 +237,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'garage' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.garage &&
+                            {propertyOptions && propertyOptions.garage &&
                                 propertyOptions.garage.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -269,7 +270,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'heating' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.heating &&
+                            {propertyOptions && propertyOptions.heating &&
                                 propertyOptions.heating.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -302,7 +303,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'buildingType' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.buildingType &&
+                            {propertyOptions && propertyOptions.buildingType &&
                                 propertyOptions.buildingType.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -337,7 +338,7 @@ export const CreateProperty = () => {
                                 toggleButtons === 'numberOfRooms' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.numberOfRooms &&
+                            {propertyOptions && propertyOptions.numberOfRooms &&
                                 propertyOptions.numberOfRooms.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
