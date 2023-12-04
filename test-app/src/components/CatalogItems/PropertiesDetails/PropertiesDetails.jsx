@@ -1,14 +1,12 @@
 import { useParams } from 'react-router-dom';
 
-// import { getRandomImage } from '../../../mock/mock';
-import { useSelectedProperties } from '../../../hooks/useProperties';
 import Loader from '../../../UI/Loader';
 import DetailsImages from './DetailsImages';
+import { useFetchPropertyByIdQuery } from '../../../services/propertiesApi';
 
 export const PropertiesDetails = () => {
     const { detailsId } = useParams();
-
-    const { property, isLoading } = useSelectedProperties(detailsId);
+    const { data: property, isLoading } = useFetchPropertyByIdQuery(detailsId);
 
     const pricePerSqm = property?.price / property?.space;
 
@@ -16,11 +14,10 @@ export const PropertiesDetails = () => {
         <section className='m-4 mt-10'>
             {isLoading && <Loader />}
             <h1 className='text-3xl font-semibold'>
-                {property?.numberOfRooms} апартамент за продажба, {property?.space} m
-                <sup>2</sup>
+                {property?.numberOfRooms} апартамент за продажба, {property?.space} m<sup>2</sup>
             </h1>
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
-                <DetailsImages images={property.images} />
+                <DetailsImages images={property?.images} isLoading={isLoading} />
                 <div className='text-xl'>
                     <div className='flex justify-between'>
                         <p className='font-semibold'>София</p>
@@ -72,7 +69,7 @@ export const PropertiesDetails = () => {
                                 Телефонен номер: {property.contactInfo?.phoneNumber}
                             </p>
                             <a href={`mailto:${property?.contactInfo.email}`} className='pt-1'>
-                               Електронна поща: {property.contactInfo?.email}
+                                Електронна поща: {property.contactInfo?.email}
                             </a>
                         </>
                     )}
