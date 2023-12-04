@@ -16,9 +16,12 @@ const authApi = createApi({
                     };
                 },
             }),
+            fetchRolesOptions: builder.query({
+                query: () => ({ url: '/roles' }),
+            }),
         };
     },
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useFetchRolesOptionsQuery } = authApi;
 export { authApi };
