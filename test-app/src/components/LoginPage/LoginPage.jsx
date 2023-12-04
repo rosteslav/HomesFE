@@ -17,7 +17,7 @@ export const LoginPage = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            dispatch(setUser(data));
+            // dispatch(setUser(data));
             navigate('/');
         }
     }, [isSuccess, data, dispatch, navigate]);
