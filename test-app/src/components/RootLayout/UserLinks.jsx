@@ -6,9 +6,12 @@ import { ButtonPrimary, ButtonSecondary } from '../../UI';
 import { clearOwnProperties, resetFetcher } from '../../store/slices/properties/propertiesSlice';
 
 const UserLinks = ({ user }) => {
-    let isSeller = null;
+    let isSellerOrBroker = null;
+    const isBrokerOrSeller = (role) => (role === 'Брокер' || role === 'Продавач');
+
+    // Expected output: true
     if (user.claims?.roles) {
-        isSeller = user.claims.roles.includes('Продавач');
+        isSellerOrBroker = user.claims.roles.some(isBrokerOrSeller);
     }
     const dispatch = useDispatch();
 
@@ -20,7 +23,7 @@ const UserLinks = ({ user }) => {
 
     return (
         <div className='flex items-center justify-center'>
-            {isSeller && (
+            {isSellerOrBroker && (
                 <div className='w-34 m-4'>
                     <Link to={`/createProperty`} className='link'>
                         <ButtonSecondary>Създай имот</ButtonSecondary>

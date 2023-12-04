@@ -12,8 +12,10 @@ import {
 } from '../../services/propertiesApi';
 import { AddImages } from './AddImages';
 import { useFetchBrokersOptionsQuery } from '../../services/authApi';
+import { useSelector } from 'react-redux';
 
 export const CreateProperty = () => {
+    const user = useSelector((state) => state.authUser.data);
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
     const { data: propertyOptions } = useFetchPropertyOptionsQuery();
@@ -89,6 +91,14 @@ export const CreateProperty = () => {
             setValue(e.target.parentElement.id, content);
         }
     };
+
+    let isBroker = null;
+
+    // Expected output: true
+    if (user.claims?.roles) {
+        isBroker = user.claims.roles.some((role) => role === 'Брокер');
+    }
+
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -389,7 +399,7 @@ export const CreateProperty = () => {
                             {errors.price && <p className='text-red-500'>{errors.price.message}</p>}
                         </div>
                     </div>
-                    <div>
+                    {!isBroker && <div>
                         <div className='flex items-center justify-between'>
                             <label
                                 htmlFor='brokerId'
@@ -434,7 +444,7 @@ export const CreateProperty = () => {
                                 </>
                             )}
                         </div>
-                    </div>
+                    </div>}
                     <div className='flex gap-4'>
                         <div className='flex-1'>
                             <label
