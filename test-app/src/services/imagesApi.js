@@ -15,6 +15,9 @@ const imagesApi = createApi({
     }),
     endpoints(builder) {
         return {
+            fetchPropertyImages: builder.query({
+                query: (id) => ({ url: `/image/${id}` }),
+            }),
             addPropertyImage: builder.mutation({
                 query: (arg) => {
                     return {
@@ -64,5 +67,5 @@ const imagesApi = createApi({
     },
 });
 
-export const { useAddPropertyImageMutation } = imagesApi;
+export const { useAddPropertyImageMutation, useFetchPropertyImagesQuery } = imagesApi;
 export { imagesApi };
