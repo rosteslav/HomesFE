@@ -1,15 +1,26 @@
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { validationLoginSchema } from '../../services/validationSchema';
-import useThunk from '../../hooks/use-thunk';
-import { loginUser } from '../../store/slices/auth/authThunk';
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
+import { useLoginMutation } from '../../services/authApi';
+import { setUser } from '../../store/features/authUser';
 
 export const LoginPage = () => {
-    const [onLogin, isLoading] = useThunk(loginUser);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [login, { data, isLoading, isSuccess }] = useLoginMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(setUser(data));
+            navigate('/');
+        }
+    }, [isSuccess, data, dispatch, navigate]);
 
     const {
         register,
@@ -20,7 +31,7 @@ export const LoginPage = () => {
     });
 
     const onSubmit = (formData) => {
-        onLogin(formData);
+        login(formData);
     };
 
     return (
