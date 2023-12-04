@@ -41,6 +41,20 @@ const imagesApi = createApi({
                                 }
                             )
                         );
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchAllProperties',
+                                undefined,
+                                (draftData) => {
+                                    draftData?.map((property) => {
+                                        if (property.id === arg.propertyId) {
+                                            property.images.push(res.data.imageURL);
+                                        }
+                                        return property;
+                                    });
+                                }
+                            )
+                        );
                     } catch (error) {
                         console.log(error);
                     }
