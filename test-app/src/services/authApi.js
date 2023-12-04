@@ -41,6 +41,15 @@ const authApi = createApi({
                     };
                 },
             }),
+            registerAdmin: builder.mutation({
+                query: (body) => {
+                    return {
+                        url: '/admin/register',
+                        method: 'POST',
+                        body,
+                    };
+                },
+            }),
             fetchRolesOptions: builder.query({
                 query: () => ({ url: '/roles' }),
             }),
@@ -53,8 +62,9 @@ const authApi = createApi({
 
 export const {
     useLoginMutation,
-    useFetchRolesOptionsQuery,
     useRegisterUserMutation,
+    useRegisterAdminMutation,
+    useFetchRolesOptionsQuery,
     useFetchBrokersOptionsQuery,
 } = authApi;
 export { authApi };
