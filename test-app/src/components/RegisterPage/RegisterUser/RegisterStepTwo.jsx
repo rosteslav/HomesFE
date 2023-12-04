@@ -2,18 +2,19 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { validationRegisterSchemaStepTwo } from '../../../services/validationSchema';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { registerUser } from '../../../store/slices/auth/authThunk';
 import { stepTwo } from '../../../store/slices/registerUserSlice/registerUserSlice';
-import useThunk from '../../../hooks/use-thunk';
 import Loader from '../../../UI/Loader';
+import { useLoginMutation, useRegisterUserMutation } from '../../../services/authApi';
 
 const RegisterStepTwo = () => {
     const currRegisterFormValues = useSelector((state) => state.registerUserForm);
-    const [onRegister, isLoading] = useThunk(registerUser);
+    const [registerUser, { isLoading, isSuccess: isSuccessRegister }] = useRegisterUserMutation();
+    const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin }] = useLoginMutation();
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [values, setValues] = useState({
@@ -21,6 +22,18 @@ const RegisterStepTwo = () => {
         email: currRegisterFormValues.email,
         password: currRegisterFormValues.password,
         repPassword: currRegisterFormValues.repPassword,
+    });
+
+    useEffect(() => {
+        if (isSuccessRegister) {
+            if (isSuccessLogin) {
+                navigate('/');
+            } else if (isLoadingLogin) {
+                console.log('loading');
+            } else {
+                login({ username: values.username, password: values.password });
+            }
+        }
     });
 
     const {
@@ -41,7 +54,7 @@ const RegisterStepTwo = () => {
         if (currRegisterFormValues.role !== 'Купувач') {
             navigate('/auth/register/step3');
         } else {
-            onRegister({
+            registerUser({
                 role: currRegisterFormValues.role,
                 ...data,
             });
