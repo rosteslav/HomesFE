@@ -6,10 +6,10 @@ const CardDeleteBtn = ({ property }) => {
         removeOwnProperty(id);
     };
     return (
-        <div className='my-5 flex justify-around'>
+        <div className='my-2 flex justify-around'>
             <div className='w-fit'>
                 <button className='btnStyle' onClick={() => onClickSubmit(property.id)}>
-                    Изтриване на имота
+                    Изтриване
                 </button>
             </div>
         </div>
