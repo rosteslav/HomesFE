@@ -22,7 +22,7 @@ const RootLayout = () => {
                             style: {
                                 fontSize: '16px',
                                 maxWidth: '500px',
-                                margin: '10px',
+                                margin: '80px',
                                 padding: '16px 24px',
                                 backgroundColor: 'white',
                                 color: 'var(--color-grey-700)',
