@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import toast from 'react-hot-toast';
+import notificationMessages from './notificationMessages';
 
 const propertiesApi = createApi({
     reducerPath: 'propertiesApi',
@@ -61,7 +63,7 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        console.log(error);
+                        toast.error(notificationMessages(error?.error?.status))
                     }
                 },
             }),
@@ -75,7 +77,6 @@ const propertiesApi = createApi({
                 async onQueryStarted(data, { dispatch, queryFulfilled }) {
                     try {
                         await queryFulfilled;
-                        console.log(data);
 
                         dispatch(
                             propertiesApi.util.updateQueryData(
@@ -96,7 +97,7 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        console.log(error);
+                        toast.error(notificationMessages(error?.error?.status))
                     }
                 },
             }),

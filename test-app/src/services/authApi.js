@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setUser } from '../store/features/authUser';
+import toast from 'react-hot-toast';
+import notificationMessages from './notificationMessages';
 
 const authApi = createApi({
     reducerPath: 'authApi',
@@ -28,7 +30,7 @@ const authApi = createApi({
                         const response = await queryFulfilled;
                         dispatch(setUser(response.data));
                     } catch (error) {
-                        console.log(error);
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
@@ -40,6 +42,13 @@ const authApi = createApi({
                         body,
                     };
                 },
+                async onQueryStarted(data, { queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        toast.error(notificationMessages(error?.error?.status));
+                    }
+                },
             }),
             registerAdmin: builder.mutation({
                 query: (body) => {
@@ -48,6 +57,13 @@ const authApi = createApi({
                         method: 'POST',
                         body,
                     };
+                },
+                async onQueryStarted(data, { queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        toast.error(notificationMessages(error?.error?.status));
+                    }
                 },
             }),
             fetchRolesOptions: builder.query({

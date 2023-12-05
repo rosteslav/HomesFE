@@ -12,6 +12,8 @@ import {
 } from '../../../store/slices/registerAdminSlice/registerAdminSlice';
 import { ButtonPrimary } from '../../../UI';
 import { useLoginMutation, useRegisterAdminMutation } from '../../../services/authApi';
+import toast from 'react-hot-toast';
+import { successNotifications } from '../../../services/notificationMessages';
 
 export const RegisterAdmin = () => {
     const currRegisterAdminFormValues = useSelector(selectedAdmin);
@@ -33,6 +35,8 @@ export const RegisterAdmin = () => {
     useEffect(() => {
         if (isSuccessRegister) {
             if (isSuccessLogin) {
+                toast.success(successNotifications('register'))
+                toast.success(successNotifications('login'))
                 navigate('/');
             } else if (isLoadingLogin) {
                 console.log('loading');

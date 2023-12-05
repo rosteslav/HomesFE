@@ -1,5 +1,7 @@
+import toast from 'react-hot-toast';
 import { propertiesApi } from './propertiesApi';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import notificationMessages from './notificationMessages';
 
 const imagesApi = createApi({
     reducerPath: 'imagesApi',
@@ -59,7 +61,7 @@ const imagesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        console.log(error);
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
