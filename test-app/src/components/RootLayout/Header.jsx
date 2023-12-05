@@ -5,7 +5,7 @@ import GuestLinks from './GuestLinks';
 import { useSelector } from 'react-redux';
 
 export const Header = () => {
-    const user = useSelector((state) => state.auth.data);
+    const user = useSelector((state) => state.authUser.data);
     return (
         <>
             <header className='bg-gray-200'>
@@ -18,7 +18,7 @@ export const Header = () => {
                             LOGO
                         </Link>
                     </div>
-                    <ul className='flex'>{user.claims ? <UserLinks user={user} /> : <GuestLinks />}</ul>
+                    <ul className='flex'>{user ? <UserLinks user={user} /> : <GuestLinks />}</ul>
                 </nav>
             </header>
         </>

@@ -1,26 +1,28 @@
 import { Link } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-import { removeUser } from '../../store/slices/auth/authSlice';
 import { ButtonPrimary, ButtonSecondary } from '../../UI';
-import { clearOwnProperties, resetFetcher } from '../../store/slices/properties/propertiesSlice';
+import { propertiesApi } from '../../services/propertiesApi';
+import { removeUser } from '../../store/features/authUser';
 
 const UserLinks = ({ user }) => {
-    let isSeller = null;
+    let isSellerOrBroker = null;
+    const isBrokerOrSeller = (role) => (role === 'Брокер' || role === 'Продавач');
+
+    // Expected output: true
     if (user.claims?.roles) {
-        isSeller = user.claims.roles.includes('Продавач');
+        isSellerOrBroker = user.claims.roles.some(isBrokerOrSeller);
     }
     const dispatch = useDispatch();
 
     const onLogout = () => {
         dispatch(removeUser());
-        dispatch(clearOwnProperties())
-        dispatch(resetFetcher())
+        dispatch(propertiesApi.util.resetFetcher());
     };
 
     return (
         <div className='flex items-center justify-center'>
-            {isSeller && (
+            {isSellerOrBroker && (
                 <div className='w-34 m-4'>
                     <Link to={`/createProperty`} className='link'>
                         <ButtonSecondary>Създай имот</ButtonSecondary>
@@ -30,7 +32,11 @@ const UserLinks = ({ user }) => {
             <span className='text-1xl text-center font-bold leading-9 tracking-tight text-gray-900'>
                 Здравей, {user.claims.name}
             </span>
-            <img className='h-10 w-10 bg-white rounded-full mx-2' src="/src/assets/images/profile.svg" alt="" />
+            <img
+                className='mx-2 h-10 w-10 rounded-full bg-white'
+                src='/src/assets/images/profile.svg'
+                alt=''
+            />
 
             <Link
                 to={'/'}

@@ -2,17 +2,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { validationRegisterSchemaStepThree } from '../../../services/validationSchema';
-import { registerUser } from '../../../store/slices/auth/authThunk';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import { stepThree } from '../../../store/slices/registerUserSlice/registerUserSlice';
-import useThunk from '../../../hooks/use-thunk';
 import Loader from '../../../UI/Loader';
+import { useLoginMutation, useRegisterUserMutation } from '../../../services/authApi';
+import toast from 'react-hot-toast';
+import { successNotifications } from '../../../services/notificationMessages';
 
 const RegisterStepThree = () => {
     const currRegisterFormValues = useSelector((state) => state.registerUserForm);
+    const [registerUser, { isLoading, isSuccess: isSuccessRegister }] = useRegisterUserMutation();
+    const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin }] = useLoginMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [values, setValues] = useState({
@@ -20,7 +23,23 @@ const RegisterStepThree = () => {
         lastName: currRegisterFormValues.lastName,
         phoneNumber: currRegisterFormValues.phoneNumber,
     });
-    const [onRegister, isLoading] = useThunk(registerUser);
+
+    useEffect(() => {
+        if (isSuccessRegister) {
+            if (isSuccessLogin) {
+                toast.success(successNotifications('register'))
+                toast.success(successNotifications('login'))
+                navigate('/');
+            } else if (isLoadingLogin) {
+                console.log('loading');
+            } else {
+                login({
+                    username: currRegisterFormValues.username,
+                    password: currRegisterFormValues.password,
+                });
+            }
+        }
+    });
 
     const {
         register,
@@ -36,7 +55,7 @@ const RegisterStepThree = () => {
 
     const onSubmitHandler = (data) => {
         dispatch(stepThree(data));
-        onRegister({ ...currRegisterFormValues, ...data });
+        registerUser({ ...currRegisterFormValues, ...data });
     };
 
     const onChangeHandler = (e) => {

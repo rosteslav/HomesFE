@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const DetailsImages = ({ images }) => {
+const DetailsImages = ({ images, isLoading }) => {
     const [mainImage, setMainImage] = useState();
 
     useEffect(() => {
@@ -13,9 +13,10 @@ const DetailsImages = ({ images }) => {
 
     return (
         <div>
-            <img src={mainImage} className='h-60 w-full  object-cover lg:h-96' />
+            {!isLoading && <img src={mainImage} className='h-60 w-full  object-cover lg:h-96' />}
             <div className='mt-4 grid grid-cols-4 gap-4'>
-                {images &&
+                {!isLoading &&
+                    images &&
                     images.length > 0 &&
                     images.map((image, inx) => (
                         <img

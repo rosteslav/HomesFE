@@ -4,20 +4,26 @@ import { useEffect, useState } from 'react';
 
 import { validationCreatePropertySchema } from '../../services/validationSchema';
 import { ButtonPrimary } from '../../UI';
-import { createProperty } from '../../store/slices/properties/propertiesThunk';
-import useThunk from '../../hooks/use-thunk';
-import { getAllBrokersList, getAllPropertyOptions } from '../../services/api';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
-import { useDispatch } from 'react-redux';
-import { addOwnProperties } from '../../store/slices/properties/propertiesSlice';
+import {
+    useAddPropertyInfoMutation,
+    useFetchPropertyOptionsQuery,
+} from '../../services/propertiesApi';
+import { AddImages } from './AddImages';
+import { useFetchBrokersOptionsQuery } from '../../services/authApi';
+import { useSelector } from 'react-redux';
 
 export const CreateProperty = () => {
-    const [propertyOptions, setPropertyOptions] = useState([]);
-    const [brokersList, setBrokersList] = useState([]);
+    const [selectedExposure, setSelectedExposure] = useState([]); // Step 1
+
+    const user = useSelector((state) => state.authUser.data);
+    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
+        useAddPropertyInfoMutation();
+    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
+    const { data: brokersList } = useFetchBrokersOptionsQuery();
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
-    const dispatch = useDispatch();
     const [values, setValues] = useState({
         numberOfRooms: '',
         space: '',
@@ -38,25 +44,10 @@ export const CreateProperty = () => {
     });
 
     useEffect(() => {
-        const fetchOptions = async () => {
-            const options = await getAllPropertyOptions();
-            const brokers = await getAllBrokersList();
-            setPropertyOptions(options);
-            setBrokersList(brokers);
-        };
-        fetchOptions();
-    }, []);
-
-    // console.log(values);
-
-    const [onCreateProperty, isLoading, response] = useThunk(createProperty);
-
-    useEffect(() => {
-        if (response != null) {
+        if (isSuccess) {
             setToggleForms('images');
-            console.log(response);
         }
-    }, [response]);
+    }, [isSuccess]);
     const {
         register,
         handleSubmit,
@@ -66,14 +57,23 @@ export const CreateProperty = () => {
         resolver: yupResolver(validationCreatePropertySchema),
     });
 
+    const handleExposureChange = (e) => {
+        const value = e.target.value;
+        if (selectedExposure.includes(value)) {
+            setSelectedExposure(selectedExposure.filter((item) => item !== value));
+        } else {
+            setSelectedExposure([...selectedExposure, value]);
+        }
+    };
+    console.log(selectedExposure);
+
     const onSubmit = async (formData) => {
         const date = new Date();
         formData.createdOnLocalTime = date.toISOString();
         formData.images = [];
-        formData.brokerId = brokerValues.id
-        console.log(formData)
-        // onCreateProperty(formData);
-        dispatch(addOwnProperties({ ...formData, ...response }));
+        formData.brokerId = brokerValues.id;
+        formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
+        addPropertyInfo(formData);
     };
 
     const onChangeHandler = (e) => {
@@ -98,10 +98,17 @@ export const CreateProperty = () => {
         if (e.target.tagName === 'BUTTON') {
             const dataId = e.target.getAttribute('data-info');
             const content = e.target.textContent;
-            setBrokerValues({content: content, id: dataId})
+            setBrokerValues({ content: content, id: dataId });
             setValue(e.target.parentElement.id, content);
         }
     };
+
+    let isBroker = null;
+
+    if (user.claims?.roles) {
+        isBroker = user.claims.roles.some((role) => role === 'Брокер');
+    }
+
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -143,7 +150,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'neighbourhood' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.neighbourhood &&
+                            {propertyOptions &&
+                                propertyOptions.neighbourhood &&
                                 propertyOptions.neighbourhood.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -176,7 +184,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'finish' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.finish &&
+                            {propertyOptions &&
+                                propertyOptions.finish &&
                                 propertyOptions.finish.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -209,7 +218,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'furnishment' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.furnishment &&
+                            {propertyOptions &&
+                                propertyOptions.furnishment &&
                                 propertyOptions.furnishment.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -242,7 +252,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'garage' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.garage &&
+                            {propertyOptions &&
+                                propertyOptions.garage &&
                                 propertyOptions.garage.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -275,7 +286,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'heating' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.heating &&
+                            {propertyOptions &&
+                                propertyOptions.heating &&
                                 propertyOptions.heating.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -308,7 +320,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'buildingType' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.buildingType &&
+                            {propertyOptions &&
+                                propertyOptions.buildingType &&
                                 propertyOptions.buildingType.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -343,7 +356,8 @@ export const CreateProperty = () => {
                                 toggleButtons === 'numberOfRooms' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions.numberOfRooms &&
+                            {propertyOptions &&
+                                propertyOptions.numberOfRooms &&
                                 propertyOptions.numberOfRooms.map((option) => (
                                     <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
@@ -395,49 +409,54 @@ export const CreateProperty = () => {
                             {errors.price && <p className='text-red-500'>{errors.price.message}</p>}
                         </div>
                     </div>
-                    <div>
-                        <div className='flex items-center justify-between'>
-                            <label
-                                htmlFor='brokerId'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Брокери
-                            </label>
-                        </div>
-                        <div className='mt-2'>
-                            <input
-                                {...register('brokerId')}
-                                type='text'
-                                name='brokerId'
-                                value={brokerValues.content}
-                                className='formInput'
-                                readOnly
-                            />
-                            {/* {errors.brokers && (
+                    {!isBroker && (
+                        <div>
+                            <div className='flex items-center justify-between'>
+                                <label
+                                    htmlFor='brokerId'
+                                    className='block text-sm font-medium leading-6 text-gray-900'
+                                >
+                                    Брокери
+                                </label>
+                            </div>
+                            <div className='mt-2'>
+                                <input
+                                    {...register('brokerId')}
+                                    type='text'
+                                    name='brokerId'
+                                    value={brokerValues.content}
+                                    className='formInput'
+                                    readOnly
+                                />
+                                {/* {errors.brokers && (
                                 <p className='text-red-500'>{errors.numberOfRooms.message}</p>
                             )} */}
+                            </div>
+                            <div
+                                id='brokerId'
+                                onClick={onSubmitBrokerContent}
+                                className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                    toggleButtons === 'brokerId' ? '' : 'visibility: hidden'
+                                }`}
+                            >
+                                {brokersList && (
+                                    <>
+                                        <button
+                                            type='button'
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+                                        >
+                                            Без брокер
+                                        </button>
+                                        {brokersList.map((option) => (
+                                            <ButtonOptions key={option.id} dataInfo={option.id}>
+                                                {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
+                                            </ButtonOptions>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div
-                            id='brokerId'
-                            onClick={onSubmitBrokerContent}
-                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
-                                toggleButtons === 'brokerId' ? '' : 'visibility: hidden'
-                            }`}
-                        >
-                            {brokersList && (
-                                <>
-                                    <button type='button' className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'>
-                                        Без брокер
-                                    </button>
-                                    {brokersList.map((option) => (
-                                        <ButtonOptions key={option.id} dataInfo={option.id}>
-                                            {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
-                                        </ButtonOptions>
-                                    ))}
-                                </>
-                            )}
-                        </div>
-                    </div>
+                    )}
                     <div className='flex gap-4'>
                         <div className='flex-1'>
                             <label
@@ -513,11 +532,48 @@ export const CreateProperty = () => {
                             )}
                         </div>
                     </div>
+
+                    <div>
+                    <h3 className='block text-sm font-medium leading-6 text-gray-900'>Изложение</h3>
+                    <ul className='w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 sm:flex '>
+                            {propertyOptions &&
+                                propertyOptions.exposure &&
+                                propertyOptions.exposure.map((option) => (
+                                    <li
+                                        key={option}
+                                        className='w-full border-b border-gray-200 sm:border-b-0 sm:border-r '
+                                    >
+                                        <div className='flex items-center ps-3'>
+                                            <input
+                                                type='checkbox'
+                                                name='exposure'
+                                                value={option}
+                                                onChange={handleExposureChange}
+                                                checked={selectedExposure.includes(option)}
+                                                className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2  focus:ring-blue-500'
+                                            />
+                                            <label
+                                                htmlFor='exposure'
+                                                className='ms-2 w-full py-3 text-sm font-medium text-gray-900 '
+                                            >
+                                                {option}
+                                            </label>
+                                        </div>
+                                    </li>
+                                ))}
+                    </ul>
+                        
+                    </div>
                 </div>
                 <div className='m-auto mt-4 max-w-lg'>
                     <ButtonPrimary>Напред</ButtonPrimary>
                 </div>
             </form>
+            <AddImages
+                responseId={addPropertyInfoResult}
+                setToggleForms={setToggleForms}
+                toggleForms={toggleForms}
+            />
         </>
     );
 };

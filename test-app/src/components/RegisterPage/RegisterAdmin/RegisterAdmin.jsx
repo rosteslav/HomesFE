@@ -1,22 +1,25 @@
-import useThunk from '../../../hooks/use-thunk';
 import { useForm } from 'react-hook-form';
-
-import { Link } from 'react-router-dom';
-import { registerAdmin } from '../../../store/slices/auth/authThunk';
-import { validationRegisterAdminSchema } from '../../../services/validationSchema';
+import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect, useState } from 'react';
+
+import { validationRegisterAdminSchema } from '../../../services/validationSchema';
 import Loader from '../../../UI/Loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
 import {
     selectedAdmin,
     setData,
 } from '../../../store/slices/registerAdminSlice/registerAdminSlice';
 import { ButtonPrimary } from '../../../UI';
+import { useLoginMutation, useRegisterAdminMutation } from '../../../services/authApi';
+import toast from 'react-hot-toast';
+import { successNotifications } from '../../../services/notificationMessages';
 
 export const RegisterAdmin = () => {
     const currRegisterAdminFormValues = useSelector(selectedAdmin);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [values, setValues] = useState({
         username: currRegisterAdminFormValues.username,
         email: currRegisterAdminFormValues.email,
@@ -25,7 +28,27 @@ export const RegisterAdmin = () => {
         lastName: currRegisterAdminFormValues.lastName,
         phoneNumber: currRegisterAdminFormValues.phoneNumber,
     });
-    const [onRegisterAdmin, isLoading] = useThunk(registerAdmin);
+
+    const [registerAdmin, { isSuccess: isSuccessRegister, isLoading }] = useRegisterAdminMutation();
+    const [login, { isSuccess: isSuccessLogin, isLoading: isLoadingLogin }] = useLoginMutation();
+
+    useEffect(() => {
+        if (isSuccessRegister) {
+            if (isSuccessLogin) {
+                toast.success(successNotifications('register'))
+                toast.success(successNotifications('login'))
+                navigate('/');
+            } else if (isLoadingLogin) {
+                console.log('loading');
+            } else {
+                login({
+                    username: values.username,
+                    password: values.password,
+                });
+            }
+        }
+    });
+
     const {
         register,
         handleSubmit,
@@ -36,7 +59,7 @@ export const RegisterAdmin = () => {
 
     const onSubmit = (formData) => {
         dispatch(setData(formData));
-        onRegisterAdmin({ ...currRegisterAdminFormValues, ...formData });
+        registerAdmin(formData);
     };
 
     const onChangeHandler = (e) => {
