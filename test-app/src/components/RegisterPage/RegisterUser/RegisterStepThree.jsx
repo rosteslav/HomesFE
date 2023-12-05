@@ -9,6 +9,8 @@ import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import { stepThree } from '../../../store/slices/registerUserSlice/registerUserSlice';
 import Loader from '../../../UI/Loader';
 import { useLoginMutation, useRegisterUserMutation } from '../../../services/authApi';
+import toast from 'react-hot-toast';
+import { successNotifications } from '../../../services/notificationMessages';
 
 const RegisterStepThree = () => {
     const currRegisterFormValues = useSelector((state) => state.registerUserForm);
@@ -25,6 +27,8 @@ const RegisterStepThree = () => {
     useEffect(() => {
         if (isSuccessRegister) {
             if (isSuccessLogin) {
+                toast.success(successNotifications('register'))
+                toast.success(successNotifications('login'))
                 navigate('/');
             } else if (isLoadingLogin) {
                 console.log('loading');

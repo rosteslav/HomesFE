@@ -8,7 +8,8 @@ import { validationLoginSchema } from '../../services/validationSchema';
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
 import { useLoginMutation } from '../../services/authApi';
-import { setUser } from '../../store/features/authUser';
+import toast from 'react-hot-toast';
+import { successNotifications } from '../../services/notificationMessages';
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export const LoginPage = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            // dispatch(setUser(data));
+            toast.success(successNotifications('login'))
             navigate('/');
         }
     }, [isSuccess, data, dispatch, navigate]);
