@@ -3,7 +3,7 @@ const CardFooter = ({ property }) => {
         <>
             <div className='flex items-center justify-between font-bold'>
                 <p>
-                    {property?.numberOfRooms}-стаен, {property?.space} m<sup>2</sup>
+                    {property?.numberOfRooms}, {property?.space} m<sup>2</sup>
                 </p>
                 <p>{property?.price} EUR</p>
             </div>
