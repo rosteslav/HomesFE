@@ -54,6 +54,10 @@ export const PropertiesDetails = () => {
                         <span className='font-bold'>Строителство: </span>
                         {property?.buildingType}
                     </p>
+                    {property && property.exposure && <p>
+                        <span className='font-bold'>Изложение: </span>
+                        {property?.exposure}
+                    </p> }
                     <p className='border-b-2 border-black pt-4 font-bold'>
                         Допълнителна информация
                     </p>

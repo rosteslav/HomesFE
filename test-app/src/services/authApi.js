@@ -70,7 +70,7 @@ const authApi = createApi({
                 query: () => ({ url: '/roles' }),
             }),
             fetchBrokersOptions: builder.query({
-                query: () => ({ url: 'authOptions/brokers' }),
+                query: () => ({ url: '/authOptions/brokers' }),
             }),
         };
     },

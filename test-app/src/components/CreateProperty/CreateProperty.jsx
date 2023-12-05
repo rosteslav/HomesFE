@@ -15,6 +15,8 @@ import { useFetchBrokersOptionsQuery } from '../../services/authApi';
 import { useSelector } from 'react-redux';
 
 export const CreateProperty = () => {
+    const [selectedExposure, setSelectedExposure] = useState([]); // Step 1
+
     const user = useSelector((state) => state.authUser.data);
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
@@ -55,13 +57,22 @@ export const CreateProperty = () => {
         resolver: yupResolver(validationCreatePropertySchema),
     });
 
+    const handleExposureChange = (e) => {
+        const value = e.target.value;
+        if (selectedExposure.includes(value)) {
+            setSelectedExposure(selectedExposure.filter((item) => item !== value));
+        } else {
+            setSelectedExposure([...selectedExposure, value]);
+        }
+    };
+    console.log(selectedExposure);
+
     const onSubmit = async (formData) => {
         const date = new Date();
         formData.createdOnLocalTime = date.toISOString();
         formData.images = [];
         formData.brokerId = brokerValues.id;
-        // temporary there is not input field for exposure
-        formData.exposure = null;
+        formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
         addPropertyInfo(formData);
     };
 
@@ -94,7 +105,6 @@ export const CreateProperty = () => {
 
     let isBroker = null;
 
-    // Expected output: true
     if (user.claims?.roles) {
         isBroker = user.claims.roles.some((role) => role === 'Брокер');
     }
@@ -399,52 +409,54 @@ export const CreateProperty = () => {
                             {errors.price && <p className='text-red-500'>{errors.price.message}</p>}
                         </div>
                     </div>
-                    {!isBroker && <div>
-                        <div className='flex items-center justify-between'>
-                            <label
-                                htmlFor='brokerId'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Брокери
-                            </label>
-                        </div>
-                        <div className='mt-2'>
-                            <input
-                                {...register('brokerId')}
-                                type='text'
-                                name='brokerId'
-                                value={brokerValues.content}
-                                className='formInput'
-                                readOnly
-                            />
-                            {/* {errors.brokers && (
+                    {!isBroker && (
+                        <div>
+                            <div className='flex items-center justify-between'>
+                                <label
+                                    htmlFor='brokerId'
+                                    className='block text-sm font-medium leading-6 text-gray-900'
+                                >
+                                    Брокери
+                                </label>
+                            </div>
+                            <div className='mt-2'>
+                                <input
+                                    {...register('brokerId')}
+                                    type='text'
+                                    name='brokerId'
+                                    value={brokerValues.content}
+                                    className='formInput'
+                                    readOnly
+                                />
+                                {/* {errors.brokers && (
                                 <p className='text-red-500'>{errors.numberOfRooms.message}</p>
                             )} */}
+                            </div>
+                            <div
+                                id='brokerId'
+                                onClick={onSubmitBrokerContent}
+                                className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                    toggleButtons === 'brokerId' ? '' : 'visibility: hidden'
+                                }`}
+                            >
+                                {brokersList && (
+                                    <>
+                                        <button
+                                            type='button'
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+                                        >
+                                            Без брокер
+                                        </button>
+                                        {brokersList.map((option) => (
+                                            <ButtonOptions key={option.id} dataInfo={option.id}>
+                                                {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
+                                            </ButtonOptions>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div
-                            id='brokerId'
-                            onClick={onSubmitBrokerContent}
-                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
-                                toggleButtons === 'brokerId' ? '' : 'visibility: hidden'
-                            }`}
-                        >
-                            {brokersList && (
-                                <>
-                                    <button
-                                        type='button'
-                                        className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
-                                    >
-                                        Без брокер
-                                    </button>
-                                    {brokersList.map((option) => (
-                                        <ButtonOptions key={option.id} dataInfo={option.id}>
-                                            {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
-                                        </ButtonOptions>
-                                    ))}
-                                </>
-                            )}
-                        </div>
-                    </div>}
+                    )}
                     <div className='flex gap-4'>
                         <div className='flex-1'>
                             <label
@@ -519,6 +531,38 @@ export const CreateProperty = () => {
                                 <p className='text-red-500'>{errors.description.message}</p>
                             )}
                         </div>
+                    </div>
+
+                    <div>
+                    <h3 className='block text-sm font-medium leading-6 text-gray-900'>Изложение</h3>
+                    <ul className='w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 sm:flex '>
+                            {propertyOptions &&
+                                propertyOptions.exposure &&
+                                propertyOptions.exposure.map((option) => (
+                                    <li
+                                        key={option}
+                                        className='w-full border-b border-gray-200 sm:border-b-0 sm:border-r '
+                                    >
+                                        <div className='flex items-center ps-3'>
+                                            <input
+                                                type='checkbox'
+                                                name='exposure'
+                                                value={option}
+                                                onChange={handleExposureChange}
+                                                checked={selectedExposure.includes(option)}
+                                                className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2  focus:ring-blue-500'
+                                            />
+                                            <label
+                                                htmlFor='exposure'
+                                                className='ms-2 w-full py-3 text-sm font-medium text-gray-900 '
+                                            >
+                                                {option}
+                                            </label>
+                                        </div>
+                                    </li>
+                                ))}
+                    </ul>
+                        
                     </div>
                 </div>
                 <div className='m-auto mt-4 max-w-lg'>
