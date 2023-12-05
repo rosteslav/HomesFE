@@ -15,13 +15,18 @@ import { useFetchBrokersOptionsQuery } from '../../services/authApi';
 import { useSelector } from 'react-redux';
 
 export const CreateProperty = () => {
-    const [selectedExposure, setSelectedExposure] = useState([]); // Step 1
-
+    const [selectedExposure, setSelectedExposure] = useState([]);
     const user = useSelector((state) => state.authUser.data);
+    let isBroker = false;
+    if (user.claims?.roles) {
+        isBroker = user.claims.roles.some((role) => role === 'Брокер');
+    }
+    const [skip, setSkip] = useState(true);
+
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
     const { data: propertyOptions } = useFetchPropertyOptionsQuery();
-    const { data: brokersList } = useFetchBrokersOptionsQuery();
+    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {skip});
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
     const [values, setValues] = useState({
@@ -38,6 +43,13 @@ export const CreateProperty = () => {
         heating: '',
         neighbourhood: '',
     });
+
+    useEffect(() => {
+        if (!isBroker) {
+            setSkip(false);
+        }
+    }, [isBroker]);
+
     const [brokerValues, setBrokerValues] = useState({
         content: '',
         id: null,
@@ -65,7 +77,6 @@ export const CreateProperty = () => {
             setSelectedExposure([...selectedExposure, value]);
         }
     };
-    console.log(selectedExposure);
 
     const onSubmit = async (formData) => {
         const date = new Date();
@@ -102,13 +113,6 @@ export const CreateProperty = () => {
             setValue(e.target.parentElement.id, content);
         }
     };
-
-    let isBroker = null;
-
-    if (user.claims?.roles) {
-        isBroker = user.claims.roles.some((role) => role === 'Брокер');
-    }
-
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
