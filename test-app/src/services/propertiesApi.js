@@ -17,7 +17,81 @@ const propertiesApi = createApi({
     endpoints(builder) {
         return {
             fetchAllProperties: builder.query({
-                query: () => ({ url: '/properties/all' }),
+                query: (args) => {
+                    let querySting = '?';
+                    if (args?.neighbourhood && args?.neighbourhood.length > 1) {
+                        const data = args.neighbourhood;
+
+                        for (let idx = 1; idx < data.length; idx++) {
+                            if (idx === 1) {
+                                querySting += `Neighbourhood=${encodeURIComponent(data[idx])}`;
+                            } else {
+                                querySting += `&Neighbourhood=${encodeURIComponent(data[idx])}`;
+                            }
+                        }
+                    }
+                    if (args?.numberOfRooms && args?.numberOfRooms.length > 1) {
+                        const data = args.numberOfRooms;
+                        for (let idx = 1; idx < data.length; idx++) {
+                            if (idx === 1) {
+                                if (querySting === '?') {
+                                    querySting += `NumberOfRooms=${encodeURIComponent(data[idx])}`;
+                                } else {
+                                    querySting += `&NumberOfRooms=${encodeURIComponent(data[idx])}`;
+                                }
+                            } else {
+                                querySting += `&NumberOfRooms=${encodeURIComponent(data[idx])}`;
+                            }
+                        }
+                    }
+                    if (args?.buildingType && args?.buildingType.length > 1) {
+                        const data = args.buildingType;
+                        for (let idx = 1; idx < data.length; idx++) {
+                            if (idx === 1) {
+                                if (querySting === '?') {
+                                    querySting += `buildingType=${encodeURIComponent(data[idx])}`;
+                                } else {
+                                    querySting += `&buildingType=${encodeURIComponent(data[idx])}`;
+                                }
+                            } else {
+                                querySting += `&buildingType=${encodeURIComponent(data[idx])}`;
+                            }
+                        }
+                    }
+                    if (args?.exposure && args?.exposure.length > 1) {
+                        const data = args.exposure;
+                        for (let idx = 1; idx < data.length; idx++) {
+                            if (idx === 1) {
+                                if (querySting === '?') {
+                                    querySting += `exposure=${encodeURIComponent(data[idx])}`;
+                                } else {
+                                    querySting += `&exposure=${encodeURIComponent(data[idx])}`;
+                                }
+                            } else {
+                                querySting += `&exposure=${encodeURIComponent(data[idx])}`;
+                            }
+                        }
+                    }
+                    if (args?.finish && args?.finish.length > 1) {
+                        const data = args.finish;
+                        for (let idx = 1; idx < data.length; idx++) {
+                            if (idx === 1) {
+                                if (querySting === '?') {
+                                    querySting += `finish=${encodeURIComponent(data[idx])}`;
+                                } else {
+                                    querySting += `&finish=${encodeURIComponent(data[idx])}`;
+                                }
+                            } else {
+                                querySting += `&finish=${encodeURIComponent(data[idx])}`;
+                            }
+                        }
+                    }
+                    if (querySting !== '?') {
+                        return { url: `/properties/all${querySting}` };
+                    }
+
+                    return { url: `/properties/all` };
+                },
             }),
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
@@ -63,7 +137,7 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        toast.error(notificationMessages(error?.error?.status))
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
@@ -97,7 +171,7 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        toast.error(notificationMessages(error?.error?.status))
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
