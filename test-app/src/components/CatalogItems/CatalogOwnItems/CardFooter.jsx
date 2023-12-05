@@ -23,6 +23,9 @@ const CardFooter = ({ property }) => {
                 <p>Обзавеждане: {property?.finish}</p>
                 <p>Отопление: {property?.heating}</p>
             </div>
+            {property.exposure && <div className='flex items-center justify-between italic'>
+                <p>Изложение: {property?.exposure}</p>
+            </div> }
             <p>Допълнителна информация: {property?.description}</p>
             {property && property.contactInfo && (
                 <>
