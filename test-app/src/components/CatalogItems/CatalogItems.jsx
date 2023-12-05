@@ -27,24 +27,24 @@ export const CatalogItems = () => {
             {isLoading && <Loader />}
 
             {clientProperties && clientProperties.length > 0 && (
-                <>
+                <div className='border-b-2  border-black'>
                     <h2 className='mt-4 text-center text-2xl font-semibold'>Вашите Обяви</h2>
-                    <div className='mx-10 mt-4 grid gap-10 border-b-2 border-black pb-10 md:grid-cols-2 lg:grid-cols-3'>
+                    <div className='mx-10 mt-4 grid gap-10  pb-10 md:grid-cols-2 lg:grid-cols-3'>
                         {clientProperties.map((i, inx) => (
                             <CatalogOwnItem key={inx} property={i} />
                         ))}
                     </div>
-                </>
+                </div>
             )}
+
+            <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
+            
             {properties && properties.length > 0 && (
-                <>
-                    <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
-                    <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                        {properties.map((i) => (
-                            <CatalogItem key={i.id} property={i} />
-                        ))}
-                    </div>
-                </>
+                <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
+                    {properties.map((i) => (
+                        <CatalogItem key={i.id} property={i} />
+                    ))}
+                </div>
             )}
 
             {properties && properties.length === 0 && !isLoading && (
