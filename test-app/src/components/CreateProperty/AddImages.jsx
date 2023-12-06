@@ -13,7 +13,6 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
 
     const handleImageChange = (e, id) => {
-        console.log(imageInputs);
         if (!allowedFileTypes.includes(e.target.files[0].type)) {
             const updatedInputs = imageInputs.filter((input) => input.id !== id);
             setImageInputs(updatedInputs);
@@ -30,7 +29,6 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
 
         const updatedInputs = imageInputs.map((input) => {
             if (input.id === id) {
-                console.log(input);
 
                 const formData = new FormData();
                 formData.set('image', e.target.files[0]);
@@ -64,7 +62,6 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
             imageInputs.forEach(async (i) => {
                 const formData = new FormData();
                 if (i.file) {
-                    console.log(i.file);
                     formData.append('image', i.file);
                     addPropertyImage({ propertyId: responseId.id, data: formData });
                 }
