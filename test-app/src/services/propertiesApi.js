@@ -18,79 +18,27 @@ const propertiesApi = createApi({
         return {
             fetchAllProperties: builder.query({
                 query: (args) => {
-                    let querySting = '?';
-                    if (args?.neighbourhood && args?.neighbourhood.length > 1) {
-                        const data = args.neighbourhood;
+                    const buildQueryString = (param) => {
+                        if (args?.[param] && args[param].length > 1) {
+                            const data = args[param].slice(1);
+                            return data
+                                .map((value) => `&${param}=${encodeURIComponent(value)}`)
+                                .join('');
+                        }
+                        return '';
+                    };
 
-                        for (let idx = 1; idx < data.length; idx++) {
-                            if (idx === 1) {
-                                querySting += `Neighbourhood=${encodeURIComponent(data[idx])}`;
-                            } else {
-                                querySting += `&Neighbourhood=${encodeURIComponent(data[idx])}`;
-                            }
-                        }
-                    }
-                    if (args?.numberOfRooms && args?.numberOfRooms.length > 1) {
-                        const data = args.numberOfRooms;
-                        for (let idx = 1; idx < data.length; idx++) {
-                            if (idx === 1) {
-                                if (querySting === '?') {
-                                    querySting += `NumberOfRooms=${encodeURIComponent(data[idx])}`;
-                                } else {
-                                    querySting += `&NumberOfRooms=${encodeURIComponent(data[idx])}`;
-                                }
-                            } else {
-                                querySting += `&NumberOfRooms=${encodeURIComponent(data[idx])}`;
-                            }
-                        }
-                    }
-                    if (args?.buildingType && args?.buildingType.length > 1) {
-                        const data = args.buildingType;
-                        for (let idx = 1; idx < data.length; idx++) {
-                            if (idx === 1) {
-                                if (querySting === '?') {
-                                    querySting += `buildingType=${encodeURIComponent(data[idx])}`;
-                                } else {
-                                    querySting += `&buildingType=${encodeURIComponent(data[idx])}`;
-                                }
-                            } else {
-                                querySting += `&buildingType=${encodeURIComponent(data[idx])}`;
-                            }
-                        }
-                    }
-                    if (args?.exposure && args?.exposure.length > 1) {
-                        const data = args.exposure;
-                        for (let idx = 1; idx < data.length; idx++) {
-                            if (idx === 1) {
-                                if (querySting === '?') {
-                                    querySting += `exposure=${encodeURIComponent(data[idx])}`;
-                                } else {
-                                    querySting += `&exposure=${encodeURIComponent(data[idx])}`;
-                                }
-                            } else {
-                                querySting += `&exposure=${encodeURIComponent(data[idx])}`;
-                            }
-                        }
-                    }
-                    if (args?.finish && args?.finish.length > 1) {
-                        const data = args.finish;
-                        for (let idx = 1; idx < data.length; idx++) {
-                            if (idx === 1) {
-                                if (querySting === '?') {
-                                    querySting += `finish=${encodeURIComponent(data[idx])}`;
-                                } else {
-                                    querySting += `&finish=${encodeURIComponent(data[idx])}`;
-                                }
-                            } else {
-                                querySting += `&finish=${encodeURIComponent(data[idx])}`;
-                            }
-                        }
-                    }
-                    if (querySting !== '?') {
-                        return { url: `/properties/all${querySting}` };
-                    }
+                    const neighbourhoodQuery = buildQueryString('neighbourhood');
+                    const numberOfRoomsQuery = buildQueryString('numberOfRooms');
+                    const buildingTypeQuery = buildQueryString('buildingType');
+                    const exposureQuery = buildQueryString('exposure');
+                    const finishQuery = buildQueryString('finish');
+                    const furnishmentQuery = buildQueryString('furnishment');
+                    const heatingQuery = buildQueryString('heating');
 
-                    return { url: `/properties/all` };
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}`;
+
+                    return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
                 },
             }),
             fetchOwnProperties: builder.query({
