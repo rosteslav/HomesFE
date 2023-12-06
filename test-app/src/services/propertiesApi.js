@@ -19,8 +19,8 @@ const propertiesApi = createApi({
             fetchAllProperties: builder.query({
                 query: (args) => {
                     const buildQueryString = (param) => {
-                        if (args?.[param] && args[param].length > 1) {
-                            const data = args[param].slice(1);
+                        if (args?.[param] && args[param].length > 0) {
+                            const data = args[param];
                             return data
                                 .map((value) => `&${param}=${encodeURIComponent(value)}`)
                                 .join('');
