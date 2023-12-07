@@ -17,7 +17,40 @@ const propertiesApi = createApi({
     endpoints(builder) {
         return {
             fetchAllProperties: builder.query({
-                query: () => ({ url: '/properties/all' }),
+                query: (args) => {
+                    const buildQueryString = (param) => {
+                        if (args?.[param] && args[param].length > 0) {
+                            const data = args[param];
+                            return data
+                                .map((value) => `&${param}=${encodeURIComponent(value)}`)
+                                .join('');
+                        }
+                        return '';
+                    };
+
+                    const buildQueryRangeString = (param) => {
+                        if (args?.[param] && args[param].length > 1) {
+                            return `&${param}from=${encodeURIComponent(
+                                args[param][0]
+                            )}&${param}to=${encodeURIComponent(args[param][1])}`;
+                        }
+                        return '';
+                    };
+
+                    const neighbourhoodQuery = buildQueryString('neighbourhood');
+                    const numberOfRoomsQuery = buildQueryString('numberOfRooms');
+                    const buildingTypeQuery = buildQueryString('buildingType');
+                    const exposureQuery = buildQueryString('exposure');
+                    const finishQuery = buildQueryString('finish');
+                    const furnishmentQuery = buildQueryString('furnishment');
+                    const heatingQuery = buildQueryString('heating');
+                    const priceQuery = buildQueryRangeString('price');
+                    const spaceQuery = buildQueryRangeString('space');
+
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}`;
+
+                    return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
+                },
             }),
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
@@ -63,7 +96,7 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        toast.error(notificationMessages(error?.error?.status))
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
@@ -97,7 +130,56 @@ const propertiesApi = createApi({
                             )
                         );
                     } catch (error) {
-                        toast.error(notificationMessages(error?.error?.status))
+                        toast.error(notificationMessages(error?.error?.status));
+                    }
+                },
+            }),
+            editPropertyInfo: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: `properties/${data.id}`,
+                        method: 'PUT',
+                        body: data.data,
+                    };
+                },
+                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                    console.log(data);
+                    try {
+                        await queryFulfilled;
+
+                        const newProperty = data.data;
+                        newProperty.id = data.id;
+              
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchOwnProperties',
+                                undefined,
+                                (draftData) => {
+                                    return draftData?.map((property) => {
+                                        if (property?.id == data.id) {
+                                            property = newProperty;
+                                        }
+                                        return property;
+                                    });
+                                }
+                            )
+                        );
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchAllProperties',
+                                undefined,
+                                (draftData) => {
+                                    return draftData?.map((property) => {
+                                        if (property?.id == data.id) {
+                                            property = newProperty;
+                                        }
+                                        return property;
+                                    });
+                                }
+                            )
+                        );
+                    } catch (error) {
+                        toast.error(notificationMessages(error?.error?.status));
                     }
                 },
             }),
@@ -113,5 +195,6 @@ export const {
     useFetchPropertyByIdQuery,
     useAddPropertyInfoMutation,
     useDeleteOwnPropertyMutation,
+    useEditPropertyInfoMutation,
 } = propertiesApi;
 export { propertiesApi };
