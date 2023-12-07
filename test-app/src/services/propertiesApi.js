@@ -28,6 +28,15 @@ const propertiesApi = createApi({
                         return '';
                     };
 
+                    const buildQueryRangeString = (param) => {
+                        if (args?.[param] && args[param].length > 1) {
+                            return `&${param}from=${encodeURIComponent(
+                                args[param][0]
+                            )}&${param}to=${encodeURIComponent(args[param][1])}`;
+                        }
+                        return '';
+                    };
+
                     const neighbourhoodQuery = buildQueryString('neighbourhood');
                     const numberOfRoomsQuery = buildQueryString('numberOfRooms');
                     const buildingTypeQuery = buildQueryString('buildingType');
@@ -35,8 +44,10 @@ const propertiesApi = createApi({
                     const finishQuery = buildQueryString('finish');
                     const furnishmentQuery = buildQueryString('furnishment');
                     const heatingQuery = buildQueryString('heating');
+                    const priceQuery = buildQueryRangeString('price');
+                    const spaceQuery = buildQueryRangeString('space');
 
-                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}`;
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}`;
 
                     return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
                 },

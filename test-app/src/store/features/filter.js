@@ -9,6 +9,8 @@ const initialState = {
         finish: [],
         furnishment: [],
         heating: [],
+        price: [],
+        space: [],
     },
     filter: {
         data: {
@@ -54,6 +56,18 @@ const initialState = {
                 options: [],
                 allOptions: [],
             },
+            price: {
+                buttonStartContent: 'Цена',
+                buttonContent: 'Цена',
+                options: [],
+                allOptions: [0, 500000, 100],
+            },
+            space: {
+                buttonStartContent: 'Площ',
+                buttonContent: 'Площ',
+                options: [],
+                allOptions: [0, 300, 10],
+            },
         },
         collected: {
             allOptions: false,
@@ -84,21 +98,40 @@ const filterSlice = createSlice({
             }
         },
         setFilterOption(state, action) {
+            console.log(action.payload);
             const { option, value } = action.payload;
+            if (option === 'price' || option === 'space') {
+                if (
+                    state.filter.data[option].allOptions[0] != value[0] ||
+                    state.filter.data[option].allOptions[1] != value[1]
+                ) {
+                    state.filter.data[option].options = value;
+                    state.queryData[option] = value;
+                    state.filter.data[option].buttonContent = updateRangeContext(
+                        current(state.filter.data[option])
+                    );
+                } else {
+                    state.filter.data[option].options = [];
+                    state.filter.data[option].buttonContent = updateRangeContext(
+                        current(state.filter.data[option])
+                    );
+                    state.queryData[option] = [];
+                }
+            } else {
+                state.filter.data[option].options = updateOptions(
+                    state.filter.data[option].options,
+                    value
+                );
 
-            state.filter.data[option].options = updateOptions(
-                state.filter.data[option].options,
-                value
-            );
+                state.queryData = {
+                    ...state.queryData,
+                    [option]: updateQueryData(state.filter.data[option].options),
+                };
 
-            state.queryData = {
-                ...state.queryData,
-                [option]: updateQueryData(state.filter.data[option].options),
-            };
-
-            state.filter.data[option].buttonContent = updateButtonContext(
-                current(state.filter.data[option])
-            );
+                state.filter.data[option].buttonContent = updateButtonContext(
+                    current(state.filter.data[option])
+                );
+            }
         },
     },
 });
@@ -125,6 +158,19 @@ const updateButtonContext = (state) => {
     } else if (state.options.length > 1) {
         buttonEnd += `: ${state.options[0]} +${state.options.length - 1}`;
     }
+    return `${buttonStart}${buttonEnd}`;
+};
+
+const updateRangeContext = (state) => {
+    const buttonStart = state.buttonStartContent;
+
+    let buttonEnd = '';
+    if (state.options.length > 1) {
+        buttonEnd += `: От:${state.options[0]}  До:${state.options[1]}`;
+    } else {
+        buttonEnd = '';
+    }
+
     return `${buttonStart}${buttonEnd}`;
 };
 
