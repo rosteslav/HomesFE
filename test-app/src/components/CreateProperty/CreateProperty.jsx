@@ -445,12 +445,7 @@ export const CreateProperty = () => {
                             >
                                 {brokersList && (
                                     <>
-                                        <button
-                                            type='button'
-                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
-                                        >
-                                            Без брокер
-                                        </button>
+                                        <ButtonPrimary>Без брокер</ButtonPrimary>
                                         {brokersList.map((option) => (
                                             <ButtonOptions key={option.id} dataInfo={option.id}>
                                                 {`${option.firstName} ${option.lastName} (${option.phoneNumber}, ${option.email})`}
