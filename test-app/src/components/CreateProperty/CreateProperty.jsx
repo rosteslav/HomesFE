@@ -488,7 +488,7 @@ export const CreateProperty = () => {
                         </div>
 
                         <ul
-                            className={`absolute flex max-w-screen-2xl flex-wrap ${
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
                                 toggleExposure === false ? '' : 'visibility: hidden'
                             }`}
                         >
