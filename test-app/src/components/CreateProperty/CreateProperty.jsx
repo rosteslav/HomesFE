@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 
 export const CreateProperty = () => {
     const [selectedExposure, setSelectedExposure] = useState([]);
+    const [toggleExposure, setToggleExposure] = useState(true);
     const user = useSelector((state) => state.authUser.data);
     let isBroker = false;
     if (user.claims?.roles) {
@@ -26,7 +27,7 @@ export const CreateProperty = () => {
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
     const { data: propertyOptions } = useFetchPropertyOptionsQuery();
-    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {skip});
+    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, { skip });
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
     const [values, setValues] = useState({
@@ -93,7 +94,16 @@ export const CreateProperty = () => {
 
     const onToggleOptions = (e) => {
         const optionName = e.target.name;
+        const tagName = e.target.tagName;
+        const label = e.target.id;
         setToggleButtons(optionName);
+        if (e.target.id === 'exposure') {
+            setToggleExposure(false);
+        } else {
+            if (optionName !== 'exposure' && tagName !== 'BUTTON' && label !== 'exposureLabel') {
+                setToggleExposure(true);
+            }
+        }
     };
 
     const onSubmitContent = (e) => {
@@ -461,6 +471,53 @@ export const CreateProperty = () => {
                             </div>
                         </div>
                     )}
+                    <div>
+                        <h3 className='block text-sm font-medium leading-6 text-gray-900'>
+                            Изложение
+                        </h3>
+
+                        <div>
+                            <div className='mt-2'>
+                                <p
+                                    id='exposure'
+                                    className='formInput mr-2 h-9 overflow-x-auto bg-white'
+                                >
+                                    {selectedExposure.join('/')}
+                                </p>
+                            </div>
+                        </div>
+
+                        <ul
+                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                                toggleExposure === false ? '' : 'visibility: hidden'
+                            }`}
+                        >
+                            {propertyOptions &&
+                                propertyOptions.exposure &&
+                                propertyOptions.exposure.map((option, index) => (
+                                    <li className='relative' key={option}>
+                                        <ButtonOptions>
+                                            <input
+                                                id={index}
+                                                type='checkbox'
+                                                name='exposure'
+                                                value={option}
+                                                onChange={handleExposureChange}
+                                                checked={selectedExposure.includes(option)}
+                                                className='exposure1 hidden peer mb-2 me-2 mt-1 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+                                            />
+                                            <label
+                                                htmlFor={index}
+                                                id='exposureLabel'
+                                                className='peer-checked:border-transparent'
+                                            >
+                                                {option}
+                                            </label>
+                                        </ButtonOptions>
+                                    </li>
+                                ))}
+                        </ul>
+                    </div>
                     <div className='flex gap-4'>
                         <div className='flex-1'>
                             <label
@@ -535,38 +592,6 @@ export const CreateProperty = () => {
                                 <p className='text-red-500'>{errors.description.message}</p>
                             )}
                         </div>
-                    </div>
-
-                    <div>
-                    <h3 className='block text-sm font-medium leading-6 text-gray-900'>Изложение</h3>
-                    <ul className='w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 sm:flex '>
-                            {propertyOptions &&
-                                propertyOptions.exposure &&
-                                propertyOptions.exposure.map((option) => (
-                                    <li
-                                        key={option}
-                                        className='w-full border-b border-gray-200 sm:border-b-0 sm:border-r '
-                                    >
-                                        <div className='flex items-center ps-3'>
-                                            <input
-                                                type='checkbox'
-                                                name='exposure'
-                                                value={option}
-                                                onChange={handleExposureChange}
-                                                checked={selectedExposure.includes(option)}
-                                                className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2  focus:ring-blue-500'
-                                            />
-                                            <label
-                                                htmlFor='exposure'
-                                                className='ms-2 w-full py-3 text-sm font-medium text-gray-900 '
-                                            >
-                                                {option}
-                                            </label>
-                                        </div>
-                                    </li>
-                                ))}
-                    </ul>
-                        
                     </div>
                 </div>
                 <div className='m-auto mt-4 max-w-lg'>
