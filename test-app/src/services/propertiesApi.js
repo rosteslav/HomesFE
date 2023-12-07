@@ -134,6 +134,55 @@ const propertiesApi = createApi({
                     }
                 },
             }),
+            editPropertyInfo: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: `properties/${data.id}`,
+                        method: 'PUT',
+                        body: data.data,
+                    };
+                },
+                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                    console.log(data);
+                    try {
+                        await queryFulfilled;
+
+                        const newProperty = data.data;
+                        newProperty.id = data.id;
+              
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchOwnProperties',
+                                undefined,
+                                (draftData) => {
+                                    return draftData?.map((property) => {
+                                        if (property?.id == data.id) {
+                                            property = newProperty;
+                                        }
+                                        return property;
+                                    });
+                                }
+                            )
+                        );
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchAllProperties',
+                                undefined,
+                                (draftData) => {
+                                    return draftData?.map((property) => {
+                                        if (property?.id == data.id) {
+                                            property = newProperty;
+                                        }
+                                        return property;
+                                    });
+                                }
+                            )
+                        );
+                    } catch (error) {
+                        toast.error(notificationMessages(error?.error?.status));
+                    }
+                },
+            }),
         };
     },
 });
@@ -146,5 +195,6 @@ export const {
     useFetchPropertyByIdQuery,
     useAddPropertyInfoMutation,
     useDeleteOwnPropertyMutation,
+    useEditPropertyInfoMutation,
 } = propertiesApi;
 export { propertiesApi };
