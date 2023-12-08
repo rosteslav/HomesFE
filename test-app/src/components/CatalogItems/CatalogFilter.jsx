@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 
 import { useFetchPropertiesFilterOptionsQuery } from '../../services/propertiesApi';
 import ButtonFilter from '../../UI/ButtonsFilter';
-import { loadAllOptions, setFilterOption } from '../../store/features/filter';
+import { loadAllOptions, setFilterOption, updateFilterQueryData } from '../../store/features/filter';
 import RangeSlider from './RangeSlider';
 
-const CatalogFilter = ({ setFetchData }) => {
+const CatalogFilter = () => {
     const dispatch = useDispatch();
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
     const filter = useSelector((state) => state.filter);
@@ -34,7 +34,7 @@ const CatalogFilter = ({ setFetchData }) => {
                 <>
                     {filter.filter.data[option].allOptions.map((x) => (
                         <ButtonFilter
-                            isActive={filter.queryData[option].includes(x) ? true : false}
+                            isActive={filter.filter.data[option].options.includes(x) ? true : false}
                             action={() => optionsHandler(option, x)}
                             key={x}
                         >
@@ -64,12 +64,15 @@ const CatalogFilter = ({ setFetchData }) => {
         if (targetTagName !== 'BUTTON') {
             setOption(undefined);
 
-            setFetchData(filter.queryData);
+  
+            dispatch(updateFilterQueryData())
         }
     };
 
     const rangeRefetchHandle = () => {
-        setFetchData(filter.queryData);
+
+        dispatch(updateFilterQueryData())
+
     };
 
     return (

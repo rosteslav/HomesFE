@@ -13,9 +13,10 @@ import CatalogFilter from './CatalogFilter';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
-    const [fetchData, setFetchData] = useState([]);
+    // const [fetchData, setFetchData] = useState([]);
+    const queryData = useSelector((state) => state.filter.queryData)
 
-    const { data: properties, isLoading } = useFetchAllPropertiesQuery(fetchData);
+    const { data: properties, isLoading } = useFetchAllPropertiesQuery(queryData);
 
     const { data: clientProperties } = useFetchOwnPropertiesQuery(undefined, { skip });
     const role = useSelector((state) => state.authUser.data?.claims?.roles);
@@ -42,7 +43,7 @@ export const CatalogItems = () => {
             )}
 
             <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
-            <CatalogFilter setFetchData={setFetchData} />
+            <CatalogFilter />
             {properties && properties.length > 0 && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {properties.map((i) => (
