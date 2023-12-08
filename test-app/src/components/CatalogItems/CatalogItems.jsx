@@ -13,7 +13,7 @@ import CatalogFilter from './CatalogFilter';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
-    // const [fetchData, setFetchData] = useState([]);
+
     const queryData = useSelector((state) => state.filter.queryData)
 
     const { data: properties, isLoading } = useFetchAllPropertiesQuery(queryData);

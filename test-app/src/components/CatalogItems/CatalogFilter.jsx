@@ -63,8 +63,6 @@ const CatalogFilter = () => {
         const targetTagName = e.target.tagName;
         if (targetTagName !== 'BUTTON') {
             setOption(undefined);
-
-  
             dispatch(updateFilterQueryData())
         }
     };
