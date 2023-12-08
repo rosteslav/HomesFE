@@ -11,6 +11,7 @@ const initialState = {
         heating: [],
         price: [],
         space: [],
+        publishedOn: [],
     },
     filter: {
         data: {
@@ -68,6 +69,12 @@ const initialState = {
                 options: [],
                 allOptions: [0, 300, 10],
             },
+            publishedOn: {
+                buttonStartContent: 'Публикувани',
+                buttonContent: 'Публикувани',
+                options: [],
+                allOptions: [],
+            },
         },
         collected: {
             allOptions: false,
@@ -95,10 +102,10 @@ const filterSlice = createSlice({
                 optionFields.forEach((field) => {
                     state.filter.data[field].allOptions = action.payload[field];
                 });
+                state.filter.data.publishedOn.allOptions = action.payload.publishedOn;
             }
         },
         setFilterOption(state, action) {
-            console.log(action.payload);
             const { option, value } = action.payload;
             if (option === 'price' || option === 'space') {
                 if (
@@ -115,6 +122,14 @@ const filterSlice = createSlice({
                         current(state.filter.data[option])
                     );
                 }
+            } else if (option == 'publishedOn') {
+                state.filter.data.publishedOn.options = [value.numberOfDays];
+                if (value.numberOfDays > 0) {
+                    state.filter.data.publishedOn.buttonContent = `Публикувани ${value.description}`;
+                } else {
+                    state.filter.data.publishedOn.buttonContent =
+                        state.filter.data.publishedOn.buttonStartContent;
+                }
             } else {
                 state.filter.data[option].options = updateOptions(
                     state.filter.data[option].options,
@@ -128,9 +143,8 @@ const filterSlice = createSlice({
         },
 
         updateFilterQueryData(state) {
-            for (const key in state.filter.data){
-                console.log(current(state.filter.data[key].options))
-                state.queryData[key] = current(state.filter.data[key].options)
+            for (const key in state.filter.data) {
+                state.queryData[key] = current(state.filter.data[key].options);
             }
         },
     },
@@ -143,7 +157,7 @@ const updateOptions = (options, value) => {
 };
 
 const updateButtonContext = (state) => {
-    console.log(state);
+  
     const buttonStart = state.buttonStartContent;
 
     let buttonEnd = '';

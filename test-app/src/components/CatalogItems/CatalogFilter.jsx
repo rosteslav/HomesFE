@@ -52,6 +52,23 @@ const CatalogFilter = () => {
                     <RangeSlider option={option.rangeChoice} />
                 </div>
             );
+        } else if (option?.singleChoice && option?.singleChoice == 'publishedOn') {
+            return filter.filter.data[option.singleChoice].allOptions.map((button) => (
+                <ButtonFilter
+                    isActive={
+                        filter.filter.data[option.singleChoice].options[0] == button.numberOfDays
+                            ? true
+                            : false
+                    }
+                    action={() => {
+                        optionsHandler(option.singleChoice, button);
+                        setOption(undefined);
+                    }}
+                    key={button.numberOfDays}
+                >
+                    {button.description}
+                </ButtonFilter>
+            ));
         }
 
         return <></>;
@@ -186,6 +203,19 @@ const CatalogFilter = () => {
                             }}
                         >
                             {filter.filter.data.space.buttonContent}
+                        </ButtonFilter>
+                        <ButtonFilter
+                            isActive={
+                                option?.singleChoice == 'publishedOn' ||
+                                filter.filter.data.publishedOn.options.length > 0
+                                    ? true
+                                    : false
+                            }
+                            action={() => {
+                                setOption({ singleChoice: 'publishedOn' });
+                            }}
+                        >
+                            {filter.filter.data.publishedOn.buttonContent}
                         </ButtonFilter>
                     </div>
                 )}
