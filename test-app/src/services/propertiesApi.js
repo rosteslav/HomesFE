@@ -72,7 +72,7 @@ const propertiesApi = createApi({
                         body: formData,
                     };
                 },
-                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
                     try {
                         const { data: id } = await queryFulfilled;
                         data.id = id.id;
@@ -89,7 +89,7 @@ const propertiesApi = createApi({
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchAllProperties',
-                                undefined,
+                                getState().filter.queryData,
                                 (draftData) => {
                                     draftData?.push(data);
                                 }
@@ -107,7 +107,7 @@ const propertiesApi = createApi({
                         method: 'DELETE',
                     };
                 },
-                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
                     try {
                         await queryFulfilled;
 
@@ -123,7 +123,7 @@ const propertiesApi = createApi({
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchAllProperties',
-                                undefined,
+                                getState().filter.queryData,
                                 (draftData) => {
                                     return draftData?.filter((property) => property?.id !== data);
                                 }
@@ -149,7 +149,7 @@ const propertiesApi = createApi({
 
                         const newProperty = data.data;
                         newProperty.id = data.id;
-              
+
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchOwnProperties',
