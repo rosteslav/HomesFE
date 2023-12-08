@@ -46,8 +46,9 @@ const propertiesApi = createApi({
                     const heatingQuery = buildQueryString('heating');
                     const priceQuery = buildQueryRangeString('price');
                     const spaceQuery = buildQueryRangeString('space');
+                    const publishedOnQuery = buildQueryString('publishedOn');
 
-                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}`;
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}`;
 
                     return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
                 },
@@ -143,7 +144,7 @@ const propertiesApi = createApi({
                     };
                 },
                 async onQueryStarted(data, { dispatch, queryFulfilled }) {
-                    console.log(data);
+                  
                     try {
                         await queryFulfilled;
 
