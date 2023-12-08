@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 
 import { useFetchPropertiesFilterOptionsQuery } from '../../services/propertiesApi';
 import ButtonFilter from '../../UI/ButtonsFilter';
-import { loadAllOptions, setFilterOption, updateFilterQueryData } from '../../store/features/filter';
+import {
+    loadAllOptions,
+    setFilterOption,
+    updateFilterQueryData,
+} from '../../store/features/filter';
 import RangeSlider from './RangeSlider';
 
 const CatalogFilter = () => {
@@ -12,7 +16,6 @@ const CatalogFilter = () => {
     const filter = useSelector((state) => state.filter);
 
     const [option, setOption] = useState();
-    const [rangeOption, setRangeOption] = useState();
 
     useEffect(() => {
         if (isSuccess) {
@@ -24,18 +27,18 @@ const CatalogFilter = () => {
         dispatch(setFilterOption({ option, value }));
     };
 
-    const buttonsContainer = (option) => {
-        if (option == undefined) {
-            return <></>;
-        }
-
-        if (option && filter.filter.data[option].allOptions) {
+    const selectedOptions = (option) => {
+        if (option?.multiChoice && filter.filter.data[option.multiChoice].allOptions) {
             return (
                 <>
-                    {filter.filter.data[option].allOptions.map((x) => (
+                    {filter.filter.data[option.multiChoice].allOptions.map((x) => (
                         <ButtonFilter
-                            isActive={filter.filter.data[option].options.includes(x) ? true : false}
-                            action={() => optionsHandler(option, x)}
+                            isActive={
+                                filter.filter.data[option.multiChoice].options.includes(x)
+                                    ? true
+                                    : false
+                            }
+                            action={() => optionsHandler(option.multiChoice, x)}
                             key={x}
                         >
                             {x}
@@ -43,118 +46,143 @@ const CatalogFilter = () => {
                     ))}
                 </>
             );
-        }
-        return <></>;
-    };
-
-    const rangeContainer = (rangeOption) => {
-        if (rangeOption) {
+        } else if (option?.rangeChoice) {
             return (
                 <div>
-                    <RangeSlider option={rangeOption} />
+                    <RangeSlider option={option.rangeChoice} />
                 </div>
             );
-        } else {
-            return <></>;
         }
+
+        return <></>;
     };
 
     const refetchHandler = (e) => {
         const targetTagName = e.target.tagName;
         if (targetTagName !== 'BUTTON') {
             setOption(undefined);
-            dispatch(updateFilterQueryData())
+            dispatch(updateFilterQueryData());
         }
-    };
-
-    const rangeRefetchHandle = () => {
-
-        dispatch(updateFilterQueryData())
-
     };
 
     return (
         <>
             <div className='my-4 border-b-2 border-t-2 border-black'>
                 {isSuccess && (
-                    <div className='flex flex-wrap'>
+                    <div className='mx-8 flex flex-wrap'>
                         <ButtonFilter
-                            isActive={filter.queryData.neighbourhood.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'neighbourhood' ||
+                                filter.queryData.neighbourhood.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('neighbourhood');
+                                setOption({ multiChoice: 'neighbourhood' });
                             }}
                         >
                             {filter.filter.data.neighbourhood.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.numberOfRooms.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'numberOfRooms' ||
+                                filter.queryData.numberOfRooms.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('numberOfRooms');
+                                setOption({ multiChoice: 'numberOfRooms' });
                             }}
                         >
                             {filter.filter.data.numberOfRooms.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.buildingType.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'buildingType' ||
+                                filter.queryData.buildingType.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('buildingType');
+                                setOption({ multiChoice: 'buildingType' });
                             }}
                         >
                             {filter.filter.data.buildingType.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.exposure.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'exposure' ||
+                                filter.queryData.exposure.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('exposure');
+                                setOption({ multiChoice: 'exposure' });
                             }}
                         >
                             {filter.filter.data.exposure.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.finish.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'finish' ||
+                                filter.queryData.finish.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('finish');
+                                setOption({ multiChoice: 'finish' });
                             }}
                         >
                             {filter.filter.data.finish.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.furnishment.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'furnishment' ||
+                                filter.queryData.furnishment.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('furnishment');
+                                setOption({ multiChoice: 'furnishment' });
                             }}
                         >
                             {filter.filter.data.furnishment.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.queryData.heating.length > 0 ? true : false}
+                            isActive={
+                                option?.multiChoice == 'heating' ||
+                                filter.queryData.heating.length > 0
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setRangeOption(undefined);
-                                setOption('heating');
+                                setOption({ multiChoice: 'heating' });
                             }}
                         >
                             {filter.filter.data.heating.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.filter.data.price.options.length > 1 ? true : false}
+                            isActive={
+                                option?.rangeChoice == 'price' ||
+                                filter.filter.data.price.options.length > 1
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setOption(undefined);
-                                setRangeOption('price');
+                                setOption({ rangeChoice: 'price' });
                             }}
                         >
                             {filter.filter.data.price.buttonContent}
                         </ButtonFilter>
                         <ButtonFilter
-                            isActive={filter.filter.data.space.options.length > 1 ? true : false}
+                            isActive={
+                                option?.rangeChoice == 'space' ||
+                                filter.filter.data.space.options.length > 1
+                                    ? true
+                                    : false
+                            }
                             action={() => {
-                                setOption(undefined);
-                                setRangeOption('space');
+                                setOption({ rangeChoice: 'space' });
                             }}
                         >
                             {filter.filter.data.space.buttonContent}
@@ -162,8 +190,9 @@ const CatalogFilter = () => {
                     </div>
                 )}
             </div>
-            <div onClick={refetchHandler}>{buttonsContainer(option)}</div>
-            <div onClick={rangeRefetchHandle}>{rangeContainer(rangeOption)}</div>
+            <div className='mx-8' onClick={refetchHandler}>
+                {selectedOptions(option)}
+            </div>
         </>
     );
 };
