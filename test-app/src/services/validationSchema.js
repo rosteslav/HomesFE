@@ -15,7 +15,7 @@ const errors = {
         garage: 'Моля въведете информация за гараж',
         heating: 'Моля въведете начин на отопление на имота',
         neighbourhood: 'Моля въведете квартал в който се намира имота',
-        // brokerId: 'Моля въведете информация за брокера',
+        exposure: 'Моля въведете изложение',
         numberOfRooms: 'Моля въведете боря на стаите в имота',
         space: 'Моля въведете квадратурата на имота',
         price: 'Моля въведете цената на имота',
@@ -112,7 +112,13 @@ export const validationCreatePropertySchema = yup.object().shape({
         .positive(errors.positive.floor)
         .required(errors.required.floor)
         .min(1, errors.min.floor)
-        .max(20, errors.max.floor),
+        .max(20, errors.max.floor)
+        .test({
+            message: 'Етажа не може да бъде по-голям от броя на етажите в сградата.',
+            test: function (value) {
+                return value <= this.parent.totalFloorsInBuilding;
+            },
+        }),
     totalFloorsInBuilding: yup
         .number()
         .typeError(errors.number.totalFloorsInBuilding)
@@ -126,5 +132,6 @@ export const validationCreatePropertySchema = yup.object().shape({
     garage: yup.string().required(errors.required.garage),
     heating: yup.string().required(errors.required.heating),
     neighbourhood: yup.string().required(errors.required.neighbourhood),
+    exposure: yup.string().required(errors.required.exposure),
     // brokerId: yup.string().required(errors.required.brokerId),
 });
