@@ -75,6 +75,12 @@ const initialState = {
                 options: [],
                 allOptions: [],
             },
+            orderBy: {
+                buttonStartContent: 'Сортиране',
+                buttonContent: 'Сортиране',
+                options: [],
+                allOptions: [],
+            },
         },
         collected: {
             allOptions: false,
@@ -97,12 +103,13 @@ const filterSlice = createSlice({
                     'finish',
                     'furnishment',
                     'heating',
+                    'publishedOn',
+                    'orderBy',
                 ];
 
                 optionFields.forEach((field) => {
                     state.filter.data[field].allOptions = action.payload[field];
                 });
-                state.filter.data.publishedOn.allOptions = action.payload.publishedOn;
             }
         },
         setFilterOption(state, action) {
@@ -130,6 +137,9 @@ const filterSlice = createSlice({
                     state.filter.data.publishedOn.buttonContent =
                         state.filter.data.publishedOn.buttonStartContent;
                 }
+            } else if (option == 'orderBy') {
+                state.filter.data.orderBy.options = [value.relatedPropName];
+                state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
             } else {
                 state.filter.data[option].options = updateOptions(
                     state.filter.data[option].options,
@@ -157,7 +167,6 @@ const updateOptions = (options, value) => {
 };
 
 const updateButtonContext = (state) => {
-  
     const buttonStart = state.buttonStartContent;
 
     let buttonEnd = '';

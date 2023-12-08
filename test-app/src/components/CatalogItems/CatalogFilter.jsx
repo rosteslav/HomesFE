@@ -52,11 +52,12 @@ const CatalogFilter = () => {
                     <RangeSlider option={option.rangeChoice} />
                 </div>
             );
-        } else if (option?.singleChoice && option?.singleChoice == 'publishedOn') {
+        } else if (option?.singleChoice) {
+            const key = option.singleChoice == 'orderBy' ? 'relatedPropName' : 'numberOfDays'
             return filter.filter.data[option.singleChoice].allOptions.map((button) => (
                 <ButtonFilter
                     isActive={
-                        filter.filter.data[option.singleChoice].options[0] == button.numberOfDays
+                        filter.filter.data[option.singleChoice].options[0] == button[key]
                             ? true
                             : false
                     }
@@ -64,7 +65,7 @@ const CatalogFilter = () => {
                         optionsHandler(option.singleChoice, button);
                         setOption(undefined);
                     }}
-                    key={button.numberOfDays}
+                    key={button[key]}
                 >
                     {button.description}
                 </ButtonFilter>
@@ -207,7 +208,7 @@ const CatalogFilter = () => {
                         <ButtonFilter
                             isActive={
                                 option?.singleChoice == 'publishedOn' ||
-                                filter.filter.data.publishedOn.options.length > 0
+                                filter.filter.data.publishedOn.options[0] > 0
                                     ? true
                                     : false
                             }
@@ -216,6 +217,19 @@ const CatalogFilter = () => {
                             }}
                         >
                             {filter.filter.data.publishedOn.buttonContent}
+                        </ButtonFilter>
+                        <ButtonFilter
+                            isActive={
+                                option?.singleChoice == 'orderBy' ||
+                                filter.filter.data.orderBy.options.length > 0
+                                    ? true
+                                    : false
+                            }
+                            action={() => {
+                                setOption({ singleChoice: 'orderBy' });
+                            }}
+                        >
+                            {filter.filter.data.orderBy.buttonContent}
                         </ButtonFilter>
                     </div>
                 )}
