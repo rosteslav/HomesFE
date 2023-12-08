@@ -64,6 +64,7 @@ const CatalogFilter = () => {
                     action={() => {
                         optionsHandler(option.singleChoice, button);
                         setOption(undefined);
+                        dispatch(updateFilterQueryData())
                     }}
                     key={button[key]}
                 >
