@@ -106,7 +106,6 @@ const filterSlice = createSlice({
                     state.filter.data[option].allOptions[1] != value[1]
                 ) {
                     state.filter.data[option].options = value;
-                    state.queryData[option] = value;
                     state.filter.data[option].buttonContent = updateRangeContext(
                         current(state.filter.data[option])
                     );
@@ -115,7 +114,6 @@ const filterSlice = createSlice({
                     state.filter.data[option].buttonContent = updateRangeContext(
                         current(state.filter.data[option])
                     );
-                    state.queryData[option] = [];
                 }
             } else {
                 state.filter.data[option].options = updateOptions(
@@ -123,14 +121,16 @@ const filterSlice = createSlice({
                     value
                 );
 
-                state.queryData = {
-                    ...state.queryData,
-                    [option]: updateQueryData(state.filter.data[option].options),
-                };
-
                 state.filter.data[option].buttonContent = updateButtonContext(
                     current(state.filter.data[option])
                 );
+            }
+        },
+
+        updateFilterQueryData(state) {
+            for (const key in state.filter.data){
+                console.log(current(state.filter.data[key].options))
+                state.queryData[key] = current(state.filter.data[key].options)
             }
         },
     },
@@ -140,11 +140,6 @@ const updateOptions = (options, value) => {
     const idx = options.indexOf(value);
 
     return idx !== -1 ? [...options.slice(0, idx), ...options.slice(idx + 1)] : [...options, value];
-};
-
-const updateQueryData = (state) => {
-    console.log(state);
-    return state;
 };
 
 const updateButtonContext = (state) => {
@@ -175,4 +170,4 @@ const updateRangeContext = (state) => {
 };
 
 export default filterSlice.reducer;
-export const { setFilterOption, loadAllOptions } = filterSlice.actions;
+export const { setFilterOption, loadAllOptions, updateFilterQueryData } = filterSlice.actions;
