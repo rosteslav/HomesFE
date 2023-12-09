@@ -143,7 +143,7 @@ export const CreateProperty = () => {
         formData.brokerId = brokerValues.id;
         formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
         if (propertyId.propertyId) {
-            editPropertyInfo({ id: propertyId.propertyId, data: formData });
+            editPropertyInfo({ id: +propertyId.propertyId, data: formData });
         } else {
             addPropertyInfo(formData);
         }
