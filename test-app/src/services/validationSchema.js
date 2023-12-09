@@ -132,6 +132,6 @@ export const validationCreatePropertySchema = yup.object().shape({
     garage: yup.string().required(errors.required.garage),
     heating: yup.string().required(errors.required.heating),
     neighbourhood: yup.string().required(errors.required.neighbourhood),
-    exposure: yup.string().required(errors.required.exposure),
+    // exposure: yup.string().required(errors.required.exposure),
     // brokerId: yup.string().required(errors.required.brokerId),
 });

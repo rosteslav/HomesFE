@@ -65,9 +65,21 @@ const imagesApi = createApi({
                     }
                 },
             }),
+            deletePropertyImage: builder.mutation({
+                query: (id) => {
+                    return {
+                        url: `/image/${id}`,
+                        method: 'DELETE',
+                    };
+                },
+            }),
         };
     },
 });
 
-export const { useAddPropertyImageMutation, useFetchPropertyImagesQuery } = imagesApi;
+export const {
+    useAddPropertyImageMutation,
+    useFetchPropertyImagesQuery,
+    useDeletePropertyImageMutation,
+} = imagesApi;
 export { imagesApi };
