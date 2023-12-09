@@ -18,3 +18,18 @@ export const ImageSkeleton = () => {
         </div>
     );
 };
+
+export const TextSkeleton = ({ times }) => {
+    return (
+        <div role='status' className='max-w-sm animate-pulse'>
+            {Array(times)
+                .fill()
+                .map((_, index) => (
+                    <div
+                        key={index}
+                        className='mb-2.5 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700'
+                    ></div>
+                ))}
+        </div>
+    );
+};
