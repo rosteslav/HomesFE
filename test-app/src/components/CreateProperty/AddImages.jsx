@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-hot-toast';
-import { useAddPropertyImageMutation } from '../../services/imagesApi';
+import { useAddPropertyImageMutation, useDeletePropertyImageMutation, useFetchPropertyImagesQuery } from '../../services/imagesApi';
 import Loader from '../../UI/Loader';
 
-export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
+export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
+    const [skip, setSkip] = useState(true);
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
+    const [imagesUploaded, setImagesUploaded] = useState([]);
+    const { data: images, isSuccess: success } = useFetchPropertyImagesQuery(propertyId.propertyId, {
+        skip });
     const [addPropertyImage, { isSuccess, isLoading }] = useAddPropertyImageMutation();
+    const [deletePropertyImage, { isSuccess: successDelImg, isLoading: loading }] = useDeletePropertyImageMutation();
     const navigate = useNavigate();
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
@@ -48,6 +53,11 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
         const updatedInputs = imageInputs.filter((input) => input.id !== id);
         setImageInputs(updatedInputs);
     };
+    const handleRemoveImageUploaded = (id) => {
+        deletePropertyImage(id);
+        const updatedUploadedImages = imagesUploaded.filter((image) => image.id !== id);
+        setImagesUploaded(updatedUploadedImages);
+    };
 
     useEffect(() => {
         if (isSuccess) {
@@ -56,19 +66,31 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
         }
     });
 
+    useEffect(() => {
+        if(propertyId.propertyId) {
+            setSkip(false);
+            if(success) {
+                setImagesUploaded([...images]);
+            }
+        }
+    }, [setSkip, propertyId, images, success, imageInputs]);
+
     const handleSubmitImage = async (e) => {
         e.preventDefault();
         try {
+            const propId = responseId ? responseId.id : propertyId.propertyId;
             imageInputs.forEach(async (i) => {
                 const formData = new FormData();
                 if (i.file) {
                     formData.append('image', i.file);
-                    addPropertyImage({ propertyId: responseId.id, data: formData });
+                    addPropertyImage({ propertyId: propId, data: formData });
                 }
             });
         } catch (err) {
             console.log(`ERROR catch ${err.message}`);
         }
+        setToggleForms('text');
+        navigate('/');
     };
     return (
         <>
@@ -116,6 +138,27 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms }) => {
                 <div>
                     <div className='m-5 max-sm:hidden'>
                         <ul className='grid grid-cols-2 gap-4'>
+                            {imagesUploaded.map(
+                                (image) =>
+                                    image.imageURL && (
+                                        <li className='relative my-5' key={image.id}>
+                                        <div className='relative flex h-full overflow-hidden'>
+                                            <img
+                                                className='flex-1 object-cover'
+                                                src={image.imageURL}
+                                                alt={`Local Image ${image.id}`}
+                                            />
+                                        </div>
+                                        <button
+                                            className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                            onClick={() => handleRemoveImageUploaded(image.id)}
+                                        >
+                                            X
+                                        </button>
+                                    </li>
+                                    )
+                                
+                            )}
                             {imageInputs.map(
                                 (input) =>
                                     input.file && (

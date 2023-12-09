@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom';
 import { useDeleteOwnPropertyMutation } from '../../../services/propertiesApi';
 
-const CardDeleteBtn = ({ property }) => {
+const CardBtn = ({ property }) => {
     const [removeOwnProperty, result] = useDeleteOwnPropertyMutation();
     const onClickSubmit = (id) => {
         removeOwnProperty(id);
@@ -15,8 +16,15 @@ const CardDeleteBtn = ({ property }) => {
                     Изтриване
                 </button>
             </div>
+            <div className='w-fit'>
+            <Link to={`createProperty/edit/${property.id}`} className="link" ><button
+                    className='mb-2 me-2 rounded-lg bg-blue-500 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-900'
+                >
+                    Редактиране
+                </button></Link>
+            </div>
         </div>
     );
 };
 
-export default CardDeleteBtn;
+export default CardBtn;
