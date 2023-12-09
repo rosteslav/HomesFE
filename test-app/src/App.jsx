@@ -34,7 +34,8 @@ const router = createBrowserRouter([
                 ],
             },
             { path: ':detailsId', element: <PropertiesDetails /> },
-            { path: 'createProperty', element: <CreateProperty />}
+            { path: 'createProperty', element: <CreateProperty />},
+            { path: 'createProperty/edit/:propertyId', element: <CreateProperty />}
         ],
     },
 ]);
