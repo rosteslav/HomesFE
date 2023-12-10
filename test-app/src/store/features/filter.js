@@ -12,6 +12,7 @@ const initialState = {
         price: [],
         space: [],
         publishedOn: [],
+        isAscending: '',
     },
     filter: {
         data: {
@@ -79,6 +80,7 @@ const initialState = {
                 buttonStartContent: 'Сортиране',
                 buttonContent: 'Сортиране',
                 options: [],
+                isAscending: '',
                 allOptions: [],
             },
         },
@@ -110,6 +112,14 @@ const filterSlice = createSlice({
                 optionFields.forEach((field) => {
                     state.filter.data[field].allOptions = action.payload[field];
                 });
+                const isAscending = {
+                    isAscending: true,
+                };
+                state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map(
+                    (option) => {
+                        return { ...option, ...isAscending };
+                    }
+                );
             }
         },
         setFilterOption(state, action) {
@@ -138,8 +148,29 @@ const filterSlice = createSlice({
                         state.filter.data.publishedOn.buttonStartContent;
                 }
             } else if (option == 'orderBy') {
-                state.filter.data.orderBy.options = [value.relatedPropName];
-                state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
+                if (state.filter.data.orderBy.options[0] != value.relatedPropName) {
+                    state.filter.data.orderBy.options = [value.relatedPropName];
+                }
+
+                state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map(
+                    (x) => {
+                        if (x.relatedPropName == value.relatedPropName) {
+                            x.isAscending = !x.isAscending;
+                            state.filter.data.orderBy.isAscending = x.isAscending;
+                            state.queryData.isAscending = x.isAscending;
+                            if (x.isAscending == true) {
+                                const description = value.description
+                                state.filter.data.orderBy.buttonContent = `Сортиране по ${
+                                    description == 'Най-нови' ? 'Най-стари' : value.description
+                                }`;
+                            } else if (x.isAscending == false) {
+                                state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
+                            }
+                           
+                        }
+                        return x;
+                    }
+                );
             } else {
                 state.filter.data[option].options = updateOptions(
                     state.filter.data[option].options,
@@ -155,6 +186,13 @@ const filterSlice = createSlice({
         updateFilterQueryData(state) {
             for (const key in state.filter.data) {
                 state.queryData[key] = current(state.filter.data[key].options);
+            }
+        },
+        resetFilter(state) {
+            state.queryData = { ...initialState.queryData };
+            for (const key in state.filter.data) {
+                state.filter.data[key].options = [];
+                state.filter.data[key].buttonContent = state.filter.data[key].buttonStartContent;
             }
         },
     },
@@ -193,4 +231,5 @@ const updateRangeContext = (state) => {
 };
 
 export default filterSlice.reducer;
-export const { setFilterOption, loadAllOptions, updateFilterQueryData } = filterSlice.actions;
+export const { setFilterOption, loadAllOptions, updateFilterQueryData, resetFilter } =
+    filterSlice.actions;

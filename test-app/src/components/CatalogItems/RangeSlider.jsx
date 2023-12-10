@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import 'rc-slider/assets/index.css';
-import { setFilterOption } from '../../store/features/filter';
+import { setFilterOption, updateFilterQueryData } from '../../store/features/filter';
 
 const RangeSlider = ({ option }) => {
     const filter = useSelector((state) => state.filter);
@@ -14,7 +14,7 @@ const RangeSlider = ({ option }) => {
     const [step, setStep] = useState(0);
 
     useEffect(() => {
-        console.log(option);
+
         if (option) {
             if (filter.filter.data[option].options.length > 1) {
                 setRangeValues([
@@ -53,16 +53,17 @@ const RangeSlider = ({ option }) => {
 
     const changeCompleteHandler = (values) => {
         dispatch(setFilterOption({ option, value: values }));
+        dispatch(updateFilterQueryData())
     };
 
     return (
         <div className='w-full'>
-            <div className='mx-auto  my-8 flex h-9 w-96 flex-col items-center justify-center'>
-                <div className='mb-4 flex w-full justify-between'>
-                    <p>
+            <div className='slider mx-auto  m-10 flex h-9 w-96 flex-col items-center justify-center'>
+                <div className='slider mb-4 flex w-full justify-between'>
+                    <p className='slider'>
                         От: {rangeValues[0]} {formatText()}
                     </p>
-                    <p>
+                    <p className='slider'>
                         До: {rangeValues[1]} {formatText()}
                     </p>
                 </div>
