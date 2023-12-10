@@ -66,11 +66,42 @@ const imagesApi = createApi({
                 },
             }),
             deletePropertyImage: builder.mutation({
-                query: (id) => {
+                query: (data) => {
                     return {
-                        url: `/image/${id}`,
+                        url: `/image/${data.id}`,
                         method: 'DELETE',
                     };
+                },
+                async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                    await queryFulfilled;
+
+                    dispatch(
+                        propertiesApi.util.updateQueryData(
+                            'fetchOwnProperties',
+                            undefined,
+                            (draftData) => {
+                                draftData?.map((property) => {
+                                    if (property.id === args.propertyId) {
+                                        property.images = property.images.filter(
+                                            (image) => image !== args.imageURL
+                                        );
+                                    }
+                                    return property;
+                                });
+                            }
+                        )
+                    );
+                    dispatch(
+                        imagesApi.util.updateQueryData(
+                            'fetchPropertyImages',
+                            args.propertyId.toString(),
+                            (draftData) => {
+                                const data = draftData?.filter((image) => image.id !== args.id);
+
+                                return data;
+                            }
+                        )
+                    );
                 },
             }),
         };

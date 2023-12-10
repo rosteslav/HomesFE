@@ -36,11 +36,9 @@ export const CreateProperty = () => {
     });
     const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
         skip: conditionIsEdit,
+        refetchOnMountOrArgChange: true,
     });
-    const [
-        editPropertyInfo,
-        { isLoading: loading, data: editPropertyInfoResult, isSuccess: success },
-    ] = useEditPropertyInfoMutation({
+    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
         skip: conditionIsEdit,
     });
     const [toggleButtons, setToggleButtons] = useState();
@@ -143,7 +141,11 @@ export const CreateProperty = () => {
         formData.brokerId = brokerValues.id;
         formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
         if (propertyId.propertyId) {
-            editPropertyInfo({ id: propertyId.propertyId, data: formData });
+            editPropertyInfo({
+                id: +propertyId.propertyId,
+                data: formData,
+                oldImages: property.images,
+            });
         } else {
             addPropertyInfo(formData);
         }

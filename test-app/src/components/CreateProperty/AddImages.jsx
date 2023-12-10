@@ -2,17 +2,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-hot-toast';
-import { useAddPropertyImageMutation, useDeletePropertyImageMutation, useFetchPropertyImagesQuery } from '../../services/imagesApi';
+import {
+    useAddPropertyImageMutation,
+    useDeletePropertyImageMutation,
+    useFetchPropertyImagesQuery,
+} from '../../services/imagesApi';
 import Loader from '../../UI/Loader';
 
 export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
     const [imagesUploaded, setImagesUploaded] = useState([]);
-    const { data: images, isSuccess: success } = useFetchPropertyImagesQuery(propertyId.propertyId, {
-        skip });
+    const { data: images, isSuccess: success } = useFetchPropertyImagesQuery(
+        propertyId.propertyId,
+        { skip }
+    );
     const [addPropertyImage, { isSuccess, isLoading }] = useAddPropertyImageMutation();
-    const [deletePropertyImage, { isSuccess: successDelImg, isLoading: loading }] = useDeletePropertyImageMutation();
+    const [deletePropertyImage] =
+        useDeletePropertyImageMutation();
     const navigate = useNavigate();
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
@@ -34,7 +41,6 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
 
         const updatedInputs = imageInputs.map((input) => {
             if (input.id === id) {
-
                 const formData = new FormData();
                 formData.set('image', e.target.files[0]);
                 return { ...input, file: e.target.files[0] };
@@ -54,7 +60,18 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         setImageInputs(updatedInputs);
     };
     const handleRemoveImageUploaded = (id) => {
-        deletePropertyImage(id);
+        const imageURL = images.filter((image) => {
+            if (image.id == id) {
+                console.log(image);
+                return image.imageURL;
+            }
+        });
+        console.log(imageURL);
+        deletePropertyImage({
+            id,
+            propertyId: +propertyId.propertyId,
+            imageURL: imageURL[0].imageURL,
+        });
         const updatedUploadedImages = imagesUploaded.filter((image) => image.id !== id);
         setImagesUploaded(updatedUploadedImages);
     };
@@ -67,9 +84,9 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
     });
 
     useEffect(() => {
-        if(propertyId.propertyId) {
+        if (propertyId.propertyId) {
             setSkip(false);
-            if(success) {
+            if (success) {
                 setImagesUploaded([...images]);
             }
         }
@@ -83,7 +100,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                 const formData = new FormData();
                 if (i.file) {
                     formData.append('image', i.file);
-                    addPropertyImage({ propertyId: propId, data: formData });
+                    addPropertyImage({ propertyId: +propId, data: formData });
                 }
             });
         } catch (err) {
@@ -142,22 +159,21 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                                 (image) =>
                                     image.imageURL && (
                                         <li className='relative my-5' key={image.id}>
-                                        <div className='relative flex h-full overflow-hidden'>
-                                            <img
-                                                className='flex-1 object-cover'
-                                                src={image.imageURL}
-                                                alt={`Local Image ${image.id}`}
-                                            />
-                                        </div>
-                                        <button
-                                            className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
-                                            onClick={() => handleRemoveImageUploaded(image.id)}
-                                        >
-                                            X
-                                        </button>
-                                    </li>
+                                            <div className='relative flex h-full overflow-hidden'>
+                                                <img
+                                                    className='flex-1 object-cover'
+                                                    src={image.imageURL}
+                                                    alt={`Local Image ${image.id}`}
+                                                />
+                                            </div>
+                                            <button
+                                                className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                                onClick={() => handleRemoveImageUploaded(image.id)}
+                                            >
+                                                X
+                                            </button>
+                                        </li>
                                     )
-                                
                             )}
                             {imageInputs.map(
                                 (input) =>
