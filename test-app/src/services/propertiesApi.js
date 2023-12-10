@@ -49,7 +49,10 @@ const propertiesApi = createApi({
                     const publishedOnQuery = buildQueryString('publishedOn');
                     const orderByQuery = buildQueryString('orderBy');
 
-                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}${orderByQuery}`;
+                    let isAscending = args.isAscending ? `&isAscending=${args.isAscending}` : '';
+                    
+
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}${orderByQuery}${isAscending}`;
 
                     return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
                 },
