@@ -150,6 +150,7 @@ const propertiesApi = createApi({
 
                         const newProperty = data.data;
                         newProperty.id = data.id;
+                        newProperty.images = data.oldImages;
 
                         dispatch(
                             propertiesApi.util.updateQueryData(
