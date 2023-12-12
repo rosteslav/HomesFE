@@ -158,15 +158,9 @@ const filterSlice = createSlice({
                             x.isAscending = !x.isAscending;
                             state.filter.data.orderBy.isAscending = x.isAscending;
                             state.queryData.isAscending = x.isAscending;
-                            if (x.isAscending == true) {
-                                const description = value.description
-                                state.filter.data.orderBy.buttonContent = `Сортиране по ${
-                                    description == 'Най-нови' ? 'Най-стари' : value.description
-                                }`;
-                            } else if (x.isAscending == false) {
-                                state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
-                            }
-                           
+                            state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
+                        } else {
+                            x.isAscending = true;
                         }
                         return x;
                     }
@@ -194,6 +188,10 @@ const filterSlice = createSlice({
                 state.filter.data[key].options = [];
                 state.filter.data[key].buttonContent = state.filter.data[key].buttonStartContent;
             }
+            state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map((x) => {
+                x.isAscending = true;
+                return x;
+            });
         },
     },
 });
