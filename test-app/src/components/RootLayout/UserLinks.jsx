@@ -30,7 +30,7 @@ const UserLinks = ({ user }) => {
                 </div>
             )}
             <span className='text-1xl text-center font-bold leading-9 tracking-tight text-gray-900'>
-                Здравей, {user.claims.name}
+                Здравей, {user.claims.username}
             </span>
             <img
                 className='mx-2 h-10 w-10 rounded-full bg-white'
