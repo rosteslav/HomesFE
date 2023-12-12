@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import 'rc-slider/assets/index.css';
 import { setFilterOption, updateFilterQueryData } from '../../store/features/filter';
 
-const RangeSlider = ({ option }) => {
+const RangeSlider = ({ option, setPage }) => {
     const filter = useSelector((state) => state.filter);
     const dispatch = useDispatch();
     const [rangeValues, setRangeValues] = useState([]);
@@ -52,6 +52,7 @@ const RangeSlider = ({ option }) => {
     };
 
     const changeCompleteHandler = (values) => {
+        setPage(1)
         dispatch(setFilterOption({ option, value: values }));
         dispatch(updateFilterQueryData())
     };

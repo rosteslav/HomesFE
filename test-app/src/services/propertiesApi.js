@@ -48,13 +48,22 @@ const propertiesApi = createApi({
                     const spaceQuery = buildQueryRangeString('space');
                     const publishedOnQuery = buildQueryString('publishedOn');
                     const orderByQuery = buildQueryString('orderBy');
-
+                    const pageQuery = `&page=${args.page ? args.page : 1}`;
                     let isAscending = args.isAscending ? `&isAscending=${args.isAscending}` : '';
-                    
 
-                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}${orderByQuery}${isAscending}`;
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}${orderByQuery}${isAscending}${pageQuery}`;
 
                     return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
+                },
+                serializeQueryArgs: ({ queryArgs }) => {
+                    return { ...queryArgs, page: 1 };
+                },
+                
+                merge: (currentCache, newItems) => {
+                    currentCache.push(...newItems);
+                },
+                forceRefetch({ currentArg, previousArg }) {
+                    return currentArg !== previousArg;
                 },
             }),
             fetchOwnProperties: builder.query({
