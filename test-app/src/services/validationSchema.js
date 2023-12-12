@@ -4,7 +4,7 @@ const errors = {
     required: {
         username: 'Моля въведете потребителско име.',
         password: 'Моля въведете парола.',
-        email: 'Моля въведете емаил.',
+        email: 'Моля въведете електронна поща.',
         repPassword: 'Моля въведете паролата отново.',
         firstName: 'Моля въведете първото си име.',
         lastName: 'Моля въведете фамилното си име.',
@@ -67,7 +67,7 @@ export const validationLoginSchema = yup.object().shape({
 export const validationRegisterSchemaStepTwo = yup.object().shape({
     username: yup.string().required(errors.required.username),
     password: yup.string().min(3, errors.min.password).required(errors.required.password),
-    email: yup.string().email().required(errors.required.email),
+    email: yup.string().email('Моля въведете валидна електронна поща').required(errors.required.email),
     repPassword: yup
         .string()
         .oneOf([yup.ref('password'), null], errors.oneOf.password)

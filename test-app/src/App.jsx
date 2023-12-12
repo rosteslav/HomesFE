@@ -11,6 +11,7 @@ import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterA
 import { CreateProperty } from './components/CreateProperty/CreateProperty';
 import { useDispatch } from 'react-redux';
 import { removeUser, setUserAutoLogin } from './store/features/authUser';
+import RegisterUserForm from './components/RegisterPage/RegisterUser/RegisterUserForm';
 
 const router = createBrowserRouter([
     {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
                 loader: restrictLoginRegister,
                 children: [
                     { path: 'register/*', element: <RegisterUser />, loader: restrictLoginRegister },
+                    { path: 'register2', element: <RegisterUserForm />},
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',

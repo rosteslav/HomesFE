@@ -72,6 +72,9 @@ const authApi = createApi({
             fetchBrokersOptions: builder.query({
                 query: () => ({ url: '/authOptions/brokers' }),
             }),
+            fetchBuyerPreferences: builder.query({
+                query: () => ({ url: '/authOptions/preferences' }),
+            }),
         };
     },
 });
@@ -82,5 +85,6 @@ export const {
     useRegisterAdminMutation,
     useFetchRolesOptionsQuery,
     useFetchBrokersOptionsQuery,
+    useFetchBuyerPreferencesQuery,
 } = authApi;
 export { authApi };
