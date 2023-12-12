@@ -11,7 +11,7 @@ import {
 } from '../../store/features/filter';
 import RangeSlider from './RangeSlider';
 
-const CatalogFilter = () => {
+const CatalogFilter = ({ setPage }) => {
     const dispatch = useDispatch();
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
     const filter = useSelector((state) => state.filter);
@@ -25,6 +25,7 @@ const CatalogFilter = () => {
     });
 
     const optionsHandler = (option, value) => {
+        setPage(1);
         dispatch(setFilterOption({ option, value }));
         dispatch(updateFilterQueryData());
     };
@@ -51,7 +52,7 @@ const CatalogFilter = () => {
         } else if (option?.rangeChoice) {
             return (
                 <div>
-                    <RangeSlider option={option.rangeChoice} />
+                    <RangeSlider setPage={setPage} option={option.rangeChoice} />
                 </div>
             );
         } else if (option?.singleChoice) {
@@ -66,6 +67,7 @@ const CatalogFilter = () => {
                     action={() => {
                         optionsHandler(option.singleChoice, button);
                         setOption(undefined);
+                        setPage(1);
                         dispatch(updateFilterQueryData());
                     }}
                     key={button[key]}
@@ -273,7 +275,12 @@ const CatalogFilter = () => {
                                 )}
                             </ButtonFilter>
 
-                            <ButtonReset action={() => dispatch(resetFilter())}>
+                            <ButtonReset
+                                action={() => {
+                                    dispatch(resetFilter());
+                                    setPage(1);
+                                }}
+                            >
                                 Премахни филтрите
                             </ButtonReset>
                         </div>
