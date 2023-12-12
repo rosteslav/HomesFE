@@ -104,6 +104,15 @@ const imagesApi = createApi({
                     );
                 },
             }),
+            addUserImage: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: `/userImages`,
+                        method: 'POST',
+                        body: data,
+                    };
+                },
+            }),
         };
     },
 });
@@ -112,5 +121,6 @@ export const {
     useAddPropertyImageMutation,
     useFetchPropertyImagesQuery,
     useDeletePropertyImageMutation,
+    useAddUserImageMutation,
 } = imagesApi;
 export { imagesApi };
