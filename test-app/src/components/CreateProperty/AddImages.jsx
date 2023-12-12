@@ -18,8 +18,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         { skip }
     );
     const [addPropertyImage, { isSuccess, isLoading }] = useAddPropertyImageMutation();
-    const [deletePropertyImage] =
-        useDeletePropertyImageMutation();
+    const [deletePropertyImage] = useDeletePropertyImageMutation();
     const navigate = useNavigate();
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
@@ -96,13 +95,13 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         e.preventDefault();
         try {
             const propId = responseId ? responseId.id : propertyId.propertyId;
-            imageInputs.forEach(async (i) => {
+            for (const i of imageInputs) {
                 const formData = new FormData();
                 if (i.file) {
                     formData.append('image', i.file);
-                    addPropertyImage({ propertyId: +propId, data: formData });
+                    await addPropertyImage({ propertyId: +propId, data: formData });
                 }
-            });
+            }
         } catch (err) {
             console.log(`ERROR catch ${err.message}`);
         }
