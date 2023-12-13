@@ -13,6 +13,7 @@ const initialState = {
         space: [],
         publishedOn: [],
         isAscending: '',
+        orderBy: [],
     },
     filter: {
         data: {
