@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import Loader from '../../UI/Loader';
 import { CatalogItem } from './CatalogItem/CatalogItem';
 import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
 import CatalogFilter from './CatalogFilter';
@@ -9,6 +8,7 @@ import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
 } from '../../services/propertiesApi';
+import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
@@ -17,14 +17,16 @@ export const CatalogItems = () => {
 
     const queryData = useSelector((state) => state.filter.queryData);
 
-    const { data: properties, isLoading } = useFetchAllPropertiesQuery({
+    const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
     });
 
     const targetRef = useRef();
 
-    const { data: clientProperties } = useFetchOwnPropertiesQuery(undefined, { skip });
+    const { data: clientProperties, isLoading: isLoadingClientProperties } =
+        useFetchOwnPropertiesQuery(undefined, { skip });
+
     const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     useEffect(() => {
@@ -45,7 +47,7 @@ export const CatalogItems = () => {
 
     const lastPropertyElement = useCallback(
         (prop) => {
-            if (isLoading) {
+            if (isLoadingProperties) {
                 return;
             }
             if (targetRef.current) {
@@ -60,17 +62,29 @@ export const CatalogItems = () => {
                 targetRef.current.observe(prop);
             }
         },
-        [isLoading, hasMorePages]
+        [isLoadingProperties, hasMorePages]
     );
 
     return (
         <section>
-            {isLoading && <Loader />}
-
             {clientProperties && clientProperties.length > 0 && (
                 <div className='border-b-2  border-black'>
                     <h2 className='mt-4 text-center text-2xl font-semibold'>Вашите Обяви</h2>
                     <div className='mx-10 mt-4 grid gap-10  pb-10 md:grid-cols-2 lg:grid-cols-3'>
+                        {isLoadingClientProperties &&
+                            Array(3)
+                                .fill()
+                                .map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className='h-64 w-full cursor-pointer object-cover'
+                                    >
+                                        <TextSkeleton />
+                                        <ImageSkeleton />
+                                        <TextSkeleton />
+                                        <TextSkeleton />
+                                    </div>
+                                ))}
                         {clientProperties.map((i, inx) => (
                             <CatalogOwnItem key={inx} property={i} />
                         ))}
@@ -80,21 +94,39 @@ export const CatalogItems = () => {
 
             <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
             <CatalogFilter setPage={setPage} />
+            {isLoadingProperties && (
+                <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
+                    {Array(24)
+                        .fill()
+                        .map((_, index) => (
+                            <div key={index} className='h-64 w-full cursor-pointer object-cover'>
+                                <TextSkeleton />
+                                <ImageSkeleton />
+                                <TextSkeleton />
+                                <TextSkeleton />
+                            </div>
+                        ))}
+                </div>
+            )}
             {properties && properties.length > 0 && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {properties.map((i, index) => {
                         if (properties.length === index + 1) {
                             return (
-                                <CatalogItem reference={lastPropertyElement} key={i.id} property={i} />
+                                <CatalogItem
+                                    reference={lastPropertyElement}
+                                    key={index}
+                                    property={i}
+                                />
                             );
                         } else {
-                            return <CatalogItem key={i.id} property={i} />;
+                            return <CatalogItem key={index} property={i} />;
                         }
                     })}
                 </div>
             )}
 
-            {properties && properties.length === 0 && !isLoading && (
+            {properties && properties.length === 0 && !isLoadingProperties && (
                 <h1 className='mt-10 text-center text-xl font-bold'>Не са намерени имоти</h1>
             )}
         </section>

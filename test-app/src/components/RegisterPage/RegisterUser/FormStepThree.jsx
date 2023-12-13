@@ -54,6 +54,8 @@ const FormStepThree = ({
                     password: stepTwoValues.password,
                 });
             }
+        }else {
+            setComplete(false)
         }
     });
 
