@@ -7,7 +7,7 @@ import { removeUser } from '../../store/features/authUser';
 
 const UserLinks = ({ user }) => {
     let isSellerOrBroker = null;
-    const isBrokerOrSeller = (role) => (role === 'Брокер' || role === 'Продавач');
+    const isBrokerOrSeller = (role) => role === 'Брокер' || role === 'Продавач';
 
     // Expected output: true
     if (user.claims?.roles) {
@@ -33,8 +33,12 @@ const UserLinks = ({ user }) => {
                 Здравей, {user.claims.username}
             </span>
             <img
-                className='mx-2 h-10 w-10 rounded-full bg-white'
-                src='/src/assets/images/profile.svg'
+                className='mx-2 h-10 w-10 rounded-full bg-white object-cover'
+                src={
+                    user?.claims.userImage
+                        ? user.claims.userImage
+                        : '/src/assets/images/profile.svg'
+                }
                 alt=''
             />
 
