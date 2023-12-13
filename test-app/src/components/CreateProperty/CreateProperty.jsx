@@ -457,7 +457,7 @@ export const CreateProperty = () => {
                                     <>
                                         <button
                                             type='button'
-                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-indigo-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-600 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-white dark:border-indigo-500 dark:bg-indigo-600 dark:text-white dark:hover:bg-indigo-500 dark:hover:text-white dark:focus:ring-white'
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 px-5 py-2.5 text-sm font-medium  border-indigo-500 bg-indigo-600 text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
                                             >
                                             Без брокер
                                         </button>
