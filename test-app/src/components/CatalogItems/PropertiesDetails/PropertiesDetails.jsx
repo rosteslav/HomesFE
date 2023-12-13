@@ -11,6 +11,9 @@ export const PropertiesDetails = () => {
     const { detailsId } = useParams();
     const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
     const navigate = useNavigate();
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const neighborhoodName = property?.neighbourhood;
+    const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
 
     useEffect(() => {
         if (isError) {
@@ -112,6 +115,17 @@ export const PropertiesDetails = () => {
                             </div>
                  
                     )}
+                </div>
+                <div>
+                    <iframe
+                        className='rounded-md'
+                        title={`Map of ${neighborhoodName}`}
+                        src={iframeSrc}
+                        width="600"
+                        height="400"
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
                 </div>
             </div>
         </section>
