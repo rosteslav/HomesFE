@@ -3,10 +3,12 @@ import { propertiesApi } from './propertiesApi';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_IMAGES_API;
+
 const imagesApi = createApi({
     reducerPath: 'imagesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5223',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {

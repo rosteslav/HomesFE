@@ -3,10 +3,12 @@ import { setUser } from '../store/features/authUser';
 import toast from 'react-hot-toast';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_AUTH_API;
+
 const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5220',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {

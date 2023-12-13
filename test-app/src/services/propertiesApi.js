@@ -2,10 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import toast from 'react-hot-toast';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_PROPERTIES_API;
+
 const propertiesApi = createApi({
     reducerPath: 'propertiesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5221',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {
@@ -58,7 +60,7 @@ const propertiesApi = createApi({
                 serializeQueryArgs: ({ queryArgs }) => {
                     return { ...queryArgs, page: 1 };
                 },
-                
+
                 merge: (currentCache, newItems) => {
                     currentCache.push(...newItems);
                 },
