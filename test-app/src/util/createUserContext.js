@@ -29,6 +29,8 @@ export const createUserContext = (token) => {
             userContext.claims.id = decodedToken[key];
         } else if (key.includes('surname')) {
             userContext.claims.lastName = decodedToken[key];
+        } else if (key.includes('claims/uri')) {
+            userContext.claims.userImage = decodedToken[key];
         }
     }
 

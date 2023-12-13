@@ -36,8 +36,6 @@ const FormStepThree = ({
     const boxRef = useRef(null);
     const navigate = useNavigate();
 
-    console.log(userImage);
-
     const { data: buyerPreferences } = useFetchBuyerPreferencesQuery(undefined, {
         skip: chosenRole != 'Купувач',
     });

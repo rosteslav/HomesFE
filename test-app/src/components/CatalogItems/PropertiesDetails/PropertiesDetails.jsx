@@ -86,18 +86,31 @@ export const PropertiesDetails = () => {
                     <p>{property?.description}</p>
                     <p className='border-b-2 border-black pt-4 font-bold'>Контакти</p>
                     {property && property.contactInfo && (
-                        <>
-                            <p className='pt-1'>
-                                Име: {property.contactInfo?.firstName}{' '}
-                                {property.contactInfo?.lastName}
-                            </p>
-                            <p className='pt-1'>
-                                Телефонен номер: {property.contactInfo?.phoneNumber}
-                            </p>
-                            <a href={`mailto:${property?.contactInfo.email}`} className='pt-1'>
-                                Електронна поща: {property.contactInfo?.email}
-                            </a>
-                        </>
+                        <div className='flex items-center'>
+                            <div className='flex-1'>
+                                <p className='pt-1'>
+                                    Име: {property.contactInfo?.firstName}{' '}
+                                    {property.contactInfo?.lastName}
+                                </p>
+                                <p className='pt-1'>
+                                    Телефонен номер: {property.contactInfo?.phoneNumber}
+                                </p>
+                                <a href={`mailto:${property?.contactInfo.email}`} className='pt-1'>
+                                    Електронна поща: {property.contactInfo?.email}
+                                </a>
+                            </div>
+                           
+                                <img
+                                    className='mx-2 h-20 w-20 rounded-lg bg-white object-cover'
+                                    src={
+                                        property.contactInfo?.imageURL
+                                            ? property.contactInfo.imageURL
+                                            : '/src/assets/images/profile.svg'
+                                    }
+                                    alt='userImage'
+                                />
+                            </div>
+                 
                     )}
                 </div>
             </div>

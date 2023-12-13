@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { LoginPage } from './components/LoginPage/LoginPage';
-import RegisterUser from './components/RegisterPage/RegisterUser/RegisterUser';
 import { CatalogItems } from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
@@ -25,8 +24,7 @@ const router = createBrowserRouter([
                 path: 'auth',
                 loader: restrictLoginRegister,
                 children: [
-                    { path: 'register/*', element: <RegisterUser />, loader: restrictLoginRegister },
-                    { path: 'register2', element: <RegisterUserForm />},
+                    { path: 'register/*', element: <RegisterUserForm />, loader: restrictLoginRegister },
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',
