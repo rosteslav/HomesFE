@@ -16,12 +16,6 @@ const GuestLinks = () => {
             >
                 <ButtonPrimary>Регистрация</ButtonPrimary>
             </Link>
-            <Link
-                className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
-                to={'/auth/register-admin'}
-            >
-                <ButtonPrimary>Регистрация админ</ButtonPrimary>
-            </Link>
         </>
     );
 };
