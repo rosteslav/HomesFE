@@ -1,17 +1,10 @@
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-    background-color: #f5f5f5;
+.formInput {
+    @apply block w-full rounded-md border-0 px-2 py-1.5 text-2xl text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
 }
-
-html,
-body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.labelStyle {
+    @apply mb-2 me-2 mt-1 inline-block rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 peer-checked:border-transparent dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700;
 }
