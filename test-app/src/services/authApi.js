@@ -3,10 +3,12 @@ import { setUser } from '../store/features/authUser';
 import toast from 'react-hot-toast';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_AUTH_API;
+
 const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5220',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {
@@ -72,6 +74,9 @@ const authApi = createApi({
             fetchBrokersOptions: builder.query({
                 query: () => ({ url: '/authOptions/brokers' }),
             }),
+            fetchBuyerPreferences: builder.query({
+                query: () => ({ url: '/authOptions/preferences' }),
+            }),
         };
     },
 });
@@ -82,5 +87,6 @@ export const {
     useRegisterAdminMutation,
     useFetchRolesOptionsQuery,
     useFetchBrokersOptionsQuery,
+    useFetchBuyerPreferencesQuery,
 } = authApi;
 export { authApi };

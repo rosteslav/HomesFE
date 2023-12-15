@@ -2,10 +2,10 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { validationRegisterAdminSchema } from '../../../services/validationSchema';
 import Loader from '../../../UI/Loader';
-import { useDispatch, useSelector } from 'react-redux';
 import {
     selectedAdmin,
     setData,

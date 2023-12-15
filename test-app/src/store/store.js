@@ -1,9 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import authReducer from './slices/auth/authSlice';
-import propertiesSlice from './slices/properties/propertiesSlice';
-import registerUserSlice from './slices/registerUserSlice/registerUserSlice';
 import registerAdminSlice from './slices/registerAdminSlice/registerAdminSlice';
 import { propertiesApi } from '../services/propertiesApi';
 import { imagesApi } from '../services/imagesApi';
@@ -15,9 +12,6 @@ const store = configureStore({
     reducer: {
         authUser: authUser,
         filter: filter,
-        auth: authReducer,
-        properties: propertiesSlice,
-        registerUserForm: registerUserSlice,
         registerAdmin: registerAdminSlice,
         [propertiesApi.reducerPath]: propertiesApi.reducer,
         [imagesApi.reducerPath]: imagesApi.reducer,

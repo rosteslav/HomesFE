@@ -8,13 +8,17 @@ import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
 import {
     useAddPropertyInfoMutation,
+    useEditPropertyInfoMutation,
+    useFetchPropertyByIdQuery,
     useFetchPropertyOptionsQuery,
 } from '../../services/propertiesApi';
 import { AddImages } from './AddImages';
 import { useFetchBrokersOptionsQuery } from '../../services/authApi';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 export const CreateProperty = () => {
+    const propertyId = useParams();
     const [selectedExposure, setSelectedExposure] = useState([]);
     const [toggleExposure, setToggleExposure] = useState(true);
     const user = useSelector((state) => state.authUser.data);
@@ -22,12 +26,21 @@ export const CreateProperty = () => {
     if (user.claims?.roles) {
         isBroker = user.claims.roles.some((role) => role === 'Брокер');
     }
-    const [skip, setSkip] = useState(true);
-
+    const [conditionIsBroker, setConditionIsBroker] = useState(true);
+    const [conditionIsEdit, setConditionIsEdit] = useState(true);
     const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
         useAddPropertyInfoMutation();
     const { data: propertyOptions } = useFetchPropertyOptionsQuery();
-    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, { skip });
+    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {
+        skip: conditionIsBroker,
+    });
+    const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
+        skip: conditionIsEdit,
+        refetchOnMountOrArgChange: true,
+    });
+    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
+        skip: conditionIsEdit,
+    });
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
     const [values, setValues] = useState({
@@ -44,23 +57,11 @@ export const CreateProperty = () => {
         heating: '',
         neighbourhood: '',
     });
-
-    useEffect(() => {
-        if (!isBroker) {
-            setSkip(false);
-        }
-    }, [isBroker]);
-
     const [brokerValues, setBrokerValues] = useState({
         content: '',
         id: null,
     });
 
-    useEffect(() => {
-        if (isSuccess) {
-            setToggleForms('images');
-        }
-    }, [isSuccess]);
     const {
         register,
         handleSubmit,
@@ -69,6 +70,60 @@ export const CreateProperty = () => {
     } = useForm({
         resolver: yupResolver(validationCreatePropertySchema),
     });
+
+    useEffect(() => {
+        if (propertyId.propertyId) {
+            setConditionIsEdit(false);
+        }
+        if (propertyId && property) {
+            setValues({
+                numberOfRooms: property.numberOfRooms,
+                space: property.space,
+                description: property.description,
+                price: property.price,
+                floor: property.floor,
+                totalFloorsInBuilding: property.totalFloorsInBuilding,
+                buildingType: property.buildingType,
+                finish: property.finish,
+                furnishment: property.furnishment,
+                garage: property.garage,
+                heating: property.heating,
+                neighbourhood: property.neighbourhood,
+                brokerId: property.brokerId,
+            });
+            for (const feature in property) {
+                setValue(feature, property[feature]);
+            }
+
+            setSelectedExposure(property.exposure.split('/'));
+            setValue('exposure', property.exposure);
+            if (property.brokerId) {
+                setBrokerValues({
+                    content: `${property.contactInfo.firstName} ${property.contactInfo.lastName} (${property.contactInfo.phoneNumber}, ${property.contactInfo.email})`,
+                    id: property.brokerId,
+                });
+                setValue(
+                    property.brokerId,
+                    `${property.contactInfo.firstName} ${property.contactInfo.lastName} (${property.contactInfo.phoneNumber}, ${property.contactInfo.email})`
+                );
+            }
+        }
+    }, [propertyId, property, setValue]);
+
+    useEffect(() => {
+        if (!isBroker) {
+            setConditionIsBroker(false);
+        }
+    }, [isBroker]);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setToggleForms('images');
+        }
+        if (success) {
+            setToggleForms('images');
+        }
+    }, [isSuccess, success]);
 
     const handleExposureChange = (e) => {
         const value = e.target.value;
@@ -85,7 +140,15 @@ export const CreateProperty = () => {
         formData.images = [];
         formData.brokerId = brokerValues.id;
         formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
-        addPropertyInfo(formData);
+        if (propertyId.propertyId) {
+            editPropertyInfo({
+                id: +propertyId.propertyId,
+                data: formData,
+                oldImages: property.images,
+            });
+        } else {
+            addPropertyInfo(formData);
+        }
     };
 
     const onChangeHandler = (e) => {
@@ -123,10 +186,11 @@ export const CreateProperty = () => {
             setValue(e.target.parentElement.id, content);
         }
     };
+    const title = propertyId.propertyId ? 'Редактиране на имота' : 'Създаване на нов имот';
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-                Създаване на нов имот
+                {title}
             </h2>
             {isLoading && <Loader />}
             <form
@@ -457,8 +521,8 @@ export const CreateProperty = () => {
                                     <>
                                         <button
                                             type='button'
-                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-blue-300 bg-white px-5 py-2.5 text-sm font-medium text-blue-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:border-blue-600 dark:bg-blue-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
-                                        >
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 px-5 py-2.5 text-sm font-medium  border-indigo-500 bg-indigo-600 text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
+                                            >
                                             Без брокер
                                         </button>
                                         {brokersList.map((option) => (
@@ -496,24 +560,23 @@ export const CreateProperty = () => {
                                 propertyOptions.exposure &&
                                 propertyOptions.exposure.map((option, index) => (
                                     <li className='relative' key={option}>
-                                        <ButtonOptions>
-                                            <input
-                                                id={index}
-                                                type='checkbox'
-                                                name='exposure'
-                                                value={option}
-                                                onChange={handleExposureChange}
-                                                checked={selectedExposure.includes(option)}
-                                                className='exposure1 hidden peer mb-2 me-2 mt-1 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
-                                            />
-                                            <label
-                                                htmlFor={index}
-                                                id='exposureLabel'
-                                                className='peer-checked:border-transparent'
-                                            >
-                                                {option}
-                                            </label>
-                                        </ButtonOptions>
+                                        <input
+                                            {...register('exposure')}
+                                            id={index}
+                                            type='checkbox'
+                                            name='exposure'
+                                            value={option}
+                                            onChange={handleExposureChange}
+                                            checked={selectedExposure.includes(option)}
+                                            className='hidden'
+                                        />
+                                        <label
+                                            htmlFor={index}
+                                            id='exposureLabel'
+                                            className='labelStyle'
+                                        >
+                                            {option}
+                                        </label>
                                     </li>
                                 ))}
                         </ul>
@@ -602,6 +665,7 @@ export const CreateProperty = () => {
                 responseId={addPropertyInfoResult}
                 setToggleForms={setToggleForms}
                 toggleForms={toggleForms}
+                propertyId={propertyId}
             />
         </>
     );

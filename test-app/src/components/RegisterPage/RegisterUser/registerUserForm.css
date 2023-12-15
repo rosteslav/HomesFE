@@ -1,0 +1,23 @@
+.step-item {
+    @apply relative flex w-36 flex-col items-center justify-center;
+}
+.step-item:not(:first-child):before {
+    @apply absolute right-2/4 top-1/2 h-[3px] w-full -translate-y-2/4 bg-slate-200 content-[''];
+}
+.step {
+    @apply relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 font-semibold text-white;
+}
+.active .step {
+    @apply bg-indigo-600;
+}
+.complete .step {
+    @apply bg-green-600;
+}
+.complete p {
+    @apply text-white;
+}
+.complete:not(:first-child):before,
+.active:not(:first-child):before {
+    @apply bg-green-600;
+}
+

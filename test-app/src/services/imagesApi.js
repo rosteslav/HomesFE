@@ -3,10 +3,12 @@ import { propertiesApi } from './propertiesApi';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_IMAGES_API;
+
 const imagesApi = createApi({
     reducerPath: 'imagesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5223',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {
@@ -65,9 +67,62 @@ const imagesApi = createApi({
                     }
                 },
             }),
+            deletePropertyImage: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: `/image/${data.id}`,
+                        method: 'DELETE',
+                    };
+                },
+                async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                    await queryFulfilled;
+
+                    dispatch(
+                        propertiesApi.util.updateQueryData(
+                            'fetchOwnProperties',
+                            undefined,
+                            (draftData) => {
+                                draftData?.map((property) => {
+                                    if (property.id === args.propertyId) {
+                                        property.images = property.images.filter(
+                                            (image) => image !== args.imageURL
+                                        );
+                                    }
+                                    return property;
+                                });
+                            }
+                        )
+                    );
+                    dispatch(
+                        imagesApi.util.updateQueryData(
+                            'fetchPropertyImages',
+                            args.propertyId.toString(),
+                            (draftData) => {
+                                const data = draftData?.filter((image) => image.id !== args.id);
+
+                                return data;
+                            }
+                        )
+                    );
+                },
+            }),
+            addUserImage: builder.mutation({
+                query: (data) => {
+                    return {
+                        url: `/userImages`,
+                        method: 'POST',
+                        body: data,
+                    };
+                },
+            }),
         };
     },
 });
 
-export const { useAddPropertyImageMutation, useFetchPropertyImagesQuery } = imagesApi;
+export const {
+    useAddPropertyImageMutation,
+    useFetchPropertyImagesQuery,
+    useDeletePropertyImageMutation,
+    useAddUserImageMutation,
+} = imagesApi;
 export { imagesApi };

@@ -10,7 +10,7 @@ const useCreatedDate = (date) => {
         return 'Днес';
     }
 
-    return `${createdDate.getDate()}/${createdDate.getMonth()}/${createdDate.getFullYear()}`;
+    return `${createdDate.getDate()}/${createdDate.getMonth() + 1}/${createdDate.getFullYear()}`;
 };
 
 export default useCreatedDate;

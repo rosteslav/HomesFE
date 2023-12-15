@@ -4,7 +4,7 @@ const errors = {
     required: {
         username: 'Моля въведете потребителско име.',
         password: 'Моля въведете парола.',
-        email: 'Моля въведете емаил.',
+        email: 'Моля въведете електронна поща.',
         repPassword: 'Моля въведете паролата отново.',
         firstName: 'Моля въведете първото си име.',
         lastName: 'Моля въведете фамилното си име.',
@@ -15,7 +15,7 @@ const errors = {
         garage: 'Моля въведете информация за гараж',
         heating: 'Моля въведете начин на отопление на имота',
         neighbourhood: 'Моля въведете квартал в който се намира имота',
-        // brokerId: 'Моля въведете информация за брокера',
+        exposure: 'Моля въведете изложение',
         numberOfRooms: 'Моля въведете боря на стаите в имота',
         space: 'Моля въведете квадратурата на имота',
         price: 'Моля въведете цената на имота',
@@ -67,7 +67,7 @@ export const validationLoginSchema = yup.object().shape({
 export const validationRegisterSchemaStepTwo = yup.object().shape({
     username: yup.string().required(errors.required.username),
     password: yup.string().min(3, errors.min.password).required(errors.required.password),
-    email: yup.string().email().required(errors.required.email),
+    email: yup.string().email('Моля въведете валидна електронна поща').required(errors.required.email),
     repPassword: yup
         .string()
         .oneOf([yup.ref('password'), null], errors.oneOf.password)
@@ -112,7 +112,13 @@ export const validationCreatePropertySchema = yup.object().shape({
         .positive(errors.positive.floor)
         .required(errors.required.floor)
         .min(1, errors.min.floor)
-        .max(20, errors.max.floor),
+        .max(20, errors.max.floor)
+        .test({
+            message: 'Етажа не може да бъде по-голям от броя на етажите в сградата.',
+            test: function (value) {
+                return value <= this.parent.totalFloorsInBuilding;
+            },
+        }),
     totalFloorsInBuilding: yup
         .number()
         .typeError(errors.number.totalFloorsInBuilding)
@@ -126,5 +132,6 @@ export const validationCreatePropertySchema = yup.object().shape({
     garage: yup.string().required(errors.required.garage),
     heating: yup.string().required(errors.required.heating),
     neighbourhood: yup.string().required(errors.required.neighbourhood),
+    // exposure: yup.string().required(errors.required.exposure),
     // brokerId: yup.string().required(errors.required.brokerId),
 });

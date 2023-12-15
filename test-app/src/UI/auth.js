@@ -6,7 +6,7 @@ export const getUserData = () => {
 
 export const restrictLoginRegister = async () => {
     const user = getUserData();
-    console.log(user);
+
     if (user) {
         return redirect('/');
     }

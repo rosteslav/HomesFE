@@ -2,10 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import toast from 'react-hot-toast';
 import notificationMessages from './notificationMessages';
 
+const baseUrl = import.meta.env.VITE_PROPERTIES_API;
+
 const propertiesApi = createApi({
     reducerPath: 'propertiesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5221',
+        baseUrl,
         prepareHeaders: async (headers, { getState }) => {
             const token = await getState().authUser.data?.token?.token;
             if (token) {
@@ -46,10 +48,24 @@ const propertiesApi = createApi({
                     const heatingQuery = buildQueryString('heating');
                     const priceQuery = buildQueryRangeString('price');
                     const spaceQuery = buildQueryRangeString('space');
+                    const publishedOnQuery = buildQueryString('publishedOn');
+                    const orderByQuery = buildQueryString('orderBy');
+                    const pageQuery = `&page=${args.page ? args.page : 1}`;
+                    let isAscending = args.isAscending ? `&isAscending=${args.isAscending}` : '';
 
-                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}`;
+                    const queryString = `${neighbourhoodQuery}${numberOfRoomsQuery}${buildingTypeQuery}${exposureQuery}${finishQuery}${furnishmentQuery}${heatingQuery}${priceQuery}${spaceQuery}${publishedOnQuery}${orderByQuery}${isAscending}${pageQuery}`;
 
                     return { url: `/properties/all${queryString ? `?${queryString}` : ''}` };
+                },
+                serializeQueryArgs: ({ queryArgs }) => {
+                    return { ...queryArgs, page: 1 };
+                },
+
+                merge: (currentCache, newItems) => {
+                    currentCache.push(...newItems);
+                },
+                forceRefetch({ currentArg, previousArg }) {
+                    return currentArg !== previousArg;
                 },
             }),
             fetchOwnProperties: builder.query({
@@ -72,7 +88,7 @@ const propertiesApi = createApi({
                         body: formData,
                     };
                 },
-                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
                     try {
                         const { data: id } = await queryFulfilled;
                         data.id = id.id;
@@ -89,7 +105,7 @@ const propertiesApi = createApi({
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchAllProperties',
-                                undefined,
+                                getState().filter.queryData,
                                 (draftData) => {
                                     draftData?.push(data);
                                 }
@@ -107,7 +123,7 @@ const propertiesApi = createApi({
                         method: 'DELETE',
                     };
                 },
-                async onQueryStarted(data, { dispatch, queryFulfilled }) {
+                async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
                     try {
                         await queryFulfilled;
 
@@ -123,7 +139,7 @@ const propertiesApi = createApi({
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchAllProperties',
-                                undefined,
+                                getState().filter.queryData,
                                 (draftData) => {
                                     return draftData?.filter((property) => property?.id !== data);
                                 }
@@ -143,13 +159,13 @@ const propertiesApi = createApi({
                     };
                 },
                 async onQueryStarted(data, { dispatch, queryFulfilled }) {
-                    console.log(data);
                     try {
                         await queryFulfilled;
 
                         const newProperty = data.data;
                         newProperty.id = data.id;
-              
+                        newProperty.images = data.oldImages;
+
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchOwnProperties',

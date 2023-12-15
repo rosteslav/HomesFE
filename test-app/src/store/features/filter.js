@@ -11,6 +11,9 @@ const initialState = {
         heating: [],
         price: [],
         space: [],
+        publishedOn: [],
+        isAscending: '',
+        orderBy: [],
     },
     filter: {
         data: {
@@ -68,6 +71,19 @@ const initialState = {
                 options: [],
                 allOptions: [0, 300, 10],
             },
+            publishedOn: {
+                buttonStartContent: 'Публикувани',
+                buttonContent: 'Публикувани',
+                options: [],
+                allOptions: [],
+            },
+            orderBy: {
+                buttonStartContent: 'Сортиране',
+                buttonContent: 'Сортиране',
+                options: [],
+                isAscending: '',
+                allOptions: [],
+            },
         },
         collected: {
             allOptions: false,
@@ -90,15 +106,24 @@ const filterSlice = createSlice({
                     'finish',
                     'furnishment',
                     'heating',
+                    'publishedOn',
+                    'orderBy',
                 ];
 
                 optionFields.forEach((field) => {
                     state.filter.data[field].allOptions = action.payload[field];
                 });
+                const isAscending = {
+                    isAscending: true,
+                };
+                state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map(
+                    (option) => {
+                        return { ...option, ...isAscending };
+                    }
+                );
             }
         },
         setFilterOption(state, action) {
-            console.log(action.payload);
             const { option, value } = action.payload;
             if (option === 'price' || option === 'space') {
                 if (
@@ -106,7 +131,6 @@ const filterSlice = createSlice({
                     state.filter.data[option].allOptions[1] != value[1]
                 ) {
                     state.filter.data[option].options = value;
-                    state.queryData[option] = value;
                     state.filter.data[option].buttonContent = updateRangeContext(
                         current(state.filter.data[option])
                     );
@@ -115,23 +139,60 @@ const filterSlice = createSlice({
                     state.filter.data[option].buttonContent = updateRangeContext(
                         current(state.filter.data[option])
                     );
-                    state.queryData[option] = [];
                 }
+            } else if (option == 'publishedOn') {
+                state.filter.data.publishedOn.options = [value.numberOfDays];
+                if (value.numberOfDays > 0) {
+                    state.filter.data.publishedOn.buttonContent = `Публикувани ${value.description}`;
+                } else {
+                    state.filter.data.publishedOn.buttonContent =
+                        state.filter.data.publishedOn.buttonStartContent;
+                }
+            } else if (option == 'orderBy') {
+                if (state.filter.data.orderBy.options[0] != value.relatedPropName) {
+                    state.filter.data.orderBy.options = [value.relatedPropName];
+                }
+
+                state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map(
+                    (x) => {
+                        if (x.relatedPropName == value.relatedPropName) {
+                            x.isAscending = !x.isAscending;
+                            state.filter.data.orderBy.isAscending = x.isAscending;
+                            state.queryData.isAscending = x.isAscending;
+                            state.filter.data.orderBy.buttonContent = `Сортиране по ${value.description}`;
+                        } else {
+                            x.isAscending = true;
+                        }
+                        return x;
+                    }
+                );
             } else {
                 state.filter.data[option].options = updateOptions(
                     state.filter.data[option].options,
                     value
                 );
 
-                state.queryData = {
-                    ...state.queryData,
-                    [option]: updateQueryData(state.filter.data[option].options),
-                };
-
                 state.filter.data[option].buttonContent = updateButtonContext(
                     current(state.filter.data[option])
                 );
             }
+        },
+
+        updateFilterQueryData(state) {
+            for (const key in state.filter.data) {
+                state.queryData[key] = current(state.filter.data[key].options);
+            }
+        },
+        resetFilter(state) {
+            state.queryData = { ...initialState.queryData };
+            for (const key in state.filter.data) {
+                state.filter.data[key].options = [];
+                state.filter.data[key].buttonContent = state.filter.data[key].buttonStartContent;
+            }
+            state.filter.data.orderBy.allOptions = state.filter.data.orderBy.allOptions.map((x) => {
+                x.isAscending = true;
+                return x;
+            });
         },
     },
 });
@@ -142,13 +203,7 @@ const updateOptions = (options, value) => {
     return idx !== -1 ? [...options.slice(0, idx), ...options.slice(idx + 1)] : [...options, value];
 };
 
-const updateQueryData = (state) => {
-    console.log(state);
-    return state;
-};
-
 const updateButtonContext = (state) => {
-    console.log(state);
     const buttonStart = state.buttonStartContent;
 
     let buttonEnd = '';
@@ -175,4 +230,5 @@ const updateRangeContext = (state) => {
 };
 
 export default filterSlice.reducer;
-export const { setFilterOption, loadAllOptions } = filterSlice.actions;
+export const { setFilterOption, loadAllOptions, updateFilterQueryData, resetFilter } =
+    filterSlice.actions;
