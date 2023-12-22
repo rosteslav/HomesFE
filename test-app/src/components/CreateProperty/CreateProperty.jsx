@@ -16,8 +16,10 @@ import { AddImages } from './AddImages';
 import { useFetchBrokersOptionsQuery } from '../../services/authApi';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
 export const CreateProperty = () => {
+    const type = 'create';
     const propertyId = useParams();
     const [selectedExposure, setSelectedExposure] = useState([]);
     const [toggleExposure, setToggleExposure] = useState(true);
@@ -125,6 +127,41 @@ export const CreateProperty = () => {
         }
     }, [isSuccess, success]);
 
+    const handleMouseEnter = (e) => {
+        const elem = e.target;
+        const shouldExclude = elem.getAttribute('data-exclude') === 'true';
+
+        if (!shouldExclude) {
+            elem.style.fill = '#604EFA';
+        }
+    };
+
+    const handleMouseLeave = (e) => {
+        const elem = e.target;
+
+        const shouldExclude = elem.getAttribute('data-exclude') === 'true';
+
+        if (!shouldExclude) {
+            if (!elem.className.baseVal.includes('selectedNH')) {
+                elem.style.fill = '#AEA8BA';
+            }
+        }
+    };
+
+    const handleClick = (e) => {
+        const shouldExclude = e.target.getAttribute('data-exclude') === 'true';
+
+        if (!shouldExclude && e.target.tagName === 'path') {
+            setValues((state) => ({
+                ...state,
+                [e.target.parentElement.parentElement.parentElement.id]: e.target.textContent,
+            }));
+            setValue(e.target.parentElement.parentElement.parentElement.id, e.target.textContent);
+
+            setToggleButtons('');
+        }
+    };
+
     const handleExposureChange = (e) => {
         const value = e.target.value;
         if (selectedExposure.includes(value)) {
@@ -223,16 +260,16 @@ export const CreateProperty = () => {
                         </div>
                         <div
                             id='neighbourhood'
-                            onClick={onSubmitContent}
-                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                            className={`absolute min-w-full bg-white ${
                                 toggleButtons === 'neighbourhood' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions &&
-                                propertyOptions.neighbourhood &&
-                                propertyOptions.neighbourhood.map((option) => (
-                                    <ButtonOptions key={option}>{option}</ButtonOptions>
-                                ))}
+                            <SvgSofiaMap
+                                handleMouseEnter={handleMouseEnter}
+                                handleMouseLeave={handleMouseLeave}
+                                handleClick={handleClick}
+                                type={type}
+                            />
                         </div>
                     </div>
                     <div>
