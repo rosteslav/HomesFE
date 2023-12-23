@@ -75,6 +75,7 @@ return (
             >
                 <title>Район ЗАПАД</title>
             </path>
+            </>} 
 
             <path
                 stroke='rgb(255, 255, 255)'
@@ -88,7 +89,6 @@ return (
             >
                 <title>Южен парк</title>
             </path>
-           </>} 
             <path
                 stroke='rgb(255, 255, 255)'
                 strokeWidth='0.5'
