@@ -62,10 +62,15 @@ const propertiesApi = createApi({
                 },
 
                 merge: (currentCache, newItems) => {
-                    currentCache.push(...newItems);
+                    if (currentCache != newItems) {
+                        currentCache.push(...newItems);
+                    }
                 },
                 forceRefetch({ currentArg, previousArg }) {
-                    return currentArg !== previousArg;
+                    if (currentArg.page != 1 && currentArg != previousArg) {
+                        return true;
+                    }
+                    return false;
                 },
             }),
             fetchOwnProperties: builder.query({

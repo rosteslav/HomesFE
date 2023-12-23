@@ -15,6 +15,7 @@ const initialState = {
         isAscending: '',
         orderBy: [],
         isSvgClear: false,
+        page: 1,
     },
     filter: {
         data: {
@@ -198,7 +199,7 @@ const filterSlice = createSlice({
         },
         clearSvgColor(state) {
             state.queryData.isSvgClear = false;
-        }
+        },
     },
 });
 
@@ -235,5 +236,10 @@ const updateRangeContext = (state) => {
 };
 
 export default filterSlice.reducer;
-export const { setFilterOption, loadAllOptions, updateFilterQueryData, resetFilter, clearSvgColor } =
-    filterSlice.actions;
+export const {
+    setFilterOption,
+    loadAllOptions,
+    updateFilterQueryData,
+    resetFilter,
+    clearSvgColor,
+} = filterSlice.actions;
