@@ -76,6 +76,9 @@ const propertiesApi = createApi({
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
             }),
+            fetchRecommendedProperties: builder.query({
+                query: () => ({ url: '/properties/recommended' }),
+            }),
             fetchPropertyOptions: builder.query({
                 query: () => ({ url: '/propertyOptions' }),
             }),
@@ -217,5 +220,6 @@ export const {
     useAddPropertyInfoMutation,
     useDeleteOwnPropertyMutation,
     useEditPropertyInfoMutation,
+    useFetchRecommendedPropertiesQuery,
 } = propertiesApi;
 export { propertiesApi };
