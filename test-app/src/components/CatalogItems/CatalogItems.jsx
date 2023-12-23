@@ -7,13 +7,18 @@ import CatalogFilter from './CatalogFilter';
 import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
+    useFetchRecommendedPropertiesQuery,
 } from '../../services/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
+import { Link } from 'react-router-dom';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
+    const [skipBuyer, setSkipBuyer] = useState(true);
     const [page, setPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(false);
+    const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
+    const user = useSelector((state) => state.authUser);
 
     const queryData = useSelector((state) => state.filter.queryData);
 
@@ -21,6 +26,11 @@ export const CatalogItems = () => {
         ...queryData,
         page: page,
     });
+
+    const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
+        useFetchRecommendedPropertiesQuery(undefined, {
+            skip: skipBuyer,
+        });
 
     const targetRef = useRef();
 
@@ -34,6 +44,14 @@ export const CatalogItems = () => {
             setSkip(false);
         }
     }, [role]);
+
+    useEffect(() => {
+        if (user.data !== null) {
+            setSkipBuyer(false);
+        } else {
+            setSkipBuyer(true);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (properties) {
@@ -89,6 +107,60 @@ export const CatalogItems = () => {
                             <CatalogOwnItem key={inx} property={i} />
                         ))}
                     </div>
+                </div>
+            )}
+            {skip === true && (
+                <div className='border-b-2  border-black'>
+                    <h2
+                        onClick={() =>
+                            setShowRecommendedProperties(
+                                (prevShowRecommendedProperties) => !prevShowRecommendedProperties
+                            )
+                        }
+                        className='m-4 cursor-pointer text-center text-2xl font-semibold'
+                    >
+                        Препоръчани за вас
+                    </h2>
+                    {!recommendedProperties && (
+                        <div
+                            className={`${
+                                showRecommendedProperties ? 'hidden' : ''
+                            } pb-3 text-center text-xl`}
+                        >
+                            <p>
+                                Моля{' '}
+                                <Link to={'auth/register'} className='underline'>
+                                    регистрирайте се
+                                </Link>
+                                , за да получите препоръчани за Вас имоти{' '}
+                            </p>
+                        </div>
+                    )}
+                    {recommendedProperties && recommendedProperties.length > 0 && (
+                        <div
+                            className={`${
+                                showRecommendedProperties ? '' : 'hidden'
+                            } mx-10 mt-4 grid gap-10  pb-10 md:grid-cols-2 lg:grid-cols-3`}
+                        >
+                            {isLoadingRecommendedProperties &&
+                                Array(6)
+                                    .fill()
+                                    .map((_, index) => (
+                                        <div
+                                            key={index}
+                                            className='h-64 w-full cursor-pointer object-cover'
+                                        >
+                                            <TextSkeleton />
+                                            <ImageSkeleton />
+                                            <TextSkeleton />
+                                            <TextSkeleton />
+                                        </div>
+                                    ))}
+                            {recommendedProperties.map((i, inx) => (
+                                <CatalogItem key={inx} property={i} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
