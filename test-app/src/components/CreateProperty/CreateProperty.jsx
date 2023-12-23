@@ -232,7 +232,7 @@ export const CreateProperty = () => {
             {isLoading && <Loader />}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`${toggleForms === 'text' ? '' : 'visibility: hidden'}`}
+                className={`${toggleForms === 'text' ? '' : 'visibility: hidden'} relative`}
             >
                 <div
                     onClick={onToggleOptions}
@@ -260,7 +260,7 @@ export const CreateProperty = () => {
                         </div>
                         <div
                             id='neighbourhood'
-                            className={`absolute min-w-full bg-white ${
+                            className={`absolute mt-2 w-full bg-white ${
                                 toggleButtons === 'neighbourhood' ? '' : 'visibility: hidden'
                             }`}
                         >
@@ -558,8 +558,8 @@ export const CreateProperty = () => {
                                     <>
                                         <button
                                             type='button'
-                                            className='mb-2 me-2 mt-1 rounded-full border-4 px-5 py-2.5 text-sm font-medium  border-indigo-500 bg-indigo-600 text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
-                                            >
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-indigo-500 bg-indigo-600 px-5 py-2.5  text-sm font-medium text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
+                                        >
                                             Без брокер
                                         </button>
                                         {brokersList.map((option) => (
