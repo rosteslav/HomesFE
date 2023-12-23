@@ -68,8 +68,9 @@ const propertiesApi = createApi({
                 },
                 forceRefetch({ currentArg, previousArg }) {
                     if (currentArg.page != 1 && currentArg != previousArg) {
-                        return currentArg !== previousArg;
+                        return true;
                     }
+                    return false;
                 },
             }),
             fetchOwnProperties: builder.query({
