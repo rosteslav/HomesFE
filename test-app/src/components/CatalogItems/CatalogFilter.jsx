@@ -10,6 +10,7 @@ import {
     updateFilterQueryData,
 } from '../../store/features/filter';
 import RangeSlider from './RangeSlider';
+import SofiaSvgFilter from './SofiaSvgFilter';
 
 const CatalogFilter = ({ setPage }) => {
     const dispatch = useDispatch();
@@ -25,28 +26,34 @@ const CatalogFilter = ({ setPage }) => {
     });
 
     const optionsHandler = (option, value) => {
-        setPage(1);
-        dispatch(setFilterOption({ option, value }));
-        dispatch(updateFilterQueryData());
+        if (option !== 'neighbourhood') {
+            setPage(1);
+            dispatch(setFilterOption({ option, value }));
+            dispatch(updateFilterQueryData());
+        }
     };
 
     const selectedOptions = (option) => {
         if (option?.multiChoice && filter.filter.data[option.multiChoice].allOptions) {
             return (
                 <>
-                    {filter.filter.data[option.multiChoice].allOptions.map((x) => (
-                        <ButtonFilter
-                            isActive={
-                                filter.filter.data[option.multiChoice].options.includes(x)
-                                    ? true
-                                    : false
-                            }
-                            action={() => optionsHandler(option.multiChoice, x)}
-                            key={x}
-                        >
-                            {x}
-                        </ButtonFilter>
-                    ))}
+                    {option.multiChoice === 'neighbourhood' ? (
+                        <SofiaSvgFilter setPage={setPage} />
+                    ) : (
+                        filter.filter.data[option.multiChoice].allOptions.map((x) => (
+                            <ButtonFilter
+                                isActive={
+                                    filter.filter.data[option.multiChoice].options.includes(x)
+                                        ? true
+                                        : false
+                                }
+                                action={() => optionsHandler(option.multiChoice, x)}
+                                key={x}
+                            >
+                                {x}
+                            </ButtonFilter>
+                        ))
+                    )}
                 </>
             );
         } else if (option?.rangeChoice) {
@@ -100,7 +107,7 @@ const CatalogFilter = ({ setPage }) => {
         const targetTagName = e.target.tagName;
         const className = e.target.className;
 
-        if (targetTagName !== 'BUTTON') {
+        if (targetTagName !== 'BUTTON' && targetTagName !== 'svg' && targetTagName !== 'path') {
             if (className?.includes('slider')) {
                 return;
             }
