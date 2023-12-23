@@ -1,10 +1,23 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSvgColor, setFilterOption, updateFilterQueryData } from '../../store/features/filter';
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
+import { useEffect } from 'react';
 
 const SofiaSvgFilter = ({ setPage }) => {
     const dispatch = useDispatch();
     const filter = useSelector((state) => state.filter);
+
+    useEffect(() => {
+        if (filter.queryData.neighbourhood && filter.queryData.neighbourhood.length > 0) {
+            const data = Array.from(document.querySelectorAll('.allPaths'));
+            data.map((el) => {
+                if (filter.queryData.neighbourhood.includes(el.textContent)) {
+                    el.classList.add('selectedNH');
+                    el.style.fill= '#6B63FF';
+                }
+            });
+        }
+    });
 
     const handleMouseEnter = (e) => {
         const elem = e.target;
@@ -25,10 +38,14 @@ const SofiaSvgFilter = ({ setPage }) => {
         if (!shouldExclude) {
             if (area.length > 0) {
                 for (const a of area) {
-                    a.style.fill = '#604EFA';
+                    if (!a.className.baseVal.includes('selectedNH')) {
+                        a.style.fill = '#5031F8';
+                    }
                 }
             } else {
-                elem.style.fill = '#604EFA';
+                if (!elem.className.baseVal.includes('selectedNH')) {
+                    elem.style.fill = '#5031F8';
+                }
             }
         }
     };
@@ -54,7 +71,7 @@ const SofiaSvgFilter = ({ setPage }) => {
                 for (const a of area) {
                     if (!a.className.baseVal.includes('selectedNH')) {
                         a.style.fill = '#AEA8BA';
-                    }
+                    } 
                 }
             } else {
                 if (!elem.className.baseVal.includes('selectedNH')) {
@@ -95,6 +112,7 @@ const SofiaSvgFilter = ({ setPage }) => {
                 if (area.length > 0) {
                     for (const a of area) {
                         a.className.baseVal = a.className.baseVal.slice(0, -10);
+                        a.style.fill = '#5031F8';
                         setPage(1);
                         dispatch(
                             setFilterOption({ option: 'neighbourhood', value: a.textContent })
@@ -103,6 +121,7 @@ const SofiaSvgFilter = ({ setPage }) => {
                     }
                 } else {
                     elem.className.baseVal = elem.className.baseVal.slice(0, -10);
+                    elem.style.fill = '#5031F8';
                     setPage(1);
                     dispatch(
                         setFilterOption({ option: 'neighbourhood', value: selectedNeighborhood })
@@ -111,7 +130,7 @@ const SofiaSvgFilter = ({ setPage }) => {
                 }
             } else {
                 if (area.length === 0) {
-                    elem.className.baseVal += 'selectedNH';
+                    elem.style.fill = '#6B63FF';
                     setPage(1);
                     dispatch(
                         setFilterOption({ option: 'neighbourhood', value: selectedNeighborhood })
@@ -120,7 +139,7 @@ const SofiaSvgFilter = ({ setPage }) => {
                 } else {
                     for (const a of area) {
                         if (!filter.queryData.neighbourhood.includes(a.textContent)) {
-                            a.className.baseVal += 'selectedNH';
+                            a.style.fill = '#6B63FF';
                             setPage(1);
                             dispatch(
                                 setFilterOption({ option: 'neighbourhood', value: a.textContent })
