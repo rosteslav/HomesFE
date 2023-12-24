@@ -14,11 +14,13 @@ export const Header = () => {
                         <Link to={'/'}>
                             <img
                                 className='hidden h-20 sm:block'
-                                src='src/assets/images/real_estate_logo.svg'
+                                src='/src/assets/images/real_estate_logo.svg'
+                                alt='logo'
                             ></img>
                             <img
                                 className='h-20 sm:hidden'
-                                src='src/assets/images/real_logo.svg'
+                                src='/src/assets/images/real_logo.svg'
+                                alt='mobile logo'
                             ></img>
                         </Link>
                     </div>
