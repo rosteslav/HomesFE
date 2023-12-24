@@ -102,6 +102,7 @@ const ImageScroll = ({ images: img, propertyId }) => {
                                 return (
                                     <button
                                         key={inx}
+                                        aria-label="Следваща снимка"
                                         onClick={() => setCurrentIndex(inx)}
                                         className={`m-1 h-4 w-4 cursor-pointer rounded-full  ${
                                             currentIndex === inx ? 'bg-white' : 'bg-black'

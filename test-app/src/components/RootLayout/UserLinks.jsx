@@ -21,35 +21,40 @@ const UserLinks = ({ user }) => {
     };
 
     return (
-        <div className='flex items-center justify-center'>
+        <>
             {isSellerOrBroker && (
-                <div className='w-34 m-4'>
+                <li className='w-34 m-4'>
                     <Link to={`/createProperty`} className='link'>
                         <ButtonSecondary>Създай имот</ButtonSecondary>
                     </Link>
-                </div>
+                </li>
             )}
-            <span className='text-1xl text-center font-bold leading-9 tracking-tight text-gray-900'>
-                Здравей, {user.claims.username}
-            </span>
-            <img
-                className='mx-2 h-10 w-10 rounded-full bg-white object-cover'
-                src={
-                    user?.claims.userImage
-                        ? user.claims.userImage
-                        : '/src/assets/images/profile.svg'
-                }
-                alt=''
-            />
-
-            <Link
-                to={'/'}
-                className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
-                onClick={onLogout}
-            >
-                <ButtonPrimary>Изход</ButtonPrimary>
-            </Link>
-        </div>
+            <li>
+                <span className='text-1xl text-center font-bold leading-9 tracking-tight text-gray-900'>
+                    Здравей, {user.claims.username}
+                </span>
+            </li>
+            <li>
+                <img
+                    className='mx-2 h-10 w-10 rounded-full bg-white object-cover'
+                    src={
+                        user?.claims.userImage
+                            ? user.claims.userImage
+                            : '/src/assets/images/profile.svg'
+                    }
+                    alt='profile image'
+                />
+            </li>
+            <li>
+                <Link
+                    to={'/'}
+                    className='m-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                    onClick={onLogout}
+                >
+                    <ButtonPrimary>Изход</ButtonPrimary>
+                </Link>
+            </li>
+        </>
     );
 };
 
