@@ -46,12 +46,12 @@ export const CatalogItems = () => {
     }, [role]);
 
     useEffect(() => {
-        if (user.data !== null) {
+        if (user.data !== null && role[1] === 'Купувач') {
             setSkipBuyer(false);
         } else {
             setSkipBuyer(true);
         }
-    }, [user]);
+    }, [user, role]);
 
     useEffect(() => {
         if (properties) {
