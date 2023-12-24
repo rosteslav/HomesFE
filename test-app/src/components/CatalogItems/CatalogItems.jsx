@@ -127,12 +127,15 @@ export const CatalogItems = () => {
                                 showRecommendedProperties ? 'hidden' : ''
                             } pb-3 text-center text-xl`}
                         >
-                            <p>
+                            <p className='mt-10 text-center text-sm text-gray-800'>
                                 Моля{' '}
-                                <Link to={'auth/register'} className='underline'>
+                                <Link
+                                    to={'auth/register'}
+                                    className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+                                >
                                     регистрирайте се
                                 </Link>
-                                , за да получите препоръчани за Вас имоти{' '}
+                                , за да получите препоръчани за Вас имоти.
                             </p>
                         </div>
                     )}
