@@ -38,7 +38,7 @@ const FormStepOne = ({ setChosenRole, setCurrentStep }) => {
                         }
                     })}
             </div>
-            <p className='mt-10 text-center text-sm text-gray-500'>
+            <p className='mt-10 text-center text-sm text-gray-800'>
                 Ако вече сте регистрирани използвайте линка
                 <Link
                     className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
