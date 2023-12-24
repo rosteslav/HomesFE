@@ -94,7 +94,7 @@ export const LoginPage = () => {
                         <ButtonPrimary>Вход</ButtonPrimary>
                     </form>
 
-                    <p className='mt-10 text-center text-sm text-gray-500'>
+                    <p className='mt-10 text-center text-sm text-gray-800'>
                         Ако нямате регистрация? Използвайте линка
                         <Link
                             className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
