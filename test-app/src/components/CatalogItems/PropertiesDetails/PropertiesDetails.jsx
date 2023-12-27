@@ -102,29 +102,26 @@ export const PropertiesDetails = () => {
                                     Електронна поща: {property.contactInfo?.email}
                                 </a>
                             </div>
-                           
-                                <img
-                                    className='mx-2 h-20 w-20 rounded-lg bg-white object-cover'
-                                    src={
-                                        property.contactInfo?.imageURL
-                                            ? property.contactInfo.imageURL
-                                            : '/src/assets/images/profile.svg'
-                                    }
-                                    alt='userImage'
-                                />
-                            </div>
-                 
+
+                            <img
+                                className='mx-2 h-20 w-20 rounded-lg bg-white object-cover'
+                                src={
+                                    property.contactInfo?.imageURL
+                                        ? property.contactInfo.imageURL
+                                        : '/src/assets/images/profile.svg'
+                                }
+                                alt='userImage'
+                            />
+                        </div>
                     )}
                 </div>
                 <div>
                     <iframe
-                        className='rounded-md'
+                        className='h-60 w-full  rounded-lg lg:h-96'
                         title={`Map of ${neighborhoodName}`}
                         src={iframeSrc}
-                        width="600"
-                        height="400"
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
+                        loading='lazy'
+                        referrerPolicy='no-referrer-when-downgrade'
                     ></iframe>
                 </div>
             </div>
