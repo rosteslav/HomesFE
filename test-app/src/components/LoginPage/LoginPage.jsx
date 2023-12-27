@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { validationLoginSchema } from '../../services/validationSchema';
@@ -10,15 +10,18 @@ import { ButtonPrimary } from '../../UI';
 import { useLoginMutation } from '../../services/authApi';
 import toast from 'react-hot-toast';
 import { successNotifications } from '../../services/notificationMessages';
+import FloatingField from '../../UI/FloatingField';
 
 export const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [values, setValues] = useState({ username: '', password: '' });
+    const [passwordVisibility, setPasswordVisibility] = useState(false);
     const [login, { data, isLoading, isSuccess }] = useLoginMutation();
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success(successNotifications('login'))
+            toast.success(successNotifications('login'));
             navigate('/');
         }
     }, [isSuccess, data, dispatch, navigate]);
@@ -35,6 +38,10 @@ export const LoginPage = () => {
         login(formData);
     };
 
+    const onChangeHandler = (e) => {
+        setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+    };
+
     return (
         <>
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
@@ -47,50 +54,26 @@ export const LoginPage = () => {
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
                     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-                        <div>
-                            <label
-                                htmlFor='username'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Потребителско име
-                            </label>
-                            <div className='mt-2'>
-                                <input
-                                    id='username'
-                                    {...register('username')}
-                                    type='text'
-                                    name='username'
-                                    className='formInput'
-                                />
-                                {errors.username && (
-                                    <p className='text-red-500'>{errors.username.message}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className='flex items-center justify-between'>
-                                <label
-                                    htmlFor='password'
-                                    className='block text-sm font-medium leading-6 text-gray-900'
-                                >
-                                    Парола
-                                </label>
-                            </div>
-                            <div className='mt-2'>
-                                <input
-                                    {...register('password')}
-                                    id='password'
-                                    type='password'
-                                    name='password'
-                                    className='formInput'
-                                />
-                                {errors.password && (
-                                    <p className='text-red-500'>{errors.password.message}</p>
-                                )}
-                            </div>
-                        </div>
-
+                        <FloatingField
+                            placeholder='Потребителско име'
+                            name='username'
+                            type='text'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={values}
+                            errors={errors}
+                        />
+                        <FloatingField
+                            placeholder='Парола'
+                            name='password'
+                            type='password'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={values}
+                            errors={errors}
+                            passwordVisibility={passwordVisibility}
+                            setPasswordVisibility={setPasswordVisibility}
+                        />
                         <ButtonPrimary>Вход</ButtonPrimary>
                     </form>
 

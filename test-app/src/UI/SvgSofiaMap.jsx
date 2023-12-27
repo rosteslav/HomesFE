@@ -1501,7 +1501,7 @@ return (
                 strokeMiterlimit='10'
                 d='m 363.3,199.9 -1.8,-0.1 -2.4,0.2 -11.5,2.8 -3.9,-15.9 -0.2,-0.8 14.7,0.1 18.1,3.3 1.6,12.8 z'
                 fill='#AEA8BA'
-                className='allPaths east '
+                className='allPaths north '
                 cursor='pointer'
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
