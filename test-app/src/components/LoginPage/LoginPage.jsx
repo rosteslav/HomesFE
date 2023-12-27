@@ -74,50 +74,6 @@ export const LoginPage = () => {
                             passwordVisibility={passwordVisibility}
                             setPasswordVisibility={setPasswordVisibility}
                         />
-                        {/* <div>
-                            <label
-                                htmlFor='username'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Потребителско име
-                            </label>
-                            <div className='mt-2'>
-                                <input
-                                    id='username'
-                                    {...register('username')}
-                                    type='text'
-                                    name='username'
-                                    className='formInput'
-                                />
-                                {errors.username && (
-                                    <p className='text-red-500'>{errors.username.message}</p>
-                                )}
-                            </div>
-                        </div> */}
-
-                        {/* <div>
-                            <div className='flex items-center justify-between'>
-                                <label
-                                    htmlFor='password'
-                                    className='block text-sm font-medium leading-6 text-gray-900'
-                                >
-                                    Парола
-                                </label>
-                            </div>
-                            <div className='mt-2'>
-                                <input
-                                    {...register('password')}
-                                    id='password'
-                                    type='password'
-                                    name='password'
-                                    className='formInput'
-                                />
-                                {errors.password && (
-                                    <p className='text-red-500'>{errors.password.message}</p>
-                                )}
-                            </div>
-                        </div> */}
-
                         <ButtonPrimary>Вход</ButtonPrimary>
                     </form>
 
