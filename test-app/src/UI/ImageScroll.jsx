@@ -7,7 +7,12 @@ const ImageScroll = ({ images: img, propertyId }) => {
     const [startIndex, setStartIndex] = useState();
     const [endIndex, setEndIndex] = useState();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [transition, setTransition] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setTransition(true);
+    }, [currentIndex]);
 
     useEffect(() => {
         if (img.length > 0) {
@@ -29,10 +34,11 @@ const ImageScroll = ({ images: img, propertyId }) => {
     const handleTouchEnd = () => {
         if (endIndex) {
             const direction = Math.sign(endIndex - startIndex);
-            console.log(direction);
+
             setCurrentIndex(
                 (prevCurrIndex) => (prevCurrIndex - direction + images.length) % images.length
             );
+            setTransition(true);
         }
     };
 
@@ -56,6 +62,7 @@ const ImageScroll = ({ images: img, propertyId }) => {
                 setCurrentIndex((prevCurrIndex) => prevCurrIndex - 1);
             }
         }
+        setTransition(true);
     };
 
     const navigationHandler = (ev) => {
@@ -65,56 +72,71 @@ const ImageScroll = ({ images: img, propertyId }) => {
     };
 
     return (
-        <div
-            className={`container relative h-64 w-full ${
-                propertyId ? 'cursor-pointer' : ''
-            } overflow-hidden`}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onClick={propertyId ? navigationHandler : undefined}
-        >
-            <div className='relative flex h-full overflow-hidden'>
-                <img
-                    className='flex-1 object-cover'
-                    src={images[currentIndex]}
-                    alt={`Image ${currentIndex + 1}`}
-                />
-                {images.length > 1 && (
-                    <>
-                        <div className='card-buttons action-buttons absolute flex h-full w-full items-center justify-between px-7'>
-                            <button
-                                onClick={handleOnClick}
-                                className='h-10 w-10 rounded-full bg-white'
-                            >
-                                &lt;
-                            </button>
-                            <button
-                                onClick={handleOnClick}
-                                className='h-10 w-10 rounded-full bg-white'
-                            >
-                                &gt;
-                            </button>
-                        </div>
+        <>
+            <div
+                className={`container relative h-64 w-full ${
+                    propertyId ? 'cursor-pointer' : ''
+                } overflow-hidden`}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onClick={propertyId ? navigationHandler : undefined}
+            >
+                <div className='relative flex h-64 w-full overflow-hidden'>
+                    {images.length > 0 &&
+                        images.map((i) => {
+                            return (
+                                <div key={i} className='w-full flex-shrink-0 flex-grow'>
+                                    <img
+                                        className='h-full w-full  object-cover'
+                                        src={i}
+                                        alt={`Image ${i + 1}`}
+                                        style={{
+                                            transform: `translateX(${-currentIndex * 100}%)`,
+                                            transition: transition
+                                                ? 'transform 0.5s ease-in-out'
+                                                : 'none',
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })}
+                    {images.length > 1 && (
+                        <>
+                            <div className='card-buttons action-buttons absolute top-1/2 z-50 flex  w-full items-center justify-between px-7'>
+                                <button
+                                    onClick={handleOnClick}
+                                    className='h-10 w-10 rounded-full bg-white'
+                                >
+                                    &lt;
+                                </button>
+                                <button
+                                    onClick={handleOnClick}
+                                    className='h-10 w-10 rounded-full bg-white'
+                                >
+                                    &gt;
+                                </button>
+                            </div>
 
-                        <div className='card-buttons absolute bottom-4 flex w-full justify-center'>
-                            {images.map((_, inx) => {
-                                return (
-                                    <button
-                                        key={inx}
-                                        aria-label="Следваща снимка"
-                                        onClick={() => setCurrentIndex(inx)}
-                                        className={`m-1 h-4 w-4 cursor-pointer rounded-full  ${
-                                            currentIndex === inx ? 'bg-white' : 'bg-black'
-                                        }`}
-                                    ></button>
-                                );
-                            })}
-                        </div>
-                    </>
-                )}
+                            <div className='card-buttons absolute bottom-4 z-50 flex w-full justify-center'>
+                                {images.map((_, inx) => {
+                                    return (
+                                        <button
+                                            key={inx}
+                                            aria-label='Следваща снимка'
+                                            onClick={() => setCurrentIndex(inx)}
+                                            className={`m-1 h-4 w-4 cursor-pointer rounded-full  ${
+                                                currentIndex === inx ? 'bg-white' : 'bg-black'
+                                            }`}
+                                        ></button>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
