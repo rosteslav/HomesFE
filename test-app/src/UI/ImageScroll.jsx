@@ -97,6 +97,7 @@ const ImageScroll = ({ images: img, propertyId }) => {
                                                 ? 'transform 0.5s ease-in-out'
                                                 : 'none',
                                         }}
+                                        loading='lazy'
                                     />
                                 </div>
                             );
