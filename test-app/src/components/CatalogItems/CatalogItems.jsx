@@ -47,7 +47,6 @@ export const CatalogItems = () => {
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
         useFetchOwnPropertiesQuery(undefined, { skip });
 
-
     useEffect(() => {
         if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
             setSkip(false);
@@ -205,6 +204,9 @@ export const CatalogItems = () => {
                                 if (allLikedProperties.includes(i.id)) {
                                     return <CatalogItem key={index} property={i} />;
                                 }
+                            }
+                            if (properties.length === index + 1) {
+                                return <div key={index} ref={lastPropertyElement}></div>;
                             }
                         })}
                     {!showLikedProperties &&
