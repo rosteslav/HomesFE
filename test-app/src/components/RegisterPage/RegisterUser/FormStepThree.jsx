@@ -4,7 +4,10 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { validationRegisterSchemaStepThree } from '../../../services/validationSchema';
+import {
+    validationRegisterSchemaBuyerStepThree,
+    validationRegisterSchemaStepThree,
+} from '../../../services/validationSchema';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import { useAddUserImageMutation } from '../../../services/imagesApi';
 import {
@@ -54,18 +57,21 @@ const FormStepThree = ({
                     password: stepTwoValues.password,
                 });
             }
-        }else {
-            setComplete(false)
+        } else {
+            setComplete(false);
         }
     });
 
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver:
-            chosenRole == 'Купувач' ? undefined : yupResolver(validationRegisterSchemaStepThree),
+            chosenRole == 'Купувач'
+                ? yupResolver(validationRegisterSchemaBuyerStepThree)
+                : yupResolver(validationRegisterSchemaStepThree),
     });
 
     const onSubmitHandler = () => {
@@ -112,11 +118,10 @@ const FormStepThree = ({
         };
     }, []);
     const onChangeHandler = (e) => {
-        if (chosenRole == 'Купувач') {
-            setStepThreeBuyerValues((state) => ({ ...state, [e.target.name]: e.target.value }));
-        } else {
+        if (chosenRole !== 'Купувач') {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
         }
+        setValue(e.target.name, e.target.value);
     };
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
@@ -145,6 +150,17 @@ const FormStepThree = ({
                 currentValues.splice(currentPurposeIndex, 1);
             }
             setStepThreeBuyerValues((state) => ({ ...state, [chosenOption]: currentValues }));
+            if (currentValues.length > 0) {
+                setValue(chosenOption, currentValues.join('/'));
+            } else {
+                setValue(chosenOption, '');
+            }
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            setChosenOption(undefined);
         }
     };
 
@@ -167,9 +183,14 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'purposes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.purposes.map((value, index) => (
                                         <ButtonFilter
@@ -201,9 +222,14 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'regions' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.regions.map((value, index) => (
                                         <ButtonFilter
@@ -235,9 +261,14 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'buildingTypes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.buildingTypes.map((value, index) => (
                                         <ButtonFilter
@@ -269,6 +300,7 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={false}
+                            onFocus={onShowOptions}
                         />
                     </div>
                 </>
@@ -326,12 +358,14 @@ const FormStepThree = ({
                             </div>
                         )}
                     </div>
-                    {userImage && <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>}
+                    {userImage && (
+                        <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>
+                    )}
                 </>
             )}
             <div className='flex justify-between gap-10'>
                 <ButtonSecondary action={() => setCurrentStep(2)}>Назад</ButtonSecondary>
-                <ButtonPrimary>Регистрация</ButtonPrimary>
+                <ButtonPrimary isSubmit={true}>Регистрация</ButtonPrimary>
             </div>
         </form>
     );
