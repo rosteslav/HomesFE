@@ -25,7 +25,10 @@ const likedPropertiesSlice = createSlice({
                 likedProperties.splice(indexOf, 1);
             }
             state.data = likedProperties;
-            cookie.set('allLikedProperties', state.data);
+            cookie.set('allLikedProperties', state.data, {
+                path: '/',
+                expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            });
         },
     },
 });
