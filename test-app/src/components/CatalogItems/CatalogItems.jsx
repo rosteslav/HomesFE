@@ -19,13 +19,15 @@ export const CatalogItems = () => {
     const [page, setPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
+    const [showLikedProperties, setShowLikedProperties] = useState(false);
+    const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(loadLikedProperties());
-    });
+    }, [dispatch]);
 
     const queryData = useSelector((state) => state.filter.queryData);
 
@@ -175,7 +177,11 @@ export const CatalogItems = () => {
             )}
 
             <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
-            <CatalogFilter setPage={setPage} />
+            <CatalogFilter
+                setPage={setPage}
+                showLikedProperties={showLikedProperties}
+                setShowLikedProperties={setShowLikedProperties}
+            />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {Array(24)
@@ -192,19 +198,28 @@ export const CatalogItems = () => {
             )}
             {properties && properties.length > 0 && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {properties.map((i, index) => {
-                        if (properties.length === index + 1) {
-                            return (
-                                <CatalogItem
-                                    reference={lastPropertyElement}
-                                    key={index}
-                                    property={i}
-                                />
-                            );
-                        } else {
-                            return <CatalogItem key={index} property={i} />;
-                        }
-                    })}
+                    {showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (showLikedProperties) {
+                                if (allLikedProperties.includes(i.id)) {
+                                    return <CatalogItem key={index} property={i} />;
+                                }
+                            }
+                        })}
+                    {!showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (properties.length === index + 1) {
+                                return (
+                                    <CatalogItem
+                                        reference={lastPropertyElement}
+                                        key={index}
+                                        property={i}
+                                    />
+                                );
+                            } else {
+                                return <CatalogItem key={index} property={i} />;
+                            }
+                        })}
                 </div>
             )}
 
