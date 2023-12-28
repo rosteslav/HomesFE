@@ -54,8 +54,8 @@ const FormStepThree = ({
                     password: stepTwoValues.password,
                 });
             }
-        }else {
-            setComplete(false)
+        } else {
+            setComplete(false);
         }
     });
 
@@ -118,7 +118,7 @@ const FormStepThree = ({
         } else {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
         }
-        setValue(e.target.name, e.target.value)
+        setValue(e.target.name, e.target.value);
     };
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
@@ -150,6 +150,12 @@ const FormStepThree = ({
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            setChosenOption(undefined);
+        }
+    };
+
     return (
         <form
             ref={boxRef}
@@ -165,14 +171,18 @@ const FormStepThree = ({
                             name='purposes'
                             type='text'
                             onChangeHandler={onChangeHandler}
-                            onFocus={onShowOptions}
                             register={register}
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'purposes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.purposes.map((value, index) => (
                                         <ButtonFilter
@@ -205,9 +215,13 @@ const FormStepThree = ({
                             errors={errors}
                             readOnly={true}
                             onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'regions' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.regions.map((value, index) => (
                                         <ButtonFilter
@@ -240,9 +254,13 @@ const FormStepThree = ({
                             errors={errors}
                             readOnly={true}
                             onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'buildingTypes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.buildingTypes.map((value, index) => (
                                         <ButtonFilter
