@@ -12,7 +12,7 @@ import {
 import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 
-const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties }) => {
+const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, role }) => {
     const dispatch = useDispatch();
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
     const filter = useSelector((state) => state.filter);
@@ -297,16 +297,18 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties })
                                         </svg>
                                     ))}
                             </ButtonFilter>
-                            <ButtonFilter
-                                isActive={showLikedProperties}
-                                action={() => setShowLikedProperties((prev) => !prev)}
-                            >
-                                Любими имоти
-                            </ButtonFilter>
+                            {(role == undefined || role[1] === 'Купувач') && (
+                                <ButtonFilter
+                                    isActive={showLikedProperties}
+                                    action={() => setShowLikedProperties((prev) => !prev)}
+                                >
+                                    Любими имоти
+                                </ButtonFilter>
+                            )}
                             <ButtonReset
                                 action={() => {
                                     dispatch(resetFilter());
-                                    setShowLikedProperties(false)
+                                    setShowLikedProperties(false);
                                     setPage(1);
                                 }}
                             >

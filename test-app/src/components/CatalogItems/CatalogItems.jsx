@@ -22,6 +22,7 @@ export const CatalogItems = () => {
     const [showLikedProperties, setShowLikedProperties] = useState(false);
     const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
+    const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     const dispatch = useDispatch();
 
@@ -46,7 +47,6 @@ export const CatalogItems = () => {
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
         useFetchOwnPropertiesQuery(undefined, { skip });
 
-    const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     useEffect(() => {
         if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
@@ -181,6 +181,7 @@ export const CatalogItems = () => {
                 setPage={setPage}
                 showLikedProperties={showLikedProperties}
                 setShowLikedProperties={setShowLikedProperties}
+                role={role}
             />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
