@@ -9,6 +9,7 @@ const FloatingField = ({
     passwordVisibility,
     setPasswordVisibility,
     readOnly,
+    onFocus,
 }) => {
     const registerForm = register ? { ...register(name) } : '';
     const currType = type == 'password' ? (passwordVisibility ? 'text' : 'password') : type;
@@ -20,6 +21,7 @@ const FloatingField = ({
                     id={`floating_${name}`}
                     {...registerForm}
                     value={values[name]}
+                    onFocus={onFocus}
                     onChange={onChangeHandler}
                     placeholder=' '
                     readOnly={readOnly}

@@ -165,6 +165,7 @@ const FormStepThree = ({
                             name='purposes'
                             type='text'
                             onChangeHandler={onChangeHandler}
+                            onFocus={onShowOptions}
                             register={register}
                             values={stepThreeBuyerValues}
                             errors={errors}
@@ -203,6 +204,7 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
                         />
                         {chosenOption == 'regions' && (
                             <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
@@ -237,6 +239,7 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
                         />
                         {chosenOption == 'buildingTypes' && (
                             <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
@@ -328,7 +331,9 @@ const FormStepThree = ({
                             </div>
                         )}
                     </div>
-                    {userImage && <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>}
+                    {userImage && (
+                        <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>
+                    )}
                 </>
             )}
             <div className='flex justify-between gap-10'>
