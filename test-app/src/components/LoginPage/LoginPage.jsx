@@ -29,6 +29,7 @@ export const LoginPage = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(validationLoginSchema),
@@ -40,6 +41,7 @@ export const LoginPage = () => {
 
     const onChangeHandler = (e) => {
         setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        setValue(e.target.name, e.target.value)
     };
 
     return (

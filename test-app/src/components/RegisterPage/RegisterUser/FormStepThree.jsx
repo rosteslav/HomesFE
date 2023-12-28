@@ -62,6 +62,7 @@ const FormStepThree = ({
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver:
@@ -117,6 +118,7 @@ const FormStepThree = ({
         } else {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
         }
+        setValue(e.target.name, e.target.value)
     };
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
@@ -331,7 +333,7 @@ const FormStepThree = ({
             )}
             <div className='flex justify-between gap-10'>
                 <ButtonSecondary action={() => setCurrentStep(2)}>Назад</ButtonSecondary>
-                <ButtonPrimary>Регистрация</ButtonPrimary>
+                <ButtonPrimary isSubmit={true}>Регистрация</ButtonPrimary>
             </div>
         </form>
     );
