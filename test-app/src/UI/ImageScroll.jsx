@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ImageScroll.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeLikedProperties } from '../store/features/likedProperties';
 
-const ImageScroll = ({ images: img, propertyId }) => {
+const ImageScroll = ({ images: img, propertyId, star }) => {
     const [images, setImages] = useState([]);
     const [startIndex, setStartIndex] = useState();
     const [endIndex, setEndIndex] = useState();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [transition, setTransition] = useState(true);
+    const likedProperties = useSelector((state) => state.likedProperties.data);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTransition(true);
@@ -66,7 +70,7 @@ const ImageScroll = ({ images: img, propertyId }) => {
     };
 
     const navigationHandler = (ev) => {
-        if (ev.target.tagName !== 'BUTTON') {
+        if (ev.target.tagName !== 'BUTTON' && ev.target.tagName !== 'I') {
             navigate(`/${propertyId}`);
         }
     };
@@ -82,7 +86,7 @@ const ImageScroll = ({ images: img, propertyId }) => {
                 onTouchEnd={handleTouchEnd}
                 onClick={propertyId ? navigationHandler : undefined}
             >
-                <div className='relative flex h-64 w-full overflow-hidden'>
+                <div className='relative flex h-64 w-full overflow-hidden rounded-lg'>
                     {images.length > 0 &&
                         images.map((i) => {
                             return (
@@ -134,6 +138,25 @@ const ImageScroll = ({ images: img, propertyId }) => {
                                 })}
                             </div>
                         </>
+                    )}
+                    {star !== undefined && (
+                        <div className='star-button absolute z-50 w-full text-red-500'>
+                            {likedProperties.includes(propertyId) ? (
+                                <button
+                                    onClick={() => dispatch(changeLikedProperties(propertyId))}
+                                    className='float-right m-3 flex h-10 w-10 items-center justify-center rounded-full bg-white '
+                                >
+                                    <i className='fas fa-star fa-lg'></i>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => dispatch(changeLikedProperties(propertyId))}
+                                    className='float-right m-3 flex h-10 w-10 items-center justify-center rounded-full bg-white '
+                                >
+                                    <i className='far fa-star fa-lg'></i>
+                                </button>
+                            )}
+                        </div>
                     )}
                 </div>
             </div>

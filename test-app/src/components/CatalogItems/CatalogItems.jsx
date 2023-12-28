@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CatalogItem } from './CatalogItem/CatalogItem';
 import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
@@ -11,6 +11,7 @@ import {
 } from '../../services/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { Link } from 'react-router-dom';
+import { loadLikedProperties } from '../../store/features/likedProperties';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
@@ -18,7 +19,16 @@ export const CatalogItems = () => {
     const [page, setPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
+    const [showLikedProperties, setShowLikedProperties] = useState(false);
+    const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
+    const role = useSelector((state) => state.authUser.data?.claims?.roles);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(loadLikedProperties());
+    }, [dispatch]);
 
     const queryData = useSelector((state) => state.filter.queryData);
 
@@ -36,8 +46,6 @@ export const CatalogItems = () => {
 
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
         useFetchOwnPropertiesQuery(undefined, { skip });
-
-    const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     useEffect(() => {
         if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
@@ -168,7 +176,12 @@ export const CatalogItems = () => {
             )}
 
             <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
-            <CatalogFilter setPage={setPage} />
+            <CatalogFilter
+                setPage={setPage}
+                showLikedProperties={showLikedProperties}
+                setShowLikedProperties={setShowLikedProperties}
+                role={role}
+            />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {Array(24)
@@ -185,19 +198,31 @@ export const CatalogItems = () => {
             )}
             {properties && properties.length > 0 && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {properties.map((i, index) => {
-                        if (properties.length === index + 1) {
-                            return (
-                                <CatalogItem
-                                    reference={lastPropertyElement}
-                                    key={index}
-                                    property={i}
-                                />
-                            );
-                        } else {
-                            return <CatalogItem key={index} property={i} />;
-                        }
-                    })}
+                    {showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (showLikedProperties) {
+                                if (allLikedProperties.includes(i.id)) {
+                                    return <CatalogItem key={index} property={i} />;
+                                }
+                            }
+                            if (properties.length === index + 1) {
+                                return <div key={index} ref={lastPropertyElement}></div>;
+                            }
+                        })}
+                    {!showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (properties.length === index + 1) {
+                                return (
+                                    <CatalogItem
+                                        reference={lastPropertyElement}
+                                        key={index}
+                                        property={i}
+                                    />
+                                );
+                            } else {
+                                return <CatalogItem key={index} property={i} />;
+                            }
+                        })}
                 </div>
             )}
 

@@ -6,7 +6,7 @@ export const CatalogItem = ({ property, reference }) => {
     return (
         <div ref={reference}>
             <CardHeader property={property} />
-            <ImageScroll images={property.images} propertyId={property.id} />
+            <ImageScroll star={true} images={property.images} propertyId={property.id} />
             <CardFooter property={property} />
         </div>
     );
