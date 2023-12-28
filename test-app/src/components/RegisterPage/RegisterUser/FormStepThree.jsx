@@ -4,7 +4,10 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { validationRegisterSchemaStepThree } from '../../../services/validationSchema';
+import {
+    validationRegisterSchemaBuyerStepThree,
+    validationRegisterSchemaStepThree,
+} from '../../../services/validationSchema';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import { useAddUserImageMutation } from '../../../services/imagesApi';
 import {
@@ -66,7 +69,9 @@ const FormStepThree = ({
         formState: { errors },
     } = useForm({
         resolver:
-            chosenRole == 'Купувач' ? undefined : yupResolver(validationRegisterSchemaStepThree),
+            chosenRole == 'Купувач'
+                ? yupResolver(validationRegisterSchemaBuyerStepThree)
+                : yupResolver(validationRegisterSchemaStepThree),
     });
 
     const onSubmitHandler = () => {
@@ -113,9 +118,7 @@ const FormStepThree = ({
         };
     }, []);
     const onChangeHandler = (e) => {
-        if (chosenRole == 'Купувач') {
-            setStepThreeBuyerValues((state) => ({ ...state, [e.target.name]: e.target.value }));
-        } else {
+        if (chosenRole !== 'Купувач') {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
         }
         setValue(e.target.name, e.target.value);
@@ -147,6 +150,11 @@ const FormStepThree = ({
                 currentValues.splice(currentPurposeIndex, 1);
             }
             setStepThreeBuyerValues((state) => ({ ...state, [chosenOption]: currentValues }));
+            if (currentValues.length > 0) {
+                setValue(chosenOption, currentValues.join('/'));
+            } else {
+                setValue(chosenOption, '');
+            }
         }
     };
 
@@ -292,6 +300,7 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={false}
+                            onFocus={onShowOptions}
                         />
                     </div>
                 </>

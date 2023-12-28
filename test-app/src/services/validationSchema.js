@@ -22,6 +22,9 @@ const errors = {
         floor: 'Моля въведете етажа на имота',
         totalFloorsInBuilding: 'Моля въведете броя етажи на сградата',
         description: 'Моля въведете описание на имота',
+        purposes: 'Моля изберете причина за покупката',
+        regions: 'Моля изберете регион',
+        buildingTypes: 'Моля изберете вид строителство',
     },
     positive: {
         numberOfRooms: 'Моля въведете положително число',
@@ -46,6 +49,7 @@ const errors = {
         floor: 'Етаж трябва да съдържа само цифри',
         totalFloorsInBuilding: 'Брой етажи трябва да съдържа само цифри',
         all: 'Моля въведете номер',
+        priceHigherEnd: 'Моля въведете цена',
     },
     max: {
         space: 'Максималната големина може да е 300',
@@ -67,7 +71,10 @@ export const validationLoginSchema = yup.object().shape({
 export const validationRegisterSchemaStepTwo = yup.object().shape({
     username: yup.string().required(errors.required.username),
     password: yup.string().min(3, errors.min.password).required(errors.required.password),
-    email: yup.string().email('Моля въведете валидна електронна поща').required(errors.required.email),
+    email: yup
+        .string()
+        .email('Моля въведете валидна електронна поща')
+        .required(errors.required.email),
     repPassword: yup
         .string()
         .oneOf([yup.ref('password'), null], errors.oneOf.password)
@@ -78,6 +85,17 @@ export const validationRegisterSchemaStepThree = yup.object().shape({
     firstName: yup.string().required(errors.required.firstName),
     lastName: yup.string().required(errors.required.lastName),
     phoneNumber: yup.string().required(errors.required.phoneNumber),
+});
+
+export const validationRegisterSchemaBuyerStepThree = yup.object().shape({
+    purposes: yup.string().required(errors.required.purposes),
+    regions: yup.string().required(errors.required.regions),
+    buildingTypes: yup.string().required(errors.required.buildingTypes),
+    priceHigherEnd: yup
+        .number()
+        .typeError(errors.number.priceHigherEnd)
+        .positive(errors.positive.price)
+        .required(errors.required.price),
 });
 
 export const validationRegisterAdminSchema = yup.object().shape({
