@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CatalogItem } from './CatalogItem/CatalogItem';
 import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
@@ -11,6 +11,7 @@ import {
 } from '../../services/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { Link } from 'react-router-dom';
+import { loadLikedProperties } from '../../store/features/likedProperties';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
@@ -19,6 +20,12 @@ export const CatalogItems = () => {
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const user = useSelector((state) => state.authUser);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(loadLikedProperties());
+    });
 
     const queryData = useSelector((state) => state.filter.queryData);
 
