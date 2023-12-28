@@ -7,11 +7,13 @@ import { imagesApi } from '../services/imagesApi';
 import { authApi } from '../services/authApi';
 import authUser from './features/authUser';
 import filter from './features/filter';
+import likedProperties from './features/likedProperties';
 
 const store = configureStore({
     reducer: {
         authUser: authUser,
         filter: filter,
+        likedProperties: likedProperties,
         registerAdmin: registerAdminSlice,
         [propertiesApi.reducerPath]: propertiesApi.reducer,
         [imagesApi.reducerPath]: imagesApi.reducer,
