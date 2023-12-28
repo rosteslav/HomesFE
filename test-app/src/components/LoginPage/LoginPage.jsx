@@ -76,7 +76,7 @@ export const LoginPage = () => {
                             passwordVisibility={passwordVisibility}
                             setPasswordVisibility={setPasswordVisibility}
                         />
-                        <ButtonPrimary>Вход</ButtonPrimary>
+                        <ButtonPrimary isSubmit={true}>Вход</ButtonPrimary>
                     </form>
 
                     <p className='mt-10 text-center text-sm text-gray-800'>
