@@ -86,7 +86,7 @@ const ImageScroll = ({ images: img, propertyId, star }) => {
                 onTouchEnd={handleTouchEnd}
                 onClick={propertyId ? navigationHandler : undefined}
             >
-                <div className='relative flex h-64 w-full overflow-hidden'>
+                <div className='relative flex h-64 w-full overflow-hidden rounded-lg'>
                     {images.length > 0 &&
                         images.map((i) => {
                             return (
