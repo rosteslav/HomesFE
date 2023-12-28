@@ -9,7 +9,7 @@ const CardFooter = ({ property }) => {
             </div>
             <div className='flex items-center justify-between italic'>
                 <p>{property?.details}</p>
-                <p>
+                <p className="text-right">
                     {(property?.price / property?.space).toFixed(2)} EUR/m<sup>2</sup>
                 </p>
             </div>
