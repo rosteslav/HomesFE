@@ -27,3 +27,8 @@ export const readToken = (token) => {
     }
     return userData;
 };
+
+export const checkIsAdmin = (token) => {
+    const userData = readToken(token);
+    return userData?.role.includes('Администратор');
+};
