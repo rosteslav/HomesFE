@@ -11,6 +11,7 @@ import { CreateProperty } from './components/CreateProperty/CreateProperty';
 import { useDispatch } from 'react-redux';
 import { removeUser, setUserAutoLogin } from './store/features/authUser';
 import RegisterUserForm from './components/RegisterPage/RegisterUser/RegisterUserForm';
+import Dashboard from './components/AdminDashboard/Dashboard';
 
 const router = createBrowserRouter([
     {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
                 path: 'auth',
                 loader: restrictLoginRegister,
                 children: [
-                    { path: 'register/*', element: <RegisterUserForm />, loader: restrictLoginRegister },
+                    {
+                        path: 'register/*',
+                        element: <RegisterUserForm />,
+                        loader: restrictLoginRegister,
+                    },
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',
@@ -34,8 +39,9 @@ const router = createBrowserRouter([
                 ],
             },
             { path: ':detailsId', element: <PropertiesDetails /> },
-            { path: 'createProperty', element: <CreateProperty />},
-            { path: 'createProperty/edit/:propertyId', element: <CreateProperty />}
+            { path: 'createProperty', element: <CreateProperty /> },
+            { path: 'createProperty/edit/:propertyId', element: <CreateProperty /> },
+            { path: 'dashboard', element: <Dashboard /> },
         ],
     },
 ]);
