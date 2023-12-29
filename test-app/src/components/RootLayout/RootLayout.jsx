@@ -12,7 +12,7 @@ const RootLayout = () => {
             <main
                 className={` ${
                     lowercasePathname.includes('/dashboard')
-                        ? 'm-4'
+                        ? ''
                         : 'm-auto max-w-screen-2xl flex-1'
                 } `}
             >
