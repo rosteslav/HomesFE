@@ -11,6 +11,7 @@ import { useLoginMutation } from '../../services/authApi';
 import toast from 'react-hot-toast';
 import { successNotifications } from '../../services/notificationMessages';
 import FloatingField from '../../UI/FloatingField';
+import { checkIsAdmin } from '../../util/auth';
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -21,9 +22,12 @@ export const LoginPage = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
             toast.success(successNotifications('login'));
-            navigate('/');
+            if (checkIsAdmin(data.token)) {
+                navigate('/dashboard');
+            } else {
+                navigate('/');
+            }
         }
     }, [isSuccess, data, dispatch, navigate]);
 
@@ -42,7 +46,7 @@ export const LoginPage = () => {
 
     const onChangeHandler = (e) => {
         setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
-        setValue(e.target.name, e.target.value)
+        setValue(e.target.name, e.target.value);
     };
 
     return (
