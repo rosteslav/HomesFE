@@ -21,6 +21,7 @@ export const LoginPage = () => {
 
     useEffect(() => {
         if (isSuccess) {
+            console.log(data)
             toast.success(successNotifications('login'));
             navigate('/');
         }

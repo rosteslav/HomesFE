@@ -4,7 +4,7 @@ import { LoginPage } from './components/LoginPage/LoginPage';
 import { CatalogItems } from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
-import { restrictLoginRegister } from './UI/auth';
+import { restrictLoginRegister } from './util/auth';
 import { PropertiesDetails } from './components/CatalogItems/PropertiesDetails/PropertiesDetails';
 import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
 import { CreateProperty } from './components/CreateProperty/CreateProperty';
