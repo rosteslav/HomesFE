@@ -32,3 +32,23 @@ export const checkIsAdmin = (token) => {
     const userData = readToken(token);
     return userData?.role.includes('Администратор');
 };
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const restrictForAdmin = async () => {
+    let userData = getUserData();
+
+    if (userData === null) {
+        await delay(1000);
+
+        userData = getUserData();
+
+        if (userData.isAdmin) {
+            return true;
+        }
+    } else {
+        if (userData.isAdmin) {
+            return true;
+        }
+    }
+};
