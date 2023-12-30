@@ -2,11 +2,11 @@ import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
 import ImageScroll from '../../../UI/ImageScroll';
 
-export const CatalogItem = ({ property, reference }) => {
+export const CatalogItem = ({ property, reference, star }) => {
     return (
         <div ref={reference}>
             <CardHeader property={property} />
-            <ImageScroll star={true} images={property.images} propertyId={property.id} />
+            <ImageScroll star={star} images={property.images} propertyId={property.id} />
             <CardFooter property={property} />
         </div>
     );
