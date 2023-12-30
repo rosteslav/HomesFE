@@ -44,7 +44,7 @@ const AllPropertiesDashboard = () => {
     );
 
     return (
-        <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid gap-5 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {isLoadingProperties &&
                 Array(24)
                     .fill()
