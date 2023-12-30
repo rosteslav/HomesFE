@@ -8,7 +8,7 @@ export const createUserContext = (token) => {
     };
 
     const decodedToken = decodeToken(token.token);
-    console.log(decodedToken);
+
     for (const key in decodedToken) {
         if (key.includes('claims/role')) {
             const roles = decodedToken[key];

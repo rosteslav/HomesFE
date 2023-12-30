@@ -17,6 +17,7 @@ export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
     const [skipBuyer, setSkipBuyer] = useState(true);
     const [page, setPage] = useState(1);
+    const [isStar, setIsStar] = useState(undefined);
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const [showLikedProperties, setShowLikedProperties] = useState(false);
@@ -25,6 +26,14 @@ export const CatalogItems = () => {
     const role = useSelector((state) => state.authUser.data?.claims?.roles);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (user?.data === null || (role && role[1] === 'Купувач')) {
+            setIsStar(true);
+        } else {
+            setIsStar(undefined);
+        }
+    }, [role, user]);
 
     useEffect(() => {
         dispatch(loadLikedProperties());
@@ -217,10 +226,11 @@ export const CatalogItems = () => {
                                         reference={lastPropertyElement}
                                         key={index}
                                         property={i}
+                                        star={isStar}
                                     />
                                 );
                             } else {
-                                return <CatalogItem key={index} property={i} />;
+                                return <CatalogItem star={isStar} key={index} property={i} />;
                             }
                         })}
                 </div>

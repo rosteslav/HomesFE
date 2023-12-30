@@ -1,12 +1,21 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Toaster } from 'react-hot-toast';
 
 const RootLayout = () => {
+    const location = useLocation();
+    const lowercasePathname = location.pathname.toLowerCase();
+
     return (
         <>
             <Header />
-            <main className='m-auto max-w-screen-2xl flex-1'>
+            <main
+                className={` ${
+                    lowercasePathname.includes('/dashboard')
+                        ? ''
+                        : 'm-auto max-w-screen-2xl flex-1'
+                } `}
+            >
                 <>
                     <Toaster
                         position='top-center'
