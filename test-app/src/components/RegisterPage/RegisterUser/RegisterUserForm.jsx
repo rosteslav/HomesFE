@@ -23,6 +23,7 @@ const RegisterUserForm = () => {
     });
     const [stepThreeBuyerValues, setStepThreeBuyerValues] = useState({
         purposes: [],
+        numberOfRooms: [],
         regions: [],
         buildingTypes: [],
         priceHigherEnd: '',
