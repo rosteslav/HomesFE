@@ -153,6 +153,18 @@ const propertiesApi = createApi({
                                 }
                             )
                         );
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchAllProperties',
+                                {
+                                    orderBy: ['CreatedOnLocalTime'],
+                                    page: 1,
+                                },
+                                (draftData) => {
+                                    return draftData?.filter((property) => property?.id !== data);
+                                }
+                            )
+                        );
                     } catch (error) {
                         toast.error(notificationMessages(error?.error?.status));
                     }

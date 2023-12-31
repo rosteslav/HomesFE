@@ -4,7 +4,10 @@ import { useDeleteOwnPropertyMutation } from '../../../services/propertiesApi';
 const CardBtn = ({ property }) => {
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
     const onClickSubmit = (id) => {
-        removeOwnProperty(id);
+        const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
+        if (isConfirmed) {
+            removeOwnProperty(id);
+        }
     };
     return (
         <div className='my-2 flex justify-around'>
@@ -17,11 +20,11 @@ const CardBtn = ({ property }) => {
                 </button>
             </div>
             <div className='w-fit'>
-            <Link to={`createProperty/edit/${property.id}`} className="link" ><button
-                    className='mb-2 me-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-900'
-                >
-                    Редактиране
-                </button></Link>
+                <Link to={`createProperty/edit/${property.id}`} className='link'>
+                    <button className='mb-2 me-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-900'>
+                        Редактиране
+                    </button>
+                </Link>
             </div>
         </div>
     );
