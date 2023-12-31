@@ -87,6 +87,10 @@ const FormStepThree = ({
                 stepThreeBuyerValues.purposes.length > 0
                     ? stepThreeBuyerValues.purposes.join('/')
                     : '';
+            payLoad.purpose =
+                stepThreeBuyerValues.numberOfRooms.length > 0
+                    ? stepThreeBuyerValues.numberOfRooms.join('/')
+                    : '';
             payLoad.region =
                 stepThreeBuyerValues.regions.length > 0
                     ? stepThreeBuyerValues.regions.join('/')
@@ -120,6 +124,8 @@ const FormStepThree = ({
     const onChangeHandler = (e) => {
         if (chosenRole !== 'Купувач') {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        } else if (chosenRole === 'Купувач' && e.target.name === 'priceHigherEnd') {
+            setStepThreeBuyerValues((state) => ({ ...state, [e.target.name]: e.target.value }));
         }
         setValue(e.target.name, e.target.value);
     };
@@ -140,7 +146,8 @@ const FormStepThree = ({
         if (
             chosenOption == 'purposes' ||
             chosenOption == 'regions' ||
-            chosenOption == 'buildingTypes'
+            chosenOption == 'buildingTypes' ||
+            chosenOption == 'numberOfRooms'
         ) {
             const currentValues = stepThreeBuyerValues[chosenOption];
             const currentPurposeIndex = currentValues.indexOf(value);
@@ -196,6 +203,45 @@ const FormStepThree = ({
                                         <ButtonFilter
                                             key={index}
                                             isActive={stepThreeBuyerValues?.purposes?.includes(
+                                                value
+                                            )}
+                                            action={() => onUpdatePreferences(value)}
+                                        >
+                                            {value}
+                                        </ButtonFilter>
+                                    ))}
+                                <div
+                                    onClick={() => setChosenOption(undefined)}
+                                    className='absolute right-2 top-2 cursor-pointer text-red-600'
+                                >
+                                    x
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div onClick={onShowOptions}>
+                        <FloatingField
+                            placeholder='Тип / Брой стаи'
+                            name='numberOfRooms'
+                            type='text'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={stepThreeBuyerValues}
+                            errors={errors}
+                            readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
+                        />
+                        {chosenOption == 'numberOfRooms' && (
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
+                                {buyerPreferences &&
+                                    buyerPreferences?.numberOfRooms.map((value, index) => (
+                                        <ButtonFilter
+                                            key={index}
+                                            isActive={stepThreeBuyerValues?.numberOfRooms?.includes(
                                                 value
                                             )}
                                             action={() => onUpdatePreferences(value)}
