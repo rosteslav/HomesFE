@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFetchAllPropertiesQuery } from '../../services/propertiesApi';
+import {
+    useDeleteOwnPropertyMutation,
+    useFetchAllPropertiesQuery,
+} from '../../services/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { CatalogItem } from '../CatalogItems/CatalogItem/CatalogItem';
 
@@ -12,6 +15,7 @@ const AllPropertiesDashboard = () => {
         orderBy: ['CreatedOnLocalTime'],
         page: page,
     });
+    const [removeOwnProperty] = useDeleteOwnPropertyMutation();
 
     useEffect(() => {
         if (properties) {
@@ -43,6 +47,13 @@ const AllPropertiesDashboard = () => {
         [isLoadingProperties, hasMorePages]
     );
 
+    const onDeleteHandler = (id) => {
+        const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
+        if (isConfirmed) {
+            removeOwnProperty(id);
+        }
+    };
+
     return (
         <div className='grid gap-5 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {isLoadingProperties &&
@@ -64,7 +75,19 @@ const AllPropertiesDashboard = () => {
                             <CatalogItem reference={lastPropertyElement} key={index} property={i} />
                         );
                     } else {
-                        return <CatalogItem key={index} property={i} />;
+                        return (
+                            <div key={index}>
+                                <CatalogItem property={i} />;
+                                <div className='m-auto w-fit'>
+                                    <button
+                                        onClick={() => onDeleteHandler(i.id)}
+                                        className='mb-2 me-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-700 dark:hover:bg-red-600 dark:focus:ring-red-900'
+                                    >
+                                        Изтриване
+                                    </button>
+                                </div>
+                            </div>
+                        );
                     }
                 })}
         </div>
