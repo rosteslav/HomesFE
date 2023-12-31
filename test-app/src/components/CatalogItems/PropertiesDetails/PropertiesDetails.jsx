@@ -1,19 +1,42 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import DetailsImages from './DetailsImages';
 import { useFetchPropertyByIdQuery } from '../../../services/propertiesApi';
 import notificationMessages from '../../../services/notificationMessages';
 import { TextSkeleton } from '../../../UI/Skeletons';
+import {
+    changeLikedProperties,
+    loadLikedProperties,
+} from '../../../store/features/likedProperties';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const PropertiesDetails = () => {
     const { detailsId } = useParams();
     const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
+    const [star, setStar] = useState(false);
     const navigate = useNavigate();
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const neighborhoodName = property?.neighbourhood;
     const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
+    const dispatch = useDispatch();
+    const likedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
+
+    useEffect(() => {
+        if (user.data === null || user.data?.claims?.roles === 'Купувач') {
+            setStar(true);
+        } else {
+            setStar(false);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (star && likedProperties.length === 0) {
+            dispatch(loadLikedProperties());
+        }
+    },);
 
     useEffect(() => {
         if (isError) {
@@ -25,10 +48,29 @@ export const PropertiesDetails = () => {
     const pricePerSqm = property?.price / property?.space;
 
     return (
-        <section className='m-4 mt-10'>
+        <section className='relative m-4 mt-10'>
             <h1 className='text-3xl font-semibold'>
                 {property?.numberOfRooms} апартамент за продажба, {property?.space} m<sup>2</sup>
             </h1>
+            {star && (
+                <div className='absolute right-2 top-2 z-50 text-red-500'>
+                    {likedProperties.includes(+detailsId) ? (
+                        <button
+                            onClick={() => dispatch(changeLikedProperties(+detailsId))}
+                            className='float-right m-3 flex h-10 w-10 items-center justify-center rounded-full  '
+                        >
+                            <i className='fas fa-star fa-lg'></i>
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => dispatch(changeLikedProperties(+detailsId))}
+                            className='float-right m-3 flex h-10 w-10 items-center justify-center rounded-full '
+                        >
+                            <i className='far fa-star fa-lg'></i>
+                        </button>
+                    )}
+                </div>
+            )}
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
                 <DetailsImages images={property?.images} isLoading={isLoading} />
                 {isLoading}
