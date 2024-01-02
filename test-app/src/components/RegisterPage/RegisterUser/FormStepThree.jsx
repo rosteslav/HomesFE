@@ -87,7 +87,7 @@ const FormStepThree = ({
                 stepThreeBuyerValues.purposes.length > 0
                     ? stepThreeBuyerValues.purposes.join('/')
                     : '';
-            payLoad.purpose =
+            payLoad.numberOfRooms =
                 stepThreeBuyerValues.numberOfRooms.length > 0
                     ? stepThreeBuyerValues.numberOfRooms.join('/')
                     : '';
