@@ -77,7 +77,7 @@ const AllPropertiesDashboard = () => {
                     } else {
                         return (
                             <div key={index}>
-                                <CatalogItem property={i} />;
+                                <CatalogItem property={i} />
                                 <div className='m-auto w-fit'>
                                     <button
                                         onClick={() => onDeleteHandler(i.id)}
