@@ -219,6 +219,15 @@ const propertiesApi = createApi({
                     }
                 },
             }),
+            addPropertyReason: builder.mutation({
+                query: ({ detailsId, formData }) => {
+                    return {
+                        url: `/properties/${detailsId}/report`,
+                        method: 'POST',
+                        body: {reason: formData.reason},
+                    };
+                },
+            }),
         };
     },
 });
@@ -233,5 +242,6 @@ export const {
     useDeleteOwnPropertyMutation,
     useEditPropertyInfoMutation,
     useFetchRecommendedPropertiesQuery,
+    useAddPropertyReasonMutation
 } = propertiesApi;
 export { propertiesApi };

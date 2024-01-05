@@ -19,6 +19,7 @@ export const successNotifications = (message) => {
     const successMessages = {
         login: 'Влизането е успешно',
         register: 'Регистрацията премина успешно',
+        reportReason: 'Съобщението за нередност е изпратено успешно'
     };
 
     if (message in successMessages) {

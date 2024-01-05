@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useDeleteOwnPropertyMutation } from '../../../services/propertiesApi';
+// import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../../services/adminApi';
 
 const CardBtn = ({ property }) => {
+    // const { data: reportedProperties } = useFetchAllReportsQuery();
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
+    // const [deleteReportsById] = useDeleteReportsByIdMutation();
     const onClickSubmit = (id) => {
         const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
         if (isConfirmed) {
             removeOwnProperty(id);
+            // if(reportedProperties) {
+            //     reportedProperties.forEach(reportedProp => {
+            //         if(reportedProp.propertyId === id) {
+            //             deleteReportsById(id);
+            //         }
+            //     });
+            // }
         }
     };
     return (

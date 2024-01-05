@@ -3,18 +3,25 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import DetailsImages from './DetailsImages';
-import { useFetchPropertyByIdQuery } from '../../../services/propertiesApi';
-import notificationMessages from '../../../services/notificationMessages';
+import {
+    useAddPropertyReasonMutation,
+    useFetchPropertyByIdQuery,
+} from '../../../services/propertiesApi';
+import notificationMessages, { successNotifications } from '../../../services/notificationMessages';
 import { TextSkeleton } from '../../../UI/Skeletons';
 import {
     changeLikedProperties,
     loadLikedProperties,
 } from '../../../store/features/likedProperties';
 import { useDispatch, useSelector } from 'react-redux';
+import { validationPropertyReportSchema } from '../../../services/validationSchema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
 export const PropertiesDetails = () => {
     const { detailsId } = useParams();
     const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
+    const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
     const [star, setStar] = useState(false);
     const navigate = useNavigate();
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -23,12 +30,22 @@ export const PropertiesDetails = () => {
     const dispatch = useDispatch();
     const likedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
+    const [report, setReport] = useState(false);
+    const [isClicked, setIsClicked] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [values, setValues] = useState({ reason: '' });
 
     useEffect(() => {
+        console.log(user.data?.isAdmin);
         if (user.data === null || user.data?.claims?.roles === 'Купувач') {
             setStar(true);
         } else {
             setStar(false);
+        }
+        if (user.data !== null && user.data?.isAdmin === false) {
+            setReport(true);
+        } else {
+            setReport(false);
         }
     }, [user]);
 
@@ -36,7 +53,7 @@ export const PropertiesDetails = () => {
         if (star && likedProperties.length === 0) {
             dispatch(loadLikedProperties());
         }
-    },);
+    });
 
     useEffect(() => {
         if (isError) {
@@ -45,13 +62,84 @@ export const PropertiesDetails = () => {
         }
     });
 
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success(successNotifications('reportReason'));
+        }
+    }, [isSuccess]);
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(validationPropertyReportSchema),
+    });
+
+    const onSubmit = (formData) => {
+        addPropertyReason({ detailsId, formData });
+        setIsVisible(!isVisible);
+    };
+
+    const onChangeHandler = (e) => {
+        setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        setValue(e.target.name, e.target.value);
+    };
+
+    const isClickedReport = () => {
+        setIsClicked(!isClicked);
+    };
+
     const pricePerSqm = property?.price / property?.space;
 
     return (
         <section className='relative m-4 mt-10'>
-            <h1 className='text-3xl font-semibold'>
-                {property?.numberOfRooms} апартамент за продажба, {property?.space} m<sup>2</sup>
-            </h1>
+            <div className='flex items-center'>
+                <h1 className='inline-block text-3xl font-semibold'>
+                    {property?.numberOfRooms} апартамент за продажба, {property?.space} m
+                    <sup>2</sup>
+                </h1>
+                {report && (
+                    <div className='inline-block text-lg text-red-500 hover:text-xl'>
+                        <button
+                            onClick={isClickedReport}
+                            title='Съобщи за нередност'
+                            className='float-right m-3 flex h-10 w-10 items-center justify-center rounded-full'
+                        >
+                            <i className='fas fa-exclamation-triangle '></i>
+                        </button>
+                    </div>
+                )}
+            </div>
+            {isClicked && isVisible && (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className='mb-4 w-1/2 rounded-lg border-2 border-gray-300 bg-gray-50'>
+                        <div className='rounded-t-lg bg-white px-4 py-2'>
+                            <label htmlFor='reason' className='sr-only'>
+                                Съобщи за проблем
+                            </label>
+                            <textarea
+                                className='w-full border-0 bg-white px-2 text-sm text-gray-900 focus:ring-0'
+                                rows='4'
+                                name='reason'
+                                onChange={onChangeHandler}
+                                {...register('reason')}
+                                values={values}
+                                placeholder='Съобщи за нередност...'
+                            ></textarea>
+                            {errors.reason && (
+                                <p className='text-red-500'>{errors.reason.message}</p>
+                            )}
+                        </div>
+                        <div className='flex items-center justify-between border-t px-3 py-2'>
+                            <button className='inline-flex items-center rounded-lg bg-indigo-700 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-indigo-500 focus:ring-4 focus:ring-blue-200'>
+                                Изпрати
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            )}
             {star && (
                 <div className='absolute right-2 top-2 z-50 text-red-500'>
                     {likedProperties.includes(+detailsId) ? (
