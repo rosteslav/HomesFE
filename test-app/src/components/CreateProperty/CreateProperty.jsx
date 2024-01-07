@@ -695,7 +695,7 @@ export const CreateProperty = () => {
                     </div>
                 </div>
                 <div className='m-auto mt-4 max-w-lg'>
-                    <ButtonPrimary>Напред</ButtonPrimary>
+                    <ButtonPrimary isSubmit={'submit'}>Напред</ButtonPrimary>
                 </div>
             </form>
             <AddImages
