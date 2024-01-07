@@ -8,6 +8,7 @@ import {
     useFetchPropertyImagesQuery,
 } from '../../services/imagesApi';
 import Loader from '../../UI/Loader';
+import notificationMessages from '../../services/notificationMessages';
 
 export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);
@@ -65,7 +66,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                 return image.imageURL;
             }
         });
-        console.log(imageURL);
+
         deletePropertyImage({
             id,
             propertyId: +propertyId.propertyId,
@@ -93,24 +94,37 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
 
     const handleSubmitImage = async (e) => {
         e.preventDefault();
-        try {
-            const propId = responseId ? responseId.id : propertyId.propertyId;
-            for (const i of imageInputs) {
-                const formData = new FormData();
-                if (i.file) {
-                    formData.append('image', i.file);
-                    await addPropertyImage({ propertyId: +propId, data: formData });
+        const isConfirmed =
+            imageInputs[0].file === null
+                ? confirm(
+                      'Не сте качили снимки! Имоти без снимки са по-трудно продаваеми и по-трудно се показват в препоръчани. Сигурни ли сте че искате да публикувате без снимки?'
+                  )
+                : true;
+        if (isConfirmed) {
+            try {
+                const propId = responseId ? responseId.id : propertyId.propertyId;
+                for (const i of imageInputs) {
+                    const formData = new FormData();
+                    if (i.file) {
+                        formData.append('image', i.file);
+                        await addPropertyImage({ propertyId: +propId, data: formData });
+                    } else {
+                        return;
+                    }
                 }
+            } catch (error) {
+                toast.error(notificationMessages(error?.error?.status));
             }
-        } catch (err) {
-            console.log(`ERROR catch ${err.message}`);
+            setToggleForms('text');
+            navigate('/');
         }
-        setToggleForms('text');
-        navigate('/');
     };
     return (
         <>
             {isLoading && <Loader />}
+            <h2 className={`${toggleForms === 'images' ? '' : 'visibility: hidden'} text-center`}>
+                Имоти без снимки са по-трудно продаваеми и по-трудно се показват в препоръчани
+            </h2>
             <div
                 className={`m-5 flex justify-between ${
                     toggleForms === 'images' ? '' : 'visibility: hidden'
