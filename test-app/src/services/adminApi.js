@@ -49,9 +49,12 @@ const adminApi = createApi({
                     }
                 },
             }),
+            fetchAllRegions: builder.query({
+                query: () => ({ url: '/admins/neighbourhoods/regions' }),
+            }),
         };
     },
 });
 
-export const { useFetchAllReportsQuery, useDeleteReportsByIdMutation } = adminApi;
+export const { useFetchAllReportsQuery, useDeleteReportsByIdMutation, useFetchAllRegionsQuery } = adminApi;
 export { adminApi };
