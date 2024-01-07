@@ -1,5 +1,5 @@
 const CardFooter = ({ property }) => {
-    const propertyDetails = property?.details.split(',')
+    const propertyDetails = property?.details?.split(',')
     return (
         <>
             <div className='flex items-center justify-between font-bold'>
@@ -9,7 +9,7 @@ const CardFooter = ({ property }) => {
                 <p>{property?.price} EUR</p>
             </div>
             <div className='flex items-center justify-between italic'>
-                <p>{propertyDetails.join(', ')}</p>
+                <p>{propertyDetails && propertyDetails.join(', ')}</p>
                 <p className="text-right">
                     {(property?.price / property?.space).toFixed(2)} EUR/m<sup>2</sup>
                 </p>
