@@ -49,9 +49,44 @@ const adminApi = createApi({
                     }
                 },
             }),
+            fetchAllRegions: builder.query({
+                query: () => ({ url: '/admins/neighbourhoods/regions' }),
+            }),
+            fetchNeighbourhoodsRating: builder.query({
+                query: () => ({ url: '/admins/neighbourhoodsRating' }),
+            }),
+            updateNeighbourhoodsRating: builder.mutation({
+                query: (arg) => {
+                    return {
+                        url: `/admins/neighbourhoodsRating`,
+                        method: 'POST',
+                        body: arg,
+                    };
+                },
+                async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                        dispatch(
+                            adminApi.util.updateQueryData(
+                                'fetchNeighbourhoodsRating',
+                                undefined,
+                                () => arg
+                            )
+                        );
+                    } catch (error) {
+                        toast.error(notificationMessages(error?.error?.status));
+                    }
+                },
+            }),
         };
     },
 });
 
-export const { useFetchAllReportsQuery, useDeleteReportsByIdMutation } = adminApi;
+export const {
+    useFetchAllReportsQuery,
+    useDeleteReportsByIdMutation,
+    useFetchAllRegionsQuery,
+    useFetchNeighbourhoodsRatingQuery,
+    useUpdateNeighbourhoodsRatingMutation,
+} = adminApi;
 export { adminApi };

@@ -1,14 +1,17 @@
 import { useState } from 'react';
 
 import CustomPath from './CustomPath';
+import { useFetchAllRegionsQuery } from '../../services/adminApi';
 
-const SofiaSvgMap = ({chosen, setChosen}) => {
+const SofiaSvgMap = ({ chosen, setChosen }) => {
     const [activeRegion, setActiveRegion] = useState();
+    const { data: regions } = useFetchAllRegionsQuery();
+    const [clickedRegion, setClickedRegion] = useState({ Изток: 0, Запад: 0, Север: 0, Юг: 0 });
     const styles = {
         region: 'fill-gray-200',
         greenArea: 'fill-green-700',
-        others: 'fill-gray-700'
-    }
+        others: 'fill-gray-700',
+    };
 
     const handleMouseEnter = (e) => {
         if (e.target.textContent === 'Район ЮГ') {
@@ -28,11 +31,33 @@ const SofiaSvgMap = ({chosen, setChosen}) => {
         setActiveRegion('');
     };
 
+    const handleRegionClick = (e) => {
+        const targetRegionFullName = e.target.textContent.split(' ')[1];
+        const targetName = targetRegionFullName[0] + targetRegionFullName.slice(1).toLowerCase();
+        setClickedRegion((prevClickedRegion) => {
+            const currentState = prevClickedRegion[targetName];
+            const newState = currentState === 2 ? 0 : currentState + 1;
+            return {
+                ...prevClickedRegion,
+                [targetName]: newState,
+            };
+        });
+
+        let highChosen = chosen[0].filter((n) => !regions[targetName].includes(n));
+        let lowerChosen = chosen[1].filter((n) => !regions[targetName].includes(n));
+        if (clickedRegion[targetName] === 0) {
+            regions[targetName].forEach((n) => highChosen.push(n));
+        } else if (clickedRegion[targetName] === 1) {
+            regions[targetName].forEach((n) => lowerChosen.push(n));
+        }
+        setChosen([[...highChosen], [...lowerChosen]]);
+    };
+
     const handleClick = (e) => {
         const currTarget = e.target.textContent;
         const classNames = e.target.className;
-
         const currChosen = [...chosen];
+
         if (
             classNames.baseVal.includes('south') ||
             classNames.baseVal.includes('north') ||
@@ -81,7 +106,7 @@ const SofiaSvgMap = ({chosen, setChosen}) => {
                     cursor='pointer'
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
+                    onClick={handleRegionClick}
                 >
                     <title>Район СЕВЕР</title>
                 </path>
@@ -97,7 +122,7 @@ const SofiaSvgMap = ({chosen, setChosen}) => {
                     cursor='pointer'
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
+                    onClick={handleRegionClick}
                 >
                     <title>Район ИЗТОК</title>
                 </path>
@@ -113,7 +138,7 @@ const SofiaSvgMap = ({chosen, setChosen}) => {
                     cursor='pointer'
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
+                    onClick={handleRegionClick}
                 >
                     <title>Район ЮГ</title>
                 </path>
@@ -130,7 +155,7 @@ const SofiaSvgMap = ({chosen, setChosen}) => {
                     cursor='pointer'
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
+                    onClick={handleRegionClick}
                 >
                     <title>Район ЗАПАД</title>
                 </path>
