@@ -20,23 +20,30 @@ const CustomPath = ({
         fill,
     };
 
-    const pathClassName = ` ${region} ${
-        !chosen[0].includes(regionTitle) &&
-        !chosen[1].includes(regionTitle) &&
-        !activeRegion &&
-        'fill-gray-400'
-    } ${
-        !chosen[0].includes(regionTitle) && !chosen[1].includes(regionTitle) && 'hover:fill-red-950'
-    } ${chosen[0].includes(regionTitle) && 'fill-blue-800'} ${
-        chosen[1].includes(regionTitle) && 'fill-blue-500'
-    } ${
-        activeRegion == region
-            ? 'fill-red-950'
-            : !chosen[0].includes(regionTitle) &&
+    const pathClassName = chosen
+        ? ` ${region} ${
+              !chosen[0].includes(regionTitle) &&
+
               !chosen[1].includes(regionTitle) &&
-              activeRegion !== region &&
+              !activeRegion &&
               'fill-gray-400'
-    }`;
+          } ${
+              !chosen[0].includes(regionTitle) &&
+              !chosen[1].includes(regionTitle) &&
+              'hover:fill-red-950'
+          } ${chosen[0].includes(regionTitle) && 'fill-blue-800'} ${
+              chosen[1].includes(regionTitle) && 'fill-blue-500'
+          } ${
+              activeRegion == region
+                  ? !chosen[0].includes(regionTitle) &&
+                    !chosen[1].includes(regionTitle) &&
+                    'fill-red-950'
+                  : !chosen[0].includes(regionTitle) &&
+                    !chosen[1].includes(regionTitle) &&
+                    activeRegion !== region &&
+                    'fill-gray-400'
+          }`
+        : 'fill-gray-400';
 
     return (
         <path
