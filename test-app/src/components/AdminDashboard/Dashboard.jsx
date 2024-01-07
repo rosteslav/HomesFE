@@ -5,7 +5,7 @@ import ReportedPropertiesDashboard from './ReportedPropertiesDashboard';
 import ChangeNeighborhoodsDashboard from './ChangeNeighborhoodsDashboard';
 
 const Dashboard = () => {
-    const [action, setAction] = useState();
+    const [action, setAction] = useState('allProperties');
     const [isOpen, setIsOpen] = useState(false);
 
     const handleButtonAction = (e) => {
@@ -72,7 +72,6 @@ const Dashboard = () => {
             <div className='px-16'>
                 {
                     <div onClick={() => setIsOpen(false)}>
-                        {!action && <p className='text-center'>Добре дошли в админ панела.</p>}
                         {action === 'allProperties' && <AllPropertiesDashboard />}
                         {action === 'reportedProperties' && <ReportedPropertiesDashboard />}
                         {action === 'changeNeighbourhood' && <ChangeNeighborhoodsDashboard />}
