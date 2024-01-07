@@ -90,15 +90,12 @@ export const validationRegisterSchemaStepThree = yup.object().shape({
 });
 
 export const validationRegisterSchemaBuyerStepThree = yup.object().shape({
-    purposes: yup.string().required(errors.required.purposes),
-    regions: yup.string().required(errors.required.regions),
-    numberOfRooms: yup.string().required(errors.required.numberOfRooms),
-    buildingTypes: yup.string().required(errors.required.buildingTypes),
     priceHigherEnd: yup
         .number()
+        .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+        .nullable()
         .typeError(errors.number.priceHigherEnd)
-        .positive(errors.positive.price)
-        .required(errors.required.price),
+        .positive(errors.positive.price),
 });
 
 export const validationRegisterAdminSchema = yup.object().shape({
