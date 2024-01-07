@@ -109,7 +109,8 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                         formData.append('image', i.file);
                         await addPropertyImage({ propertyId: +propId, data: formData });
                     } else {
-                        return;
+                        setToggleForms('text');
+                        navigate('/');
                     }
                 }
             } catch (error) {
