@@ -83,23 +83,33 @@ const FormStepThree = ({
             role: chosenRole,
         };
         if (chosenRole == 'Купувач') {
-            payLoad.purpose =
-                stepThreeBuyerValues.purposes.length > 0
-                    ? stepThreeBuyerValues.purposes.join('/')
-                    : '';
-            payLoad.numberOfRooms =
-                stepThreeBuyerValues.numberOfRooms.length > 0
-                    ? stepThreeBuyerValues.numberOfRooms.join('/')
-                    : '';
-            payLoad.region =
-                stepThreeBuyerValues.regions.length > 0
-                    ? stepThreeBuyerValues.regions.join('/')
-                    : '';
-            payLoad.buildingType =
-                stepThreeBuyerValues.buildingTypes.length > 0
-                    ? stepThreeBuyerValues.buildingTypes.join('/')
-                    : '';
-            payLoad.priceHigherEnd = stepThreeBuyerValues.priceHigherEnd;
+            if (stepThreeBuyerValues.purposes.length > 0) {
+                payLoad.purpose =
+                    stepThreeBuyerValues.purposes.length > 0
+                        ? stepThreeBuyerValues.purposes.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.numberOfRooms.length > 0) {
+                payLoad.numberOfRooms =
+                    stepThreeBuyerValues.numberOfRooms.length > 0
+                        ? stepThreeBuyerValues.numberOfRooms.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.regions.length > 0) {
+                payLoad.region =
+                    stepThreeBuyerValues.regions.length > 0
+                        ? stepThreeBuyerValues.regions.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.buildingTypes.length > 0) {
+                payLoad.buildingType =
+                    stepThreeBuyerValues.buildingTypes.length > 0
+                        ? stepThreeBuyerValues.buildingTypes.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.priceHigherEnd) {
+                payLoad.priceHigherEnd = stepThreeBuyerValues.priceHigherEnd;
+            }
         } else {
             payLoad = { ...payLoad, ...stepThreeValues };
             if (isSuccessImage) {
