@@ -25,6 +25,7 @@ const errors = {
         purposes: 'Моля изберете причина за покупката',
         regions: 'Моля изберете регион',
         buildingTypes: 'Моля изберете вид строителство',
+        reason: 'Моля въведете информация за нередност',
     },
     positive: {
         numberOfRooms: 'Моля въведете положително число',
@@ -39,6 +40,7 @@ const errors = {
         space: 'Големината на имота трябва да е минимум 20',
         floor: 'Етажа трябва да е минимум 1',
         totalFloorsInBuilding: 'Брой етажи трябва да е минимум 1',
+        reason: 'Съобщението за нередност трябва да е минимум 10 символа',
     },
     oneOf: {
         password: 'Паролите не съвпадат.',
@@ -153,4 +155,8 @@ export const validationCreatePropertySchema = yup.object().shape({
     neighbourhood: yup.string().required(errors.required.neighbourhood),
     // exposure: yup.string().required(errors.required.exposure),
     // brokerId: yup.string().required(errors.required.brokerId),
+});
+
+export const validationPropertyReportSchema = yup.object().shape({
+    reason: yup.string().min(10, errors.min.reason).required(errors.required.reason),
 });

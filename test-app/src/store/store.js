@@ -8,6 +8,7 @@ import { authApi } from '../services/authApi';
 import authUser from './features/authUser';
 import filter from './features/filter';
 import likedProperties from './features/likedProperties';
+import { adminApi } from '../services/adminApi';
 
 const store = configureStore({
     reducer: {
@@ -18,12 +19,14 @@ const store = configureStore({
         [propertiesApi.reducerPath]: propertiesApi.reducer,
         [imagesApi.reducerPath]: imagesApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
+        [adminApi.reducerPath]: adminApi.reducer
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({ serializableCheck: false })
             .concat(propertiesApi.middleware)
             .concat(imagesApi.middleware)
-            .concat(authApi.middleware);
+            .concat(authApi.middleware)
+            .concat(adminApi.middleware);
     },
 });
 setupListeners(store.dispatch);

@@ -5,6 +5,7 @@ import {
 } from '../../services/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { CatalogItem } from '../CatalogItems/CatalogItem/CatalogItem';
+import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../services/adminApi';
 
 const AllPropertiesDashboard = () => {
     const targetRef = useRef();
@@ -15,7 +16,9 @@ const AllPropertiesDashboard = () => {
         orderBy: ['CreatedOnLocalTime'],
         page: page,
     });
+    const { data: reportedProperties } = useFetchAllReportsQuery();
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
+    const [deleteReportsById] = useDeleteReportsByIdMutation();
 
     useEffect(() => {
         if (properties) {
@@ -51,6 +54,13 @@ const AllPropertiesDashboard = () => {
         const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
         if (isConfirmed) {
             removeOwnProperty(id);
+            if (reportedProperties) {
+                reportedProperties.forEach((reportedProp) => {
+                    if (reportedProp.propertyId === id) {
+                        deleteReportsById(id);
+                    }
+                });
+            }
         }
     };
 
