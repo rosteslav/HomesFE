@@ -112,34 +112,6 @@ export const PropertiesDetails = () => {
                     </div>
                 )}
             </div>
-            {isClicked && isVisible && (
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className='mb-4 w-1/2 rounded-lg border-2 border-gray-300 bg-gray-50'>
-                        <div className='rounded-t-lg bg-white px-4 py-2'>
-                            <label htmlFor='reason' className='sr-only'>
-                                Съобщи за проблем
-                            </label>
-                            <textarea
-                                className='w-full border-0 bg-white px-2 text-sm text-gray-900 focus:ring-0'
-                                rows='4'
-                                name='reason'
-                                onChange={onChangeHandler}
-                                {...register('reason')}
-                                values={values}
-                                placeholder='Съобщи за нередност...'
-                            ></textarea>
-                            {errors.reason && (
-                                <p className='text-red-500'>{errors.reason.message}</p>
-                            )}
-                        </div>
-                        <div className='flex items-center justify-between border-t px-3 py-2'>
-                            <button className='inline-flex items-center rounded-lg bg-indigo-700 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-indigo-500 focus:ring-4 focus:ring-blue-200'>
-                                Изпрати
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            )}
             {star && (
                 <div className='absolute right-2 top-2 z-50 text-red-500'>
                     {likedProperties.includes(+detailsId) ? (
@@ -161,6 +133,34 @@ export const PropertiesDetails = () => {
             )}
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
                 <div>
+                    {isClicked && isVisible && (
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className='mb-4 w-full rounded-lg border-2 border-gray-300 bg-gray-50'>
+                                <div className='rounded-t-lg bg-white px-4 py-2'>
+                                    <label htmlFor='reason' className='sr-only'>
+                                        Съобщи за проблем
+                                    </label>
+                                    <textarea
+                                        className='w-full border-0 bg-white px-2 text-sm text-gray-900 focus:ring-0'
+                                        rows='4'
+                                        name='reason'
+                                        onChange={onChangeHandler}
+                                        {...register('reason')}
+                                        values={values}
+                                        placeholder='Съобщи за нередност...'
+                                    ></textarea>
+                                    {errors.reason && (
+                                        <p className='text-red-500'>{errors.reason.message}</p>
+                                    )}
+                                </div>
+                                <div className='flex items-center justify-between border-t px-3 py-2'>
+                                    <button className='inline-flex items-center rounded-lg bg-indigo-700 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-indigo-500 focus:ring-4 focus:ring-blue-200'>
+                                        Изпрати
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    )}
                     <DetailsImages images={property?.images} isLoading={isLoading} />
                     <div className='mt-4'>
                         <iframe
