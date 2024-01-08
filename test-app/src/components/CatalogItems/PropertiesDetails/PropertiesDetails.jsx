@@ -160,7 +160,18 @@ export const PropertiesDetails = () => {
                 </div>
             )}
             <div className='mt-10 grid grid-cols-1 gap-6 md:grid-cols-2'>
-                <DetailsImages images={property?.images} isLoading={isLoading} />
+                <div>
+                    <DetailsImages images={property?.images} isLoading={isLoading} />
+                    <div className='mt-4'>
+                        <iframe
+                            className='h-60 w-full  rounded-lg lg:h-96'
+                            title={`Map of ${neighborhoodName}`}
+                            src={iframeSrc}
+                            loading='lazy'
+                            referrerPolicy='no-referrer-when-downgrade'
+                        ></iframe>
+                    </div>
+                </div>
                 {isLoading}
                 <div className='text-xl'>
                     {isLoading && <TextSkeleton times={20} />}
@@ -244,15 +255,6 @@ export const PropertiesDetails = () => {
                             />
                         </div>
                     )}
-                </div>
-                <div>
-                    <iframe
-                        className='h-60 w-full  rounded-lg lg:h-96'
-                        title={`Map of ${neighborhoodName}`}
-                        src={iframeSrc}
-                        loading='lazy'
-                        referrerPolicy='no-referrer-when-downgrade'
-                    ></iframe>
                 </div>
             </div>
         </section>
