@@ -16,8 +16,10 @@ const UserLinks = ({ user }) => {
     const dispatch = useDispatch();
 
     const onLogout = () => {
+        if (isBrokerOrSeller) {
+            dispatch(propertiesApi.util.updateQueryData('fetchOwnProperties', undefined, () => []));
+        }
         dispatch(removeUser());
-        dispatch(propertiesApi.util.resetFetcher());
     };
 
     return (
