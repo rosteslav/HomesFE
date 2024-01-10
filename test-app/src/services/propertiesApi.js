@@ -102,13 +102,25 @@ const propertiesApi = createApi({
                     try {
                         const { data: id } = await queryFulfilled;
                         data.id = id.id;
+                        const ownPropertyData = { ...data };
+                        const userData = getState().authUser.data;
+                        const contactInfo = {
+                            firstName: userData.claims?.username,
+                            lastName: userData.claims?.lastName,
+                            phoneNumber: userData.claims?.phoneNumber,
+                            email: userData.claims?.email,
+                            imageURL: userData.claims?.userImage,
+                        };
+                        if (!ownPropertyData.brokerId) {
+                            ownPropertyData.contactInfo = contactInfo;
+                        }
 
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchOwnProperties',
                                 undefined,
                                 (draftData) => {
-                                    draftData?.push(data);
+                                    draftData?.push(ownPropertyData);
                                 }
                             )
                         );
