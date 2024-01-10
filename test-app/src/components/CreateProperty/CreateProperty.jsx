@@ -176,7 +176,7 @@ export const CreateProperty = () => {
         formData.createdOnLocalTime = date.toISOString();
         formData.images = [];
         formData.brokerId = brokerValues.id;
-        formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : null;
+        formData.exposure = selectedExposure.length > 0 ? selectedExposure.join('/') : 'Юг';
         if (propertyId.propertyId) {
             editPropertyInfo({
                 id: +propertyId.propertyId,
@@ -543,9 +543,6 @@ export const CreateProperty = () => {
                                     className='formInput'
                                     readOnly
                                 />
-                                {/* {errors.brokers && (
-                                <p className='text-red-500'>{errors.numberOfRooms.message}</p>
-                            )} */}
                             </div>
                             <div
                                 id='brokerId'
@@ -579,12 +576,16 @@ export const CreateProperty = () => {
 
                         <div>
                             <div className='mt-2'>
-                                <p
+                            <input
                                     id='exposure'
-                                    className='formInput mr-2 h-9 overflow-x-auto bg-white'
-                                >
-                                    {selectedExposure.join('/')}
-                                </p>
+                                    {...register('exposure')}
+                                    type='text'
+                                    name='exposure'
+                                    value={propertyId.propertyId ? selectedExposure.join('/') || 'Юг' : selectedExposure.join('/')}
+                                    onChange={onChangeHandler}
+                                    className='formInput'
+                                />
+                                {errors.exposure && <p className='text-red-500'>{errors.exposure.message}</p>}
                             </div>
                         </div>
 
@@ -598,7 +599,6 @@ export const CreateProperty = () => {
                                 propertyOptions.exposure.map((option, index) => (
                                     <li className='relative' key={option}>
                                         <input
-                                            {...register('exposure')}
                                             id={index}
                                             type='checkbox'
                                             name='exposure'
