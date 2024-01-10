@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { ButtonPrimary, ButtonSecondary } from '../../UI';
-import { propertiesApi } from '../../services/propertiesApi';
 import { removeUser } from '../../store/features/authUser';
+import { propertiesApi } from '../../services/propertiesApi';
 
 const UserLinks = ({ user }) => {
     let isSellerOrBroker = null;
@@ -16,9 +16,7 @@ const UserLinks = ({ user }) => {
     const dispatch = useDispatch();
 
     const onLogout = () => {
-        if (isBrokerOrSeller) {
-            dispatch(propertiesApi.util.updateQueryData('fetchOwnProperties', undefined, () => []));
-        }
+        dispatch(propertiesApi.util.updateQueryData('fetchOwnProperties', undefined, () => null))
         dispatch(removeUser());
     };
 
