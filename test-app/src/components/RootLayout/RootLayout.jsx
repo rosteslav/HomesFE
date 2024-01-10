@@ -20,7 +20,7 @@ const RootLayout = () => {
                     <Toaster
                         position='top-center'
                         gutter={12}
-                        containerStyle={{ margin: '80px' }}
+                        containerStyle={{ margin: '30px' }}
                         toastOptions={{
                             success: {
                                 duration: 3000,
