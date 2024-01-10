@@ -16,6 +16,7 @@ const propertiesApi = createApi({
             return headers;
         },
     }),
+    tagTypes: ['OwnProperties'],
     endpoints(builder) {
         return {
             fetchAllProperties: builder.query({
@@ -75,6 +76,7 @@ const propertiesApi = createApi({
             }),
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
+                providesTags: () => ['OwnProperties'],
             }),
             fetchRecommendedProperties: builder.query({
                 query: () => ({ url: '/properties/recommended' }),
@@ -224,7 +226,7 @@ const propertiesApi = createApi({
                     return {
                         url: `/properties/${detailsId}/report`,
                         method: 'POST',
-                        body: {reason: formData.reason},
+                        body: { reason: formData.reason },
                     };
                 },
             }),
@@ -242,6 +244,6 @@ export const {
     useDeleteOwnPropertyMutation,
     useEditPropertyInfoMutation,
     useFetchRecommendedPropertiesQuery,
-    useAddPropertyReasonMutation
+    useAddPropertyReasonMutation,
 } = propertiesApi;
 export { propertiesApi };
