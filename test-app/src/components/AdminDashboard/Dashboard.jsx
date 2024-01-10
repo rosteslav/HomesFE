@@ -14,7 +14,7 @@ const Dashboard = () => {
 
     return (
         <div className=''>
-            <div className={`fixed z-50 ${isOpen && 'rounded-e-xl bg-gray-200'}`}>
+            <div className={`fixed z-[60] ${isOpen && 'rounded-e-xl bg-gray-200'}`}>
                 <div className={`relative m-3  `}>
                     <button
                         onClick={() => setIsOpen((prev) => !prev)}
