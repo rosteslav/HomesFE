@@ -66,7 +66,7 @@ const ChangeNeighborhoodsDashboard = () => {
                     <SofiaSvgMap chosen={forLuxurious} setChosen={setForLuxurious} />
                 </div>
             </div>
-            <div className='m-auto w-56 pt-3'>
+            <div className='mx-auto mb-3 w-56 pt-3'>
                 <ButtonPrimary action={handleResult}>Запиши</ButtonPrimary>
             </div>
         </>
