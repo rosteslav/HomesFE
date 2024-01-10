@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { successNotifications } from '../../services/notificationMessages';
 import FloatingField from '../../UI/FloatingField';
 import { checkIsAdmin } from '../../util/auth';
+import { propertiesApi } from '../../services/propertiesApi';
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -26,6 +27,7 @@ export const LoginPage = () => {
             if (checkIsAdmin(data.token)) {
                 navigate('/dashboard');
             } else {
+                dispatch(propertiesApi.util.invalidateTags(['OwnProperties']));
                 navigate('/');
             }
         }
