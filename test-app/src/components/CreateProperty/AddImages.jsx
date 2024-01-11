@@ -95,7 +95,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
     const handleSubmitImage = async (e) => {
         e.preventDefault();
         const isConfirmed =
-            imageInputs[0].file === null
+            imageInputs[0].file === null && imagesUploaded.length === 0
                 ? confirm(
                       'Не сте качили снимки! Имоти без снимки са по-трудно продаваеми и по-трудно се показват в препоръчани. Сигурни ли сте че искате да публикувате без снимки?'
                   )
