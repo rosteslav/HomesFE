@@ -36,7 +36,7 @@ export const PropertiesDetails = () => {
     const [values, setValues] = useState({ reason: '' });
 
     useEffect(() => {
-        if (user.data === null || user.data?.claims?.roles[1] === 'Купувач') {
+        if (user.data === null || user.data?.isAdmin === false) {
             setStar(true);
         } else {
             setStar(false);
