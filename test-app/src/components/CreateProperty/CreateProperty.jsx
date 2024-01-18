@@ -162,13 +162,17 @@ export const CreateProperty = () => {
         }
     };
 
-    const handleExposureChange = (e) => {
-        const value = e.target.value;
+    const handleExposureClick = (e) => {
+        const value = e.target.textContent;
+        let joinStr = [];
         if (selectedExposure.includes(value)) {
             setSelectedExposure(selectedExposure.filter((item) => item !== value));
+            joinStr = selectedExposure.filter((item) => item !== value).join('/');
         } else {
             setSelectedExposure([...selectedExposure, value]);
+            joinStr = [...selectedExposure, value].join('/');
         }
+        setValue('exposure', joinStr);
     };
 
     const onSubmit = async (formData) => {
@@ -195,14 +199,11 @@ export const CreateProperty = () => {
     const onToggleOptions = (e) => {
         const optionName = e.target.name;
         const tagName = e.target.tagName;
-        const label = e.target.id;
         setToggleButtons(optionName);
-        if (e.target.id === 'exposure') {
+        if (optionName === 'exposure') {
             setToggleExposure(false);
-        } else {
-            if (optionName !== 'exposure' && tagName !== 'BUTTON' && label !== 'exposureLabel') {
-                setToggleExposure(true);
-            }
+        } else if (optionName !== 'exposure' && tagName !== 'BUTTON') {
+            setToggleExposure(true);
         }
     };
 
@@ -573,50 +574,38 @@ export const CreateProperty = () => {
                         </div>
                     )}
                     <div>
-                        <h3 className='block text-sm font-medium leading-6 text-gray-900'>
+                        <label
+                            htmlFor='exposure'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                        >
                             Изложение
-                        </h3>
-
-                        <div>
-                            <div className='mt-2'>
-                                <p
-                                    id='exposure'
-                                    className='formInput mr-2 h-9 overflow-x-auto bg-white'
-                                >
-                                    {selectedExposure.join('/')}
-                                </p>
-                            </div>
+                        </label>
+                        <div className='mt-2'>
+                            <input
+                                {...register('exposure')}
+                                type='text'
+                                name='exposure'
+                                value={selectedExposure.join('/')}
+                                className='formInput'
+                                readOnly
+                            />
+                            {errors.exposure && (
+                                <p className='text-red-500'>{errors.exposure.message}</p>
+                            )}
                         </div>
-
-                        <ul
+                        <div
+                            id='exposure'
+                            onClick={handleExposureClick}
                             className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
                                 toggleExposure === false ? '' : 'visibility: hidden'
                             }`}
                         >
                             {propertyOptions &&
                                 propertyOptions.exposure &&
-                                propertyOptions.exposure.map((option, index) => (
-                                    <li className='relative' key={option}>
-                                        <input
-                                            {...register('exposure')}
-                                            id={index}
-                                            type='checkbox'
-                                            name='exposure'
-                                            value={option}
-                                            onChange={handleExposureChange}
-                                            checked={selectedExposure.includes(option)}
-                                            className='hidden'
-                                        />
-                                        <label
-                                            htmlFor={index}
-                                            id='exposureLabel'
-                                            className='labelStyle'
-                                        >
-                                            {option}
-                                        </label>
-                                    </li>
+                                propertyOptions.exposure.map((option) => (
+                                    <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
-                        </ul>
+                        </div>
                     </div>
                     <div className='flex gap-4'>
                         <div className='flex-1'>
