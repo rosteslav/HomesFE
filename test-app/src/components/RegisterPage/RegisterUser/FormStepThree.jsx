@@ -134,7 +134,7 @@ const FormStepThree = ({
         } else {
             payLoad = { ...payLoad, ...stepThreeValues };
             if (isSuccessImage) {
-                payLoad.imageUrl = userImage.displayUrl;
+                payLoad.imageUrl = userImage.display_url;
             }
         }
         registerUser({ ...payLoad });
@@ -425,7 +425,7 @@ const FormStepThree = ({
                         )}
                     </div>
                     {userImage && (
-                        <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>
+                        <img className='h-96 w-96 object-cover' src={userImage.display_url}></img>
                     )}
                 </>
             )}
