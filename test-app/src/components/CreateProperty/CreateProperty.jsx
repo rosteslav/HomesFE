@@ -28,6 +28,9 @@ import AddImages from './AddImages';
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
 const CreateProperty = () => {
+    const user = useSelector((state) => state.authUser.data);
+    const propertyId = useParams();
+
     const [selectedExposure, setSelectedExposure] = useState([]);
     const [toggleExposure, setToggleExposure] = useState(true);
     const [conditionIsBroker, setConditionIsBroker] = useState(true);
@@ -67,9 +70,6 @@ const CreateProperty = () => {
         skip: conditionIsEdit,
     });
 
-    const user = useSelector((state) => state.authUser.data);
-
-    const propertyId = useParams();
 
     const type = 'create';
     let isBroker = false;

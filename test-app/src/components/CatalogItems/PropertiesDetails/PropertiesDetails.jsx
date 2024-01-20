@@ -16,19 +16,13 @@ import DetailsImages from './DetailsImages';
 
 // UI
 import { TextSkeleton } from '../../../UI/Skeletons';
-import {
-    changeLikedProperties,
-    loadLikedProperties,
-} from '../../../store/features/slices/likedProperties';
+import { changeLikedProperties } from '../../../store/features/slices/likedProperties';
 
 // Util functions
 import { validationPropertyReportSchema } from '../../../util/validationSchema';
 import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
 
 const PropertiesDetails = () => {
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
-
     const { detailsId } = useParams();
 
     const [star, setStar] = useState(false);
@@ -37,7 +31,7 @@ const PropertiesDetails = () => {
     const [isVisible, setIsVisible] = useState(true);
     const [values, setValues] = useState({ reason: '' });
 
-    const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
+    const { data: property, isLoading, error } = useFetchPropertyByIdQuery(detailsId);
     const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
 
     const likedProperties = useSelector((state) => state.likedProperties.data);
@@ -45,8 +39,12 @@ const PropertiesDetails = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const neighborhoodName = property?.neighbourhood;
     const pricePerSqm = property?.price / property?.space;
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
 
     useEffect(() => {
         if (user.data === null || user.data?.isAdmin === false) {
@@ -62,17 +60,11 @@ const PropertiesDetails = () => {
     }, [user]);
 
     useEffect(() => {
-        if (star && likedProperties.length === 0) {
-            dispatch(loadLikedProperties());
-        }
-    });
-
-    useEffect(() => {
-        if (isError) {
-            navigate('/');
+        if (error) {
             toast.error(notificationMessages(error.status));
+            navigate('/');
         }
-    });
+    }, [error, navigate]);
 
     useEffect(() => {
         if (isSuccess) {

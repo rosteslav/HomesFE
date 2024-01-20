@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 // RTK Queries
@@ -8,9 +8,6 @@ import {
     useFetchOwnPropertiesQuery,
     useFetchRecommendedPropertiesQuery,
 } from '../../store/features/Api/propertiesApi';
-
-// Redux slices
-import { loadLikedProperties } from '../../store/features/slices/likedProperties';
 
 // UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
@@ -49,21 +46,14 @@ const CatalogItems = () => {
         });
 
     const targetRef = useRef();
-    const dispatch = useDispatch();
-
-    const role = user.data?.claims?.roles;
 
     useEffect(() => {
-        if (user?.data === null || user.data?.claims?.roles[1] === 'Купувач') {
+        if (user?.data === null || user.data?.isAdmin === false) {
             setIsStar(true);
         } else {
             setIsStar(undefined);
         }
     }, [user]);
-
-    useEffect(() => {
-        dispatch(loadLikedProperties());
-    }, [dispatch]);
 
     useEffect(() => {
         if (properties) {
@@ -184,7 +174,7 @@ const CatalogItems = () => {
                 setPage={setPage}
                 showLikedProperties={showLikedProperties}
                 setShowLikedProperties={setShowLikedProperties}
-                role={role}
+                user={user}
             />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>

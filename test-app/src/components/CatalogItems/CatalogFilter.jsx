@@ -19,7 +19,7 @@ import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
 import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 
-const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, role }) => {
+const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, user }) => {
     const [option, setOption] = useState();
 
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
@@ -306,7 +306,7 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, r
                                         </svg>
                                     ))}
                             </ButtonFilter>
-                            {(role == undefined || role[1] === 'Купувач') && (
+                            {(user.data == null || user.data?.isAdmin === false) && (
                                 <ButtonFilter
                                     isActive={showLikedProperties}
                                     action={() => setShowLikedProperties((prev) => !prev)}

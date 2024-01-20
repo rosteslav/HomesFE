@@ -3,19 +3,12 @@ import Cookies from 'universal-cookie';
 
 const cookie = new Cookies();
 
+const existingCookie = cookie.get('allLikedProperties');
+
 const likedPropertiesSlice = createSlice({
     name: 'likedProperties',
-    initialState: { data: [] },
+    initialState: { data: existingCookie ? existingCookie : [] },
     reducers: {
-        loadLikedProperties(state) {
-            const existingCookie = cookie.get('allLikedProperties');
-            if (existingCookie) {
-                state.data = existingCookie;
-            } else {
-                state.data = [];
-                cookie.set('allLikedProperties', []);
-            }
-        },
         changeLikedProperties(state, action) {
             const likedProperties = state.data;
             const indexOf = likedProperties.indexOf(action.payload);
