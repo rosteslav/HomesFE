@@ -27,6 +27,10 @@ const CatalogItems = () => {
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const [showLikedProperties, setShowLikedProperties] = useState(false);
 
+    const allLikedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
+    const queryData = useSelector((state) => state.filter.queryData);
+
     const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
@@ -43,10 +47,6 @@ const CatalogItems = () => {
                     ? false
                     : true,
         });
-
-    const allLikedProperties = useSelector((state) => state.likedProperties.data);
-    const user = useSelector((state) => state.authUser);
-    const queryData = useSelector((state) => state.filter.queryData);
 
     const targetRef = useRef();
     const dispatch = useDispatch();
