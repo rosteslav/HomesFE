@@ -21,54 +21,49 @@ import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
 import CatalogFilter from './CatalogFilter';
 
 const CatalogItems = () => {
-    const [skipBuyer, setSkipBuyer] = useState(true);
     const [page, setPage] = useState(1);
     const [isStar, setIsStar] = useState(undefined);
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const [showLikedProperties, setShowLikedProperties] = useState(false);
+
     const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
-    const role = useSelector((state) => state.authUser.data?.claims?.roles);
     const queryData = useSelector((state) => state.filter.queryData);
+    
     const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
     });
     const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
-        useFetchRecommendedPropertiesQuery(undefined, {
-            skip: skipBuyer,
-        });
+    useFetchRecommendedPropertiesQuery(undefined, {
+        skip: user.data?.claims?.roles[1] === 'Купувач' ? false : true,
+    });
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
-        useFetchOwnPropertiesQuery(undefined, {
-            skip:
-                user.data?.claims?.roles[1] === 'Продавач' ||
-                user.data?.claims?.roles[1] === 'Брокер'
-                    ? false
-                    : true,
-        });
+    useFetchOwnPropertiesQuery(undefined, {
+        skip:
+        user.data?.claims?.roles[1] === 'Продавач' ||
+        user.data?.claims?.roles[1] === 'Брокер'
+        ? false
+        : true,
+    });
+
     const targetRef = useRef();
     const dispatch = useDispatch();
+    
+    const role = user.data?.claims?.roles;
 
     useEffect(() => {
-        if (user?.data === null || (role && role[1] === 'Купувач')) {
+        if (user?.data === null || user.data?.claims?.roles[1] === 'Купувач') {
             setIsStar(true);
         } else {
             setIsStar(undefined);
         }
-    }, [role, user]);
+    }, [user]);
 
     useEffect(() => {
         dispatch(loadLikedProperties());
     }, [dispatch]);
-
-    useEffect(() => {
-        if (user.data !== null && role[1] === 'Купувач') {
-            setSkipBuyer(false);
-        } else {
-            setSkipBuyer(true);
-        }
-    }, [user, role]);
 
     useEffect(() => {
         if (properties) {
