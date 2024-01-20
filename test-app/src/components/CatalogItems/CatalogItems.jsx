@@ -21,7 +21,6 @@ import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
 import CatalogFilter from './CatalogFilter';
 
 const CatalogItems = () => {
-    const [skip, setSkip] = useState(true);
     const [skipBuyer, setSkipBuyer] = useState(true);
     const [page, setPage] = useState(1);
     const [isStar, setIsStar] = useState(undefined);
@@ -31,7 +30,24 @@ const CatalogItems = () => {
     const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
     const role = useSelector((state) => state.authUser.data?.claims?.roles);
-
+    const queryData = useSelector((state) => state.filter.queryData);
+    const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
+        ...queryData,
+        page: page,
+    });
+    const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
+        useFetchRecommendedPropertiesQuery(undefined, {
+            skip: skipBuyer,
+        });
+    const { data: clientProperties, isLoading: isLoadingClientProperties } =
+        useFetchOwnPropertiesQuery(undefined, {
+            skip:
+                user.data?.claims?.roles[1] === 'Продавач' ||
+                user.data?.claims?.roles[1] === 'Брокер'
+                    ? false
+                    : true,
+        });
+    const targetRef = useRef();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -45,29 +61,6 @@ const CatalogItems = () => {
     useEffect(() => {
         dispatch(loadLikedProperties());
     }, [dispatch]);
-
-    const queryData = useSelector((state) => state.filter.queryData);
-
-    const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
-        ...queryData,
-        page: page,
-    });
-
-    const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
-        useFetchRecommendedPropertiesQuery(undefined, {
-            skip: skipBuyer,
-        });
-
-    const targetRef = useRef();
-
-    const { data: clientProperties, isLoading: isLoadingClientProperties } =
-        useFetchOwnPropertiesQuery(undefined, { skip });
-
-    useEffect(() => {
-        if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
-            setSkip(false);
-        }
-    }, [role]);
 
     useEffect(() => {
         if (user.data !== null && role[1] === 'Купувач') {
@@ -133,7 +126,7 @@ const CatalogItems = () => {
                     </div>
                 </div>
             )}
-            {skip === true && (
+            {(user.data === null || user.data?.claims?.roles[1] === 'Купувач') && (
                 <div className='border-b-2  border-black'>
                     <h2
                         onClick={() =>
