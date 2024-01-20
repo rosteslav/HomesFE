@@ -7,7 +7,7 @@ const cookies = new Cookies();
 
 const authUserSlice = createSlice({
     name: 'auth',
-    initialState: { data: null },
+    initialState: { data: JSON.parse(localStorage.getItem('authToken')) || null },
     reducers: {
         setUser(state, action) {
             const userContext = createUserContext(action.payload);
