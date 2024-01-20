@@ -7,17 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import {
     validationRegisterSchemaBuyerStepThree,
     validationRegisterSchemaStepThree,
-} from '../../../services/validationSchema';
+} from '../../../util/validationSchema';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { useAddUserImageMutation } from '../../../services/imagesApi';
+import { useAddUserImageMutation } from '../../../store/features/Api/imagesApi';
 import {
     useFetchBuyerPreferencesQuery,
     useLoginMutation,
     useRegisterUserMutation,
-} from '../../../services/authApi';
+} from '../../../store/features/Api/authApi';
 import FloatingField from '../../../UI/FloatingField';
 import { ButtonFilter } from '../../../UI/ButtonsFilter';
-import { successNotifications } from '../../../services/notificationMessages';
+import { successNotifications } from '../../../util/notificationMessages';
 import Loader from '../../../UI/Loader';
 
 const FormStepThree = ({

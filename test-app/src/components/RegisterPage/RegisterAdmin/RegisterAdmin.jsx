@@ -4,16 +4,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { validationRegisterAdminSchema } from '../../../services/validationSchema';
+import { validationRegisterAdminSchema } from '../../../util/validationSchema';
 import Loader from '../../../UI/Loader';
 import {
     selectedAdmin,
     setData,
-} from '../../../store/slices/registerAdminSlice/registerAdminSlice';
+} from '../../../store/features/slices/registerAdminSlice';
 import { ButtonPrimary } from '../../../UI';
-import { useLoginMutation, useRegisterAdminMutation } from '../../../services/authApi';
+import { useLoginMutation, useRegisterAdminMutation } from '../../../store/features/Api/authApi';
 import toast from 'react-hot-toast';
-import { successNotifications } from '../../../services/notificationMessages';
+import { successNotifications } from '../../../util/notificationMessages';
 
 export const RegisterAdmin = () => {
     const currRegisterAdminFormValues = useSelector(selectedAdmin);

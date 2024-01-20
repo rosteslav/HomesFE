@@ -1,9 +1,9 @@
 import ImageScroll from '../../UI/ImageScroll';
-import { useDeleteReportsByIdMutation } from '../../services/adminApi';
+import { useDeleteReportsByIdMutation } from '../../store/features/Api/adminApi';
 import {
     useDeleteOwnPropertyMutation,
     useFetchPropertyByIdQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 const ReportedProperty = ({ propertyId, reports }) => {

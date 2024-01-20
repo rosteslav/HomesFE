@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { useFetchPropertiesFilterOptionsQuery } from '../../services/propertiesApi';
+import { useFetchPropertiesFilterOptionsQuery } from '../../store/features/Api/propertiesApi';
 import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
 import {
     loadAllOptions,
     resetFilter,
     setFilterOption,
     updateFilterQueryData,
-} from '../../store/features/filter';
+} from '../../store/features/slices/filter';
 import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 

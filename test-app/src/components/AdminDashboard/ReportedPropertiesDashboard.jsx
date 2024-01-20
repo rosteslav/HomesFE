@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useFetchAllReportsQuery } from '../../services/adminApi';
-import { useFetchAllPropertiesQuery } from '../../services/propertiesApi';
+import { useFetchAllReportsQuery } from '../../store/features/Api/adminApi';
+import { useFetchAllPropertiesQuery } from '../../store/features/Api/propertiesApi';
 import ReportedProperty from './reportedProperty';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 

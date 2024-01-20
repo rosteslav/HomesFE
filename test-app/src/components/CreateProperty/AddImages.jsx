@@ -6,9 +6,9 @@ import {
     useAddPropertyImageMutation,
     useDeletePropertyImageMutation,
     useFetchPropertyImagesQuery,
-} from '../../services/imagesApi';
+} from '../../store/features/Api/imagesApi';
 import Loader from '../../UI/Loader';
-import notificationMessages from '../../services/notificationMessages';
+import notificationMessages from '../../util/notificationMessages';
 
 export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);

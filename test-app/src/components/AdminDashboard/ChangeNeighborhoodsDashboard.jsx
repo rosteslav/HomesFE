@@ -4,7 +4,7 @@ import { ButtonPrimary } from '../../UI';
 import {
     useFetchNeighbourhoodsRatingQuery,
     useUpdateNeighbourhoodsRatingMutation,
-} from '../../services/adminApi';
+} from '../../store/features/Api/adminApi';
 
 const ChangeNeighborhoodsDashboard = () => {
     const { data: neighbourhoodsRating } = useFetchNeighbourhoodsRatingQuery();

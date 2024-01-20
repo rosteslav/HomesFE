@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import 'rc-slider/assets/index.css';
-import { setFilterOption, updateFilterQueryData } from '../../store/features/filter';
+import { setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
 
 const RangeSlider = ({ option, setPage }) => {
     const filter = useSelector((state) => state.filter);

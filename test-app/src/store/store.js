@@ -1,14 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import registerAdminSlice from './slices/registerAdminSlice/registerAdminSlice';
-import { propertiesApi } from '../services/propertiesApi';
-import { imagesApi } from '../services/imagesApi';
-import { authApi } from '../services/authApi';
-import authUser from './features/authUser';
-import filter from './features/filter';
-import likedProperties from './features/likedProperties';
-import { adminApi } from '../services/adminApi';
+// Slices
+import registerAdminSlice from './features/slices/registerAdminSlice';
+import authUser from './features/slices/authUser';
+import filter from './features/slices/filter';
+import likedProperties from './features/slices/likedProperties';
+
+// RTK Queries
+import { propertiesApi } from './features/Api//propertiesApi';
+import { imagesApi } from './features/Api//imagesApi';
+import { authApi } from './features/Api/authApi';
+import { adminApi } from './features/Api/adminApi';
 
 const store = configureStore({
     reducer: {
@@ -19,7 +22,7 @@ const store = configureStore({
         [propertiesApi.reducerPath]: propertiesApi.reducer,
         [imagesApi.reducerPath]: imagesApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
-        [adminApi.reducerPath]: adminApi.reducer
+        [adminApi.reducerPath]: adminApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({ serializableCheck: false })

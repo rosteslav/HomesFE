@@ -6,15 +6,15 @@ import DetailsImages from './DetailsImages';
 import {
     useAddPropertyReasonMutation,
     useFetchPropertyByIdQuery,
-} from '../../../services/propertiesApi';
-import notificationMessages, { successNotifications } from '../../../services/notificationMessages';
+} from '../../../store/features/Api/propertiesApi';
+import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
 import { TextSkeleton } from '../../../UI/Skeletons';
 import {
     changeLikedProperties,
     loadLikedProperties,
-} from '../../../store/features/likedProperties';
+} from '../../../store/features/slices/likedProperties';
 import { useDispatch, useSelector } from 'react-redux';
-import { validationPropertyReportSchema } from '../../../services/validationSchema';
+import { validationPropertyReportSchema } from '../../../util/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 

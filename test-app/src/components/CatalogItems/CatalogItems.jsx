@@ -8,10 +8,10 @@ import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
     useFetchRecommendedPropertiesQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { Link } from 'react-router-dom';
-import { loadLikedProperties } from '../../store/features/likedProperties';
+import { loadLikedProperties } from '../../store/features/slices/likedProperties';
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);

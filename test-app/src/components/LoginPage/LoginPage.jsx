@@ -4,15 +4,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { validationLoginSchema } from '../../services/validationSchema';
+import { validationLoginSchema } from '../../util/validationSchema';
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
-import { useLoginMutation } from '../../services/authApi';
+import { useLoginMutation } from '../../store/features/Api/authApi';
 import toast from 'react-hot-toast';
-import { successNotifications } from '../../services/notificationMessages';
+import { successNotifications } from '../../util/notificationMessages';
 import FloatingField from '../../UI/FloatingField';
 import { checkIsAdmin } from '../../util/auth';
-import { propertiesApi } from '../../services/propertiesApi';
+import { propertiesApi } from '../../store/features/Api/propertiesApi';
 
 export const LoginPage = () => {
     const navigate = useNavigate();

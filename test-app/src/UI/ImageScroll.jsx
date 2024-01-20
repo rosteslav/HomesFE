@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ImageScroll.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeLikedProperties } from '../store/features/likedProperties';
+import { changeLikedProperties } from '../store/features/slices/likedProperties';
 
 const ImageScroll = ({ images: img, propertyId, star }) => {
     const [images, setImages] = useState([]);

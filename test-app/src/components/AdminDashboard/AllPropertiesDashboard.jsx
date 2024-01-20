@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     useDeleteOwnPropertyMutation,
     useFetchAllPropertiesQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 import { CatalogItem } from '../CatalogItems/CatalogItem/CatalogItem';
-import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../services/adminApi';
+import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../store/features/Api/adminApi';
 
 const AllPropertiesDashboard = () => {
     const targetRef = useRef();

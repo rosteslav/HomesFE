@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSvgColor, setFilterOption, updateFilterQueryData } from '../../store/features/filter';
+import { clearSvgColor, setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
 import { useEffect } from 'react';
 

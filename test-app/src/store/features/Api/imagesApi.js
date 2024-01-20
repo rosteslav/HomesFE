@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 import { propertiesApi } from './propertiesApi';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import notificationMessages from './notificationMessages';
+import notificationMessages from '../../../util/notificationMessages';
 
 const baseUrl = import.meta.env.VITE_IMAGES_API;
 

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { validationRegisterSchemaStepTwo } from '../../../services/validationSchema';
+import { validationRegisterSchemaStepTwo } from '../../../util/validationSchema';
 import FloatingField from '../../../UI/FloatingField';
 
 const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {

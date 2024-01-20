@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { useFetchRolesOptionsQuery } from '../../../services/authApi';
+import { useFetchRolesOptionsQuery } from '../../../store/features/Api/authApi';
 
 const FormStepOne = ({ setChosenRole, setCurrentStep }) => {
     const { data: roles } = useFetchRolesOptionsQuery();

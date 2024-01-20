@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useDeleteOwnPropertyMutation } from '../../../services/propertiesApi';
+import { useDeleteOwnPropertyMutation } from '../../../store/features/Api/propertiesApi';
 // import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../../services/adminApi';
 
 const CardBtn = ({ property }) => {

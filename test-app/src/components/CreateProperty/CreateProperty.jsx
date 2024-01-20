@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 
-import { validationCreatePropertySchema } from '../../services/validationSchema';
+import { validationCreatePropertySchema } from '../../util/validationSchema';
 import { ButtonPrimary } from '../../UI';
 import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
@@ -11,9 +11,9 @@ import {
     useEditPropertyInfoMutation,
     useFetchPropertyByIdQuery,
     useFetchPropertyOptionsQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
 import { AddImages } from './AddImages';
-import { useFetchBrokersOptionsQuery } from '../../services/authApi';
+import { useFetchBrokersOptionsQuery } from '../../store/features/Api/authApi';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
