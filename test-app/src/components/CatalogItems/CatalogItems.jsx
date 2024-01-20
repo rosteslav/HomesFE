@@ -34,13 +34,13 @@ const CatalogItems = () => {
     });
     const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
         useFetchRecommendedPropertiesQuery(undefined, {
-            skip: user.data?.claims?.roles[1] === 'Купувач' ? false : true,
+            skip: user.data?.claims?.roles.includes('Купувач') ? false : true,
         });
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
         useFetchOwnPropertiesQuery(undefined, {
             skip:
-                user.data?.claims?.roles[1] === 'Продавач' ||
-                user.data?.claims?.roles[1] === 'Брокер'
+                user.data?.claims?.roles.includes('Продавач') ||
+                user.data?.claims?.roles.includes('Брокер')
                     ? false
                     : true,
         });
@@ -111,7 +111,7 @@ const CatalogItems = () => {
                     </div>
                 </div>
             )}
-            {(user.data === null || user.data?.claims?.roles[1] === 'Купувач') && (
+            {(user.data === null || user.data?.claims?.roles.includes('Купувач')) && (
                 <div className='border-b-2  border-black'>
                     <h2
                         onClick={() =>
