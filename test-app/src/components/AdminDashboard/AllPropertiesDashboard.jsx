@@ -11,7 +11,7 @@ import {
 } from '../../store/features/Api/adminApi';
 
 // Components
-import { CatalogItem } from '../CatalogItems/CatalogItem/CatalogItem';
+import CatalogItem from '../CatalogItems/CatalogItem/CatalogItem';
 
 // UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';

@@ -25,7 +25,7 @@ import {
 import { validationPropertyReportSchema } from '../../../util/validationSchema';
 import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
 
-export const PropertiesDetails = () => {
+const PropertiesDetails = () => {
     const { detailsId } = useParams();
     const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
     const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
@@ -265,3 +265,5 @@ export const PropertiesDetails = () => {
         </section>
     );
 };
+
+export default PropertiesDetails;

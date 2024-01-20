@@ -4,13 +4,13 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { restrictForAdmin, restrictLoginRegister } from './util/auth';
 
 // Components
-import { LoginPage } from './components/LoginPage/LoginPage';
-import { CatalogItems } from './components/CatalogItems/CatalogItems';
+import LoginPage from './components/LoginPage/LoginPage';
+import CatalogItems from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
-import { PropertiesDetails } from './components/CatalogItems/PropertiesDetails/PropertiesDetails';
-import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
-import { CreateProperty } from './components/CreateProperty/CreateProperty';
+import PropertiesDetails from './components/CatalogItems/PropertiesDetails/PropertiesDetails';
+import RegisterAdmin from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
+import CreateProperty from './components/CreateProperty/CreateProperty';
 import RegisterUserForm from './components/RegisterPage/RegisterUser/RegisterUserForm';
 import Dashboard from './components/AdminDashboard/Dashboard';
 

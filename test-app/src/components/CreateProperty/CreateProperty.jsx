@@ -22,12 +22,12 @@ import ButtonOptions from '../../UI/ButtonOptions';
 import Loader from '../../UI/Loader';
 
 // Components
-import { AddImages } from './AddImages';
+import AddImages from './AddImages';
 
 // Map
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
-export const CreateProperty = () => {
+const CreateProperty = () => {
     const type = 'create';
     const propertyId = useParams();
     const [selectedExposure, setSelectedExposure] = useState([]);
@@ -705,3 +705,5 @@ export const CreateProperty = () => {
         </>
     );
 };
+
+export default CreateProperty;

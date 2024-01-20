@@ -21,7 +21,7 @@ import FloatingField from '../../UI/FloatingField';
 import { successNotifications } from '../../util/notificationMessages';
 import { checkIsAdmin } from '../../util/auth';
 
-export const LoginPage = () => {
+const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [values, setValues] = useState({ username: '', password: '' });
@@ -107,3 +107,5 @@ export const LoginPage = () => {
         </>
     );
 };
+
+export default LoginPage;

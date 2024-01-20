@@ -9,10 +9,7 @@ import toast from 'react-hot-toast';
 import { useLoginMutation, useRegisterAdminMutation } from '../../../store/features/Api/authApi';
 
 // Redux Slices
-import {
-    selectedAdmin,
-    setData,
-} from '../../../store/features/slices/registerAdminSlice';
+import { selectedAdmin, setData } from '../../../store/features/slices/registerAdminSlice';
 
 // Validation schema
 import { validationRegisterAdminSchema } from '../../../util/validationSchema';
@@ -24,7 +21,7 @@ import { ButtonPrimary } from '../../../UI';
 // Util functions
 import { successNotifications } from '../../../util/notificationMessages';
 
-export const RegisterAdmin = () => {
+const RegisterAdmin = () => {
     const currRegisterAdminFormValues = useSelector(selectedAdmin);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -44,8 +41,8 @@ export const RegisterAdmin = () => {
     useEffect(() => {
         if (isSuccessRegister) {
             if (isSuccessLogin) {
-                toast.success(successNotifications('register'))
-                toast.success(successNotifications('login'))
+                toast.success(successNotifications('register'));
+                toast.success(successNotifications('login'));
                 navigate('/');
             } else if (isLoadingLogin) {
                 console.log('loading');
@@ -238,3 +235,5 @@ export const RegisterAdmin = () => {
         </>
     );
 };
+
+export default RegisterAdmin;

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
 
-export const Header = () => {
+const Header = () => {
     const user = useSelector((state) => state.authUser.data);
     return (
         <>
@@ -31,3 +31,5 @@ export const Header = () => {
         </>
     );
 };
+
+export default Header;

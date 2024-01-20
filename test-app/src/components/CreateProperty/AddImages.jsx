@@ -15,7 +15,7 @@ import Loader from '../../UI/Loader';
 // Util functions
 import notificationMessages from '../../util/notificationMessages';
 
-export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
+const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
     const [imagesUploaded, setImagesUploaded] = useState([]);
@@ -224,3 +224,5 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         </>
     );
 };
+
+export default AddImages;

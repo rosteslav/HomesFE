@@ -16,12 +16,11 @@ import { loadLikedProperties } from '../../store/features/slices/likedProperties
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 // Components
-import { CatalogItem } from './CatalogItem/CatalogItem';
+import CatalogItem from './CatalogItem/CatalogItem';
 import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
 import CatalogFilter from './CatalogFilter';
 
-
-export const CatalogItems = () => {
+const CatalogItems = () => {
     const [skip, setSkip] = useState(true);
     const [skipBuyer, setSkipBuyer] = useState(true);
     const [page, setPage] = useState(1);
@@ -250,3 +249,5 @@ export const CatalogItems = () => {
         </section>
     );
 };
+
+export default CatalogItems;

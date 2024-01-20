@@ -5,7 +5,7 @@ import CardHeader from './CardHeader';
 // UI
 import ImageScroll from '../../../UI/ImageScroll';
 
-export const CatalogItem = ({ property, reference, star }) => {
+const CatalogItem = ({ property, reference, star }) => {
     return (
         <div ref={reference}>
             <CardHeader property={property} />
@@ -14,3 +14,5 @@ export const CatalogItem = ({ property, reference, star }) => {
         </div>
     );
 };
+
+export default CatalogItem;
