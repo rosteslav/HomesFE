@@ -1,22 +1,27 @@
 import { Link } from 'react-router-dom';
-
 import { useDispatch } from 'react-redux';
+
+// RTK Queries
+import { propertiesApi } from '../../store/features/Api/propertiesApi';
+
+// Redux slices
+import { removeUser } from '../../store/features/slices/authUser';
+
+// UI
 import { ButtonPrimary, ButtonSecondary } from '../../UI';
-import { removeUser } from '../../store/features/authUser';
-import { propertiesApi } from '../../services/propertiesApi';
 
 const UserLinks = ({ user }) => {
-    let isSellerOrBroker = null;
     const isBrokerOrSeller = (role) => role === 'Брокер' || role === 'Продавач';
-
-    // Expected output: true
+    
+    const dispatch = useDispatch();
+    
+    let isSellerOrBroker = null;
     if (user.claims?.roles) {
         isSellerOrBroker = user.claims.roles.some(isBrokerOrSeller);
     }
-    const dispatch = useDispatch();
 
     const onLogout = () => {
-        dispatch(propertiesApi.util.updateQueryData('fetchOwnProperties', undefined, () => null))
+        dispatch(propertiesApi.util.resetApiState())
         dispatch(removeUser());
     };
 

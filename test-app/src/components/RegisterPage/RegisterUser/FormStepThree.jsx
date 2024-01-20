@@ -4,21 +4,28 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    validationRegisterSchemaBuyerStepThree,
-    validationRegisterSchemaStepThree,
-} from '../../../services/validationSchema';
-import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { useAddUserImageMutation } from '../../../services/imagesApi';
+// RTK Queries
+import { useAddUserImageMutation } from '../../../store/features/Api/imagesApi';
 import {
     useFetchBuyerPreferencesQuery,
     useLoginMutation,
     useRegisterUserMutation,
-} from '../../../services/authApi';
+} from '../../../store/features/Api/authApi';
+
+// Validation Schema
+import {
+    validationRegisterSchemaBuyerStepThree,
+    validationRegisterSchemaStepThree,
+} from '../../../util/validationSchema';
+
+// UI
+import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import FloatingField from '../../../UI/FloatingField';
 import { ButtonFilter } from '../../../UI/ButtonsFilter';
-import { successNotifications } from '../../../services/notificationMessages';
 import Loader from '../../../UI/Loader';
+
+// Util functions
+import { successNotifications } from '../../../util/notificationMessages';
 
 const FormStepThree = ({
     setCurrentStep,
@@ -32,16 +39,17 @@ const FormStepThree = ({
 }) => {
     const [imageName, setImageName] = useState('Моля изберете снимка');
     const [chosenOption, setChosenOption] = useState();
+
     const [addUserImage, { data: userImage, isSuccess: isSuccessImage }] =
         useAddUserImageMutation();
     const [registerUser, { isLoading, isSuccess: isSuccessRegister }] = useRegisterUserMutation();
     const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin }] = useLoginMutation();
-    const boxRef = useRef(null);
-    const navigate = useNavigate();
-
     const { data: buyerPreferences } = useFetchBuyerPreferencesQuery(undefined, {
         skip: chosenRole != 'Купувач',
     });
+
+    const boxRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSuccessRegister) {
@@ -61,6 +69,19 @@ const FormStepThree = ({
             setComplete(false);
         }
     });
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (boxRef.current && !boxRef.current.contains(event.target)) {
+                setChosenOption(undefined);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const {
         register,
@@ -113,24 +134,12 @@ const FormStepThree = ({
         } else {
             payLoad = { ...payLoad, ...stepThreeValues };
             if (isSuccessImage) {
-                payLoad.imageUrl = userImage.displayUrl;
+                payLoad.imageUrl = userImage.display_url;
             }
         }
         registerUser({ ...payLoad });
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (boxRef.current && !boxRef.current.contains(event.target)) {
-                setChosenOption(undefined);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
     const onChangeHandler = (e) => {
         if (chosenRole !== 'Купувач') {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
@@ -139,6 +148,7 @@ const FormStepThree = ({
         }
         setValue(e.target.name, e.target.value);
     };
+
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
         formData.append('image', e.target.files[0]);
@@ -415,7 +425,7 @@ const FormStepThree = ({
                         )}
                     </div>
                     {userImage && (
-                        <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>
+                        <img className='h-96 w-96 object-cover' src={userImage.display_url}></img>
                     )}
                 </>
             )}

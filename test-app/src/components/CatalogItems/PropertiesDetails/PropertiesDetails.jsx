@@ -1,39 +1,50 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-
-import DetailsImages from './DetailsImages';
-import {
-    useAddPropertyReasonMutation,
-    useFetchPropertyByIdQuery,
-} from '../../../services/propertiesApi';
-import notificationMessages, { successNotifications } from '../../../services/notificationMessages';
-import { TextSkeleton } from '../../../UI/Skeletons';
-import {
-    changeLikedProperties,
-    loadLikedProperties,
-} from '../../../store/features/likedProperties';
 import { useDispatch, useSelector } from 'react-redux';
-import { validationPropertyReportSchema } from '../../../services/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 
-export const PropertiesDetails = () => {
+// RTK Queries
+import {
+    useAddPropertyReasonMutation,
+    useFetchPropertyByIdQuery,
+} from '../../../store/features/Api/propertiesApi';
+
+// Components
+import DetailsImages from './DetailsImages';
+
+// UI
+import { TextSkeleton } from '../../../UI/Skeletons';
+import { changeLikedProperties } from '../../../store/features/slices/likedProperties';
+
+// Util functions
+import { validationPropertyReportSchema } from '../../../util/validationSchema';
+import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
+
+const PropertiesDetails = () => {
     const { detailsId } = useParams();
-    const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
-    const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
+
     const [star, setStar] = useState(false);
-    const navigate = useNavigate();
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    const neighborhoodName = property?.neighbourhood;
-    const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
-    const dispatch = useDispatch();
-    const likedProperties = useSelector((state) => state.likedProperties.data);
-    const user = useSelector((state) => state.authUser);
     const [report, setReport] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const [values, setValues] = useState({ reason: '' });
+
+    const { data: property, isLoading, error } = useFetchPropertyByIdQuery(detailsId);
+    const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
+
+    const likedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const neighborhoodName = property?.neighbourhood;
+    const pricePerSqm = property?.price / property?.space;
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
 
     useEffect(() => {
         if (user.data === null || user.data?.isAdmin === false) {
@@ -49,17 +60,11 @@ export const PropertiesDetails = () => {
     }, [user]);
 
     useEffect(() => {
-        if (star && likedProperties.length === 0) {
-            dispatch(loadLikedProperties());
-        }
-    });
-
-    useEffect(() => {
-        if (isError) {
-            navigate('/');
+        if (error) {
             toast.error(notificationMessages(error.status));
+            navigate('/');
         }
-    });
+    }, [error, navigate]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -89,8 +94,6 @@ export const PropertiesDetails = () => {
     const isClickedReport = () => {
         setIsClicked(!isClicked);
     };
-
-    const pricePerSqm = property?.price / property?.space;
 
     return (
         <section className='relative m-4 mt-10'>
@@ -258,3 +261,5 @@ export const PropertiesDetails = () => {
         </section>
     );
 };
+
+export default PropertiesDetails;

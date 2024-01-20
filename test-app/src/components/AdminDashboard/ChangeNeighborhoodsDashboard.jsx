@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react';
-import SofiaSvgMap from './SofiaSvgMap';
-import { ButtonPrimary } from '../../UI';
+
+// RTK Queries
 import {
     useFetchNeighbourhoodsRatingQuery,
     useUpdateNeighbourhoodsRatingMutation,
-} from '../../services/adminApi';
+} from '../../store/features/Api/adminApi';
+
+// Map
+import SofiaSvgMap from './SofiaSvgMap';
+
+// UI
+import { ButtonPrimary } from '../../UI';
 
 const ChangeNeighborhoodsDashboard = () => {
-    const { data: neighbourhoodsRating } = useFetchNeighbourhoodsRatingQuery();
-    const [updateNeighbourhoodsRating] = useUpdateNeighbourhoodsRatingMutation([[], []]);
     const [forLiving, setForLiving] = useState([[], []]);
     const [forInvestment, setForInvestment] = useState([[], []]);
     const [forBudget, setForBudget] = useState([[], []]);
     const [forLuxurious, setForLuxurious] = useState([[], []]);
+    
+    const { data: neighbourhoodsRating } = useFetchNeighbourhoodsRatingQuery();
+    const [updateNeighbourhoodsRating] = useUpdateNeighbourhoodsRatingMutation([[], []]);
 
     useEffect(() => {
         if (neighbourhoodsRating) {
@@ -46,7 +53,6 @@ const ChangeNeighborhoodsDashboard = () => {
     };
 
     return (
-        // temporary button to show all results
         <>
             <div className='grid gap-5 pt-4 text-center text-xl font-bold lg:grid-cols-2'>
                 <div>

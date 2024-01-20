@@ -1,23 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { useFetchPropertiesFilterOptionsQuery } from '../../services/propertiesApi';
-import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+// RTK Queries
+import { useFetchPropertiesFilterOptionsQuery } from '../../store/features/Api/propertiesApi';
+
+// Redux slice
 import {
     loadAllOptions,
     resetFilter,
     setFilterOption,
     updateFilterQueryData,
-} from '../../store/features/filter';
+} from '../../store/features/slices/filter';
+
+// UI
+import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+
+// Components
 import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 
-const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, role }) => {
-    const dispatch = useDispatch();
+const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, user }) => {
+    const [option, setOption] = useState();
+
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
+
     const filter = useSelector((state) => state.filter);
 
-    const [option, setOption] = useState();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {
@@ -297,7 +306,7 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, r
                                         </svg>
                                     ))}
                             </ButtonFilter>
-                            {(role == undefined || role[1] === 'Купувач') && (
+                            {(user.data == null || user.data?.isAdmin === false) && (
                                 <ButtonFilter
                                     isActive={showLikedProperties}
                                     action={() => setShowLikedProperties((prev) => !prev)}

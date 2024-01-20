@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+
+// UI
 import { ImageSkeleton } from '../../../UI/Skeletons';
 
 const DetailsImages = ({ images, isLoading }) => {

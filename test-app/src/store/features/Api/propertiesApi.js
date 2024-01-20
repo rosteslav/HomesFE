@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import toast from 'react-hot-toast';
-import notificationMessages from './notificationMessages';
+
+// Util functions
+import notificationMessages from '../../../util/notificationMessages';
 
 const baseUrl = import.meta.env.VITE_PROPERTIES_API;
 

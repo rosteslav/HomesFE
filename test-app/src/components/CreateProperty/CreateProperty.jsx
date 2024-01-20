@@ -1,48 +1,40 @@
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { validationCreatePropertySchema } from '../../services/validationSchema';
-import { ButtonPrimary } from '../../UI';
-import ButtonOptions from '../../UI/ButtonOptions';
-import Loader from '../../UI/Loader';
+// RTK Queries
 import {
     useAddPropertyInfoMutation,
     useEditPropertyInfoMutation,
     useFetchPropertyByIdQuery,
     useFetchPropertyOptionsQuery,
-} from '../../services/propertiesApi';
-import { AddImages } from './AddImages';
-import { useFetchBrokersOptionsQuery } from '../../services/authApi';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+} from '../../store/features/Api/propertiesApi';
+import { useFetchBrokersOptionsQuery } from '../../store/features/Api/authApi';
+
+// Validation schema
+import { validationCreatePropertySchema } from '../../util/validationSchema';
+
+// UI
+import { ButtonPrimary } from '../../UI';
+import ButtonOptions from '../../UI/ButtonOptions';
+import Loader from '../../UI/Loader';
+
+// Components
+import AddImages from './AddImages';
+
+// Map
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
-export const CreateProperty = () => {
-    const type = 'create';
+const CreateProperty = () => {
+    const user = useSelector((state) => state.authUser.data);
     const propertyId = useParams();
+
     const [selectedExposure, setSelectedExposure] = useState([]);
     const [toggleExposure, setToggleExposure] = useState(true);
-    const user = useSelector((state) => state.authUser.data);
-    let isBroker = false;
-    if (user.claims?.roles) {
-        isBroker = user.claims.roles.some((role) => role === 'Брокер');
-    }
     const [conditionIsBroker, setConditionIsBroker] = useState(true);
     const [conditionIsEdit, setConditionIsEdit] = useState(true);
-    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
-        useAddPropertyInfoMutation();
-    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
-    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {
-        skip: conditionIsBroker,
-    });
-    const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
-        skip: conditionIsEdit,
-        refetchOnMountOrArgChange: true,
-    });
-    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
-        skip: conditionIsEdit,
-    });
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
     const [values, setValues] = useState({
@@ -63,6 +55,43 @@ export const CreateProperty = () => {
         content: '',
         id: null,
     });
+
+    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
+        useAddPropertyInfoMutation();
+    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
+    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {
+        skip: conditionIsBroker,
+    });
+    const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
+        skip: conditionIsEdit,
+        refetchOnMountOrArgChange: true,
+    });
+    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
+        skip: conditionIsEdit,
+    });
+
+
+    const type = 'create';
+    let isBroker = false;
+    if (user.claims?.roles) {
+        isBroker = user.claims.roles.some((role) => role === 'Брокер');
+    }
+    const title = propertyId.propertyId ? 'Редактиране на имота' : 'Създаване на нов имот';
+
+    useEffect(() => {
+        if (!isBroker) {
+            setConditionIsBroker(false);
+        }
+    }, [isBroker]);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setToggleForms('images');
+        }
+        if (success) {
+            setToggleForms('images');
+        }
+    }, [isSuccess, success]);
 
     const {
         register,
@@ -111,21 +140,6 @@ export const CreateProperty = () => {
             }
         }
     }, [propertyId, property, setValue]);
-
-    useEffect(() => {
-        if (!isBroker) {
-            setConditionIsBroker(false);
-        }
-    }, [isBroker]);
-
-    useEffect(() => {
-        if (isSuccess) {
-            setToggleForms('images');
-        }
-        if (success) {
-            setToggleForms('images');
-        }
-    }, [isSuccess, success]);
 
     const handleMouseEnter = (e) => {
         const elem = e.target;
@@ -224,7 +238,6 @@ export const CreateProperty = () => {
             setValue(e.target.parentElement.id, content);
         }
     };
-    const title = propertyId.propertyId ? 'Редактиране на имота' : 'Създаване на нов имот';
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -696,3 +709,5 @@ export const CreateProperty = () => {
         </>
     );
 };
+
+export default CreateProperty;

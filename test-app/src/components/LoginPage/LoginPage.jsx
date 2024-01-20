@@ -3,23 +3,31 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 
-import { validationLoginSchema } from '../../services/validationSchema';
+// RTK Queries
+import { useLoginMutation } from '../../store/features/Api/authApi';
+
+// Validation schema
+import { validationLoginSchema } from '../../util/validationSchema';
+
+// UI
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
-import { useLoginMutation } from '../../services/authApi';
-import toast from 'react-hot-toast';
-import { successNotifications } from '../../services/notificationMessages';
 import FloatingField from '../../UI/FloatingField';
-import { checkIsAdmin } from '../../util/auth';
-import { propertiesApi } from '../../services/propertiesApi';
 
-export const LoginPage = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+// Util functions
+import { successNotifications } from '../../util/notificationMessages';
+import { checkIsAdmin } from '../../util/auth';
+
+const LoginPage = () => {
     const [values, setValues] = useState({ username: '', password: '' });
     const [passwordVisibility, setPasswordVisibility] = useState(false);
+
     const [login, { data, isLoading, isSuccess }] = useLoginMutation();
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {
@@ -27,7 +35,6 @@ export const LoginPage = () => {
             if (checkIsAdmin(data.token)) {
                 navigate('/dashboard');
             } else {
-                dispatch(propertiesApi.util.invalidateTags(['OwnProperties']));
                 navigate('/');
             }
         }
@@ -100,3 +107,5 @@ export const LoginPage = () => {
         </>
     );
 };
+
+export default LoginPage;

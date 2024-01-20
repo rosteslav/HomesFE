@@ -1,17 +1,20 @@
-import ImageScroll from '../../UI/ImageScroll';
-import { useDeleteReportsByIdMutation } from '../../services/adminApi';
+// RTK Queries
 import {
     useDeleteOwnPropertyMutation,
     useFetchPropertyByIdQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
+import { useDeleteReportsByIdMutation } from '../../store/features/Api/adminApi';
+
+// UI
+import ImageScroll from '../../UI/ImageScroll';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 const ReportedProperty = ({ propertyId, reports }) => {
     const [deleteReportsById] = useDeleteReportsByIdMutation();
     const { data: property, isLoading: isLoadingReportedProperty } =
         useFetchPropertyByIdQuery(propertyId);
-
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
+
     const onClickDeleteProperty = (id) => {
         const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
         if (isConfirmed) {

@@ -1,7 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setUser } from '../store/features/authUser';
 import toast from 'react-hot-toast';
-import notificationMessages from './notificationMessages';
+
+// Redux slices
+import { setUser } from '../slices/authUser';
+
+// Util functions
+import notificationMessages from '../../../util/notificationMessages';
 
 const baseUrl = import.meta.env.VITE_AUTH_API;
 

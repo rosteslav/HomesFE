@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
-
-import UserLinks from './UserLinks';
-import GuestLinks from './GuestLinks';
 import { useSelector } from 'react-redux';
 
-export const Header = () => {
+// Components
+import UserLinks from './UserLinks';
+import GuestLinks from './GuestLinks';
+
+const Header = () => {
     const user = useSelector((state) => state.authUser.data);
+    
     return (
         <>
             <header className='bg-gray-200'>
@@ -30,3 +32,5 @@ export const Header = () => {
         </>
     );
 };
+
+export default Header;

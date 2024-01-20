@@ -1,74 +1,59 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { CatalogItem } from './CatalogItem/CatalogItem';
-import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
-import CatalogFilter from './CatalogFilter';
+// RTK Queries
 import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
     useFetchRecommendedPropertiesQuery,
-} from '../../services/propertiesApi';
-import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
-import { Link } from 'react-router-dom';
-import { loadLikedProperties } from '../../store/features/likedProperties';
+} from '../../store/features/Api/propertiesApi';
 
-export const CatalogItems = () => {
-    const [skip, setSkip] = useState(true);
-    const [skipBuyer, setSkipBuyer] = useState(true);
+// UI
+import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
+
+// Components
+import CatalogItem from './CatalogItem/CatalogItem';
+import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
+import CatalogFilter from './CatalogFilter';
+
+const CatalogItems = () => {
     const [page, setPage] = useState(1);
     const [isStar, setIsStar] = useState(undefined);
     const [hasMorePages, setHasMorePages] = useState(false);
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const [showLikedProperties, setShowLikedProperties] = useState(false);
+
     const allLikedProperties = useSelector((state) => state.likedProperties.data);
     const user = useSelector((state) => state.authUser);
-    const role = useSelector((state) => state.authUser.data?.claims?.roles);
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (user?.data === null || (role && role[1] === 'Купувач')) {
-            setIsStar(true);
-        } else {
-            setIsStar(undefined);
-        }
-    }, [role, user]);
-
-    useEffect(() => {
-        dispatch(loadLikedProperties());
-    }, [dispatch]);
-
     const queryData = useSelector((state) => state.filter.queryData);
 
     const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
     });
-
     const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
         useFetchRecommendedPropertiesQuery(undefined, {
-            skip: skipBuyer,
+            skip: user.data?.claims?.roles[1] === 'Купувач' ? false : true,
+        });
+    const { data: clientProperties, isLoading: isLoadingClientProperties } =
+        useFetchOwnPropertiesQuery(undefined, {
+            skip:
+                user.data?.claims?.roles[1] === 'Продавач' ||
+                user.data?.claims?.roles[1] === 'Брокер'
+                    ? false
+                    : true,
         });
 
     const targetRef = useRef();
 
-    const { data: clientProperties, isLoading: isLoadingClientProperties } =
-        useFetchOwnPropertiesQuery(undefined, { skip });
-
     useEffect(() => {
-        if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
-            setSkip(false);
-        }
-    }, [role]);
-
-    useEffect(() => {
-        if (user.data !== null && role[1] === 'Купувач') {
-            setSkipBuyer(false);
+        if (user?.data === null || user.data?.isAdmin === false) {
+            setIsStar(true);
         } else {
-            setSkipBuyer(true);
+            setIsStar(undefined);
         }
-    }, [user, role]);
+    }, [user]);
 
     useEffect(() => {
         if (properties) {
@@ -126,7 +111,7 @@ export const CatalogItems = () => {
                     </div>
                 </div>
             )}
-            {skip === true && (
+            {(user.data === null || user.data?.claims?.roles[1] === 'Купувач') && (
                 <div className='border-b-2  border-black'>
                     <h2
                         onClick={() =>
@@ -189,7 +174,7 @@ export const CatalogItems = () => {
                 setPage={setPage}
                 showLikedProperties={showLikedProperties}
                 setShowLikedProperties={setShowLikedProperties}
-                role={role}
+                user={user}
             />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
@@ -242,3 +227,5 @@ export const CatalogItems = () => {
         </section>
     );
 };
+
+export default CatalogItems;

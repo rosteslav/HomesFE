@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+// RTK Queries
 import {
     useDeleteOwnPropertyMutation,
     useFetchAllPropertiesQuery,
-} from '../../services/propertiesApi';
+} from '../../store/features/Api/propertiesApi';
+import {
+    useDeleteReportsByIdMutation,
+    useFetchAllReportsQuery,
+} from '../../store/features/Api/adminApi';
+
+// Components
+import CatalogItem from '../CatalogItems/CatalogItem/CatalogItem';
+
+// UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
-import { CatalogItem } from '../CatalogItems/CatalogItem/CatalogItem';
-import { useDeleteReportsByIdMutation, useFetchAllReportsQuery } from '../../services/adminApi';
 
 const AllPropertiesDashboard = () => {
     const targetRef = useRef();
