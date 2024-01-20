@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Cookies from 'universal-cookie';
 
+// Util Functions
 import { createUserContext } from '../../../util/createUserContext';
 
 const cookies = new Cookies();

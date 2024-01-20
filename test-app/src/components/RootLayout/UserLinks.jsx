@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
-
 import { useDispatch } from 'react-redux';
-import { ButtonPrimary, ButtonSecondary } from '../../UI';
-import { removeUser } from '../../store/features/slices/authUser';
+
+// RTK Queries
 import { propertiesApi } from '../../store/features/Api/propertiesApi';
+
+// Redux slices
+import { removeUser } from '../../store/features/slices/authUser';
+
+// UI
+import { ButtonPrimary, ButtonSecondary } from '../../UI';
 
 const UserLinks = ({ user }) => {
     let isSellerOrBroker = null;

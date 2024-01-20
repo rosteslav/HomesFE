@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
-import SofiaSvgMap from './SofiaSvgMap';
-import { ButtonPrimary } from '../../UI';
+
+// RTK Queries
 import {
     useFetchNeighbourhoodsRatingQuery,
     useUpdateNeighbourhoodsRatingMutation,
 } from '../../store/features/Api/adminApi';
+
+// Map
+import SofiaSvgMap from './SofiaSvgMap';
+
+// UI
+import { ButtonPrimary } from '../../UI';
 
 const ChangeNeighborhoodsDashboard = () => {
     const { data: neighbourhoodsRating } = useFetchNeighbourhoodsRatingQuery();

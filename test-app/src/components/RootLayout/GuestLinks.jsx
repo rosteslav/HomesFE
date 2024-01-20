@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+
+// UI
 import { ButtonPrimary } from '../../UI';
 
 const GuestLinks = () => {

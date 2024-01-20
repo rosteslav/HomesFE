@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSvgColor, setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
-import SvgSofiaMap from '../../UI/SvgSofiaMap';
 import { useEffect } from 'react';
+
+// Redux slices
+import { clearSvgColor, setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
+
+// Map
+import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
 const SofiaSvgFilter = ({ setPage }) => {
     const dispatch = useDispatch();

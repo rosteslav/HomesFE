@@ -1,17 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { CatalogItem } from './CatalogItem/CatalogItem';
-import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
-import CatalogFilter from './CatalogFilter';
+// RTK Queries
 import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
     useFetchRecommendedPropertiesQuery,
 } from '../../store/features/Api/propertiesApi';
-import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
-import { Link } from 'react-router-dom';
+
+// Redux slices
 import { loadLikedProperties } from '../../store/features/slices/likedProperties';
+
+// UI
+import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
+
+// Components
+import { CatalogItem } from './CatalogItem/CatalogItem';
+import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
+import CatalogFilter from './CatalogFilter';
+
 
 export const CatalogItems = () => {
     const [skip, setSkip] = useState(true);

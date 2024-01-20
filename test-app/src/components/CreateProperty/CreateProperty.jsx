@@ -1,21 +1,30 @@
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { validationCreatePropertySchema } from '../../util/validationSchema';
-import { ButtonPrimary } from '../../UI';
-import ButtonOptions from '../../UI/ButtonOptions';
-import Loader from '../../UI/Loader';
+// RTK Queries
 import {
     useAddPropertyInfoMutation,
     useEditPropertyInfoMutation,
     useFetchPropertyByIdQuery,
     useFetchPropertyOptionsQuery,
 } from '../../store/features/Api/propertiesApi';
-import { AddImages } from './AddImages';
 import { useFetchBrokersOptionsQuery } from '../../store/features/Api/authApi';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+
+// Validation schema
+import { validationCreatePropertySchema } from '../../util/validationSchema';
+
+// UI
+import { ButtonPrimary } from '../../UI';
+import ButtonOptions from '../../UI/ButtonOptions';
+import Loader from '../../UI/Loader';
+
+// Components
+import { AddImages } from './AddImages';
+
+// Map
 import SvgSofiaMap from '../../UI/SvgSofiaMap';
 
 export const CreateProperty = () => {

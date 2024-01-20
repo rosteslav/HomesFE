@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
-import CustomPath from './CustomPath';
+// RTK Queries
 import { useFetchAllRegionsQuery } from '../../store/features/Api/adminApi';
+
+import CustomPath from './CustomPath';
 
 const SofiaSvgMap = ({ chosen, setChosen }) => {
     const [activeRegion, setActiveRegion] = useState();

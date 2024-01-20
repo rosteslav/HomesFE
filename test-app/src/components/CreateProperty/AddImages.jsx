@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { toast } from 'react-hot-toast';
+
+// RTK Queries
 import {
     useAddPropertyImageMutation,
     useDeletePropertyImageMutation,
     useFetchPropertyImagesQuery,
 } from '../../store/features/Api/imagesApi';
+
+// UI
 import Loader from '../../UI/Loader';
+
+// Util functions
 import notificationMessages from '../../util/notificationMessages';
 
 export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {

@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
+
+// RTK Queries
 import { useFetchAllReportsQuery } from '../../store/features/Api/adminApi';
 import { useFetchAllPropertiesQuery } from '../../store/features/Api/propertiesApi';
+
+// Components
 import ReportedProperty from './reportedProperty';
+
+// UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 const ReportedPropertiesDashboard = () => {

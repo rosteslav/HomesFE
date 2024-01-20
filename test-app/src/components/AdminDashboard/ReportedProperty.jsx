@@ -1,9 +1,12 @@
-import ImageScroll from '../../UI/ImageScroll';
-import { useDeleteReportsByIdMutation } from '../../store/features/Api/adminApi';
+// RTK Queries
 import {
     useDeleteOwnPropertyMutation,
     useFetchPropertyByIdQuery,
 } from '../../store/features/Api/propertiesApi';
+import { useDeleteReportsByIdMutation } from '../../store/features/Api/adminApi';
+
+// UI
+import ImageScroll from '../../UI/ImageScroll';
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
 const ReportedProperty = ({ propertyId, reports }) => {

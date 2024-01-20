@@ -1,6 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { Header } from './Header';
 import { Toaster } from 'react-hot-toast';
+
+// Components
+import { Header } from './Header';
 
 const RootLayout = () => {
     const location = useLocation();

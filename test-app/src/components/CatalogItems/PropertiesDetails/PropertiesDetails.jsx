@@ -1,22 +1,29 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
-import DetailsImages from './DetailsImages';
+// RTK Queries
 import {
     useAddPropertyReasonMutation,
     useFetchPropertyByIdQuery,
 } from '../../../store/features/Api/propertiesApi';
-import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
+
+// Components
+import DetailsImages from './DetailsImages';
+
+// UI
 import { TextSkeleton } from '../../../UI/Skeletons';
 import {
     changeLikedProperties,
     loadLikedProperties,
 } from '../../../store/features/slices/likedProperties';
-import { useDispatch, useSelector } from 'react-redux';
+
+// Util functions
 import { validationPropertyReportSchema } from '../../../util/validationSchema';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
 
 export const PropertiesDetails = () => {
     const { detailsId } = useParams();

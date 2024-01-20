@@ -2,7 +2,10 @@ import Slider from 'rc-slider';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+// Css
 import 'rc-slider/assets/index.css';
+
+// Redux slices
 import { setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
 
 const RangeSlider = ({ option, setPage }) => {

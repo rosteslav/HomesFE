@@ -2,9 +2,12 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 
+// UI
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { validationRegisterSchemaStepTwo } from '../../../util/validationSchema';
 import FloatingField from '../../../UI/FloatingField';
+
+// Validation Schema
+import { validationRegisterSchemaStepTwo } from '../../../util/validationSchema';
 
 const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {
     const {
@@ -24,7 +27,7 @@ const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {
 
     const onChangeHandler = (e) => {
         setStepTwoValues((state) => ({ ...state, [e.target.name]: e.target.value }));
-        setValue(e.target.name, e.target.value)
+        setValue(e.target.name, e.target.value);
     };
 
     return (

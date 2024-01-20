@@ -1,5 +1,8 @@
+// Components
 import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
+
+// UI
 import ImageScroll from '../../../UI/ImageScroll';
 
 export const CatalogItem = ({ property, reference, star }) => {

@@ -3,16 +3,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
-import { validationRegisterAdminSchema } from '../../../util/validationSchema';
-import Loader from '../../../UI/Loader';
+// RTK Queries
+import { useLoginMutation, useRegisterAdminMutation } from '../../../store/features/Api/authApi';
+
+// Redux Slices
 import {
     selectedAdmin,
     setData,
 } from '../../../store/features/slices/registerAdminSlice';
+
+// Validation schema
+import { validationRegisterAdminSchema } from '../../../util/validationSchema';
+
+// UI
+import Loader from '../../../UI/Loader';
 import { ButtonPrimary } from '../../../UI';
-import { useLoginMutation, useRegisterAdminMutation } from '../../../store/features/Api/authApi';
-import toast from 'react-hot-toast';
+
+// Util functions
 import { successNotifications } from '../../../util/notificationMessages';
 
 export const RegisterAdmin = () => {

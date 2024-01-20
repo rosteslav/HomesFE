@@ -4,21 +4,28 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    validationRegisterSchemaBuyerStepThree,
-    validationRegisterSchemaStepThree,
-} from '../../../util/validationSchema';
-import { ButtonPrimary, ButtonSecondary } from '../../../UI';
+// RTK Queries
 import { useAddUserImageMutation } from '../../../store/features/Api/imagesApi';
 import {
     useFetchBuyerPreferencesQuery,
     useLoginMutation,
     useRegisterUserMutation,
 } from '../../../store/features/Api/authApi';
+
+// Validation Schema
+import {
+    validationRegisterSchemaBuyerStepThree,
+    validationRegisterSchemaStepThree,
+} from '../../../util/validationSchema';
+
+// UI
+import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import FloatingField from '../../../UI/FloatingField';
 import { ButtonFilter } from '../../../UI/ButtonsFilter';
-import { successNotifications } from '../../../util/notificationMessages';
 import Loader from '../../../UI/Loader';
+
+// Util functions
+import { successNotifications } from '../../../util/notificationMessages';
 
 const FormStepThree = ({
     setCurrentStep,

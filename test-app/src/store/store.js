@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-// Slices
+// Redux Slices
 import registerAdminSlice from './features/slices/registerAdminSlice';
 import authUser from './features/slices/authUser';
 import filter from './features/slices/filter';

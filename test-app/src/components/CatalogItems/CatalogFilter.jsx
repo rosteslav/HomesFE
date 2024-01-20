@@ -1,14 +1,21 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
+// RTK Queries
 import { useFetchPropertiesFilterOptionsQuery } from '../../store/features/Api/propertiesApi';
-import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+
+// Redux slice
 import {
     loadAllOptions,
     resetFilter,
     setFilterOption,
     updateFilterQueryData,
 } from '../../store/features/slices/filter';
+
+// UI
+import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+
+// Components
 import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 

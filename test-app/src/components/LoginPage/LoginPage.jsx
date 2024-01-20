@@ -3,16 +3,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 
+// RTK Queries
+import { useLoginMutation } from '../../store/features/Api/authApi';
+import { propertiesApi } from '../../store/features/Api/propertiesApi';
+
+// Validation schema
 import { validationLoginSchema } from '../../util/validationSchema';
+
+// UI
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
-import { useLoginMutation } from '../../store/features/Api/authApi';
-import toast from 'react-hot-toast';
-import { successNotifications } from '../../util/notificationMessages';
 import FloatingField from '../../UI/FloatingField';
+
+// Util functions
+import { successNotifications } from '../../util/notificationMessages';
 import { checkIsAdmin } from '../../util/auth';
-import { propertiesApi } from '../../store/features/Api/propertiesApi';
 
 export const LoginPage = () => {
     const navigate = useNavigate();

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
+// Components
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
-import { useSelector } from 'react-redux';
 
 export const Header = () => {
     const user = useSelector((state) => state.authUser.data);

@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { ButtonPrimary } from '../../UI';
+
+// Components
 import AllPropertiesDashboard from './AllPropertiesDashboard';
 import ReportedPropertiesDashboard from './ReportedPropertiesDashboard';
 import ChangeNeighborhoodsDashboard from './ChangeNeighborhoodsDashboard';
+
+// UI
+import { ButtonPrimary } from '../../UI';
 
 const Dashboard = () => {
     const [action, setAction] = useState('allProperties');
