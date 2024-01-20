@@ -21,7 +21,7 @@ const UserLinks = ({ user }) => {
     const dispatch = useDispatch();
 
     const onLogout = () => {
-        dispatch(propertiesApi.util.updateQueryData('fetchOwnProperties', undefined, () => null))
+        dispatch(propertiesApi.util.resetApiState())
         dispatch(removeUser());
     };
 
