@@ -21,7 +21,7 @@ const FormStepOne = ({ setChosenRole, setCurrentStep }) => {
                             }}
                         >
                             {roles.roles[0]}
-                        </ButtonPrimary>{' '}
+                        </ButtonPrimary>
                     </div>
                 )}
                 {roles &&
