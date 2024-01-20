@@ -22,10 +22,6 @@ import { ButtonPrimary } from '../../../UI';
 import { successNotifications } from '../../../util/notificationMessages';
 
 const RegisterAdmin = () => {
-    const currRegisterAdminFormValues = useSelector(selectedAdmin);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
     const [values, setValues] = useState({
         username: currRegisterAdminFormValues.username,
         email: currRegisterAdminFormValues.email,
@@ -34,6 +30,11 @@ const RegisterAdmin = () => {
         lastName: currRegisterAdminFormValues.lastName,
         phoneNumber: currRegisterAdminFormValues.phoneNumber,
     });
+
+    const currRegisterAdminFormValues = useSelector(selectedAdmin);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [registerAdmin, { isSuccess: isSuccessRegister, isLoading }] = useRegisterAdminMutation();
     const [login, { isSuccess: isSuccessLogin, isLoading: isLoadingLogin }] = useLoginMutation();

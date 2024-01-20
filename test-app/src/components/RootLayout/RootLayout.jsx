@@ -6,6 +6,7 @@ import Header from './Header';
 
 const RootLayout = () => {
     const location = useLocation();
+    
     const lowercasePathname = location.pathname.toLowerCase();
 
     return (

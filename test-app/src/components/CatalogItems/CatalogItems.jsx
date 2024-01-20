@@ -27,30 +27,30 @@ const CatalogItems = () => {
     const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
     const [showLikedProperties, setShowLikedProperties] = useState(false);
 
-    const allLikedProperties = useSelector((state) => state.likedProperties.data);
-    const user = useSelector((state) => state.authUser);
-    const queryData = useSelector((state) => state.filter.queryData);
-    
     const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
     });
     const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
-    useFetchRecommendedPropertiesQuery(undefined, {
-        skip: user.data?.claims?.roles[1] === 'Купувач' ? false : true,
-    });
+        useFetchRecommendedPropertiesQuery(undefined, {
+            skip: user.data?.claims?.roles[1] === 'Купувач' ? false : true,
+        });
     const { data: clientProperties, isLoading: isLoadingClientProperties } =
-    useFetchOwnPropertiesQuery(undefined, {
-        skip:
-        user.data?.claims?.roles[1] === 'Продавач' ||
-        user.data?.claims?.roles[1] === 'Брокер'
-        ? false
-        : true,
-    });
+        useFetchOwnPropertiesQuery(undefined, {
+            skip:
+                user.data?.claims?.roles[1] === 'Продавач' ||
+                user.data?.claims?.roles[1] === 'Брокер'
+                    ? false
+                    : true,
+        });
+
+    const allLikedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
+    const queryData = useSelector((state) => state.filter.queryData);
 
     const targetRef = useRef();
     const dispatch = useDispatch();
-    
+
     const role = user.data?.claims?.roles;
 
     useEffect(() => {

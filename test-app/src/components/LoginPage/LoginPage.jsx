@@ -21,11 +21,13 @@ import { successNotifications } from '../../util/notificationMessages';
 import { checkIsAdmin } from '../../util/auth';
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [values, setValues] = useState({ username: '', password: '' });
     const [passwordVisibility, setPasswordVisibility] = useState(false);
+
     const [login, { data, isLoading, isSuccess }] = useLoginMutation();
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {

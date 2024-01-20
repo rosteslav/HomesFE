@@ -11,14 +11,14 @@ import { removeUser } from '../../store/features/slices/authUser';
 import { ButtonPrimary, ButtonSecondary } from '../../UI';
 
 const UserLinks = ({ user }) => {
-    let isSellerOrBroker = null;
     const isBrokerOrSeller = (role) => role === 'Брокер' || role === 'Продавач';
-
-    // Expected output: true
+    
+    const dispatch = useDispatch();
+    
+    let isSellerOrBroker = null;
     if (user.claims?.roles) {
         isSellerOrBroker = user.claims.roles.some(isBrokerOrSeller);
     }
-    const dispatch = useDispatch();
 
     const onLogout = () => {
         dispatch(propertiesApi.util.resetApiState())

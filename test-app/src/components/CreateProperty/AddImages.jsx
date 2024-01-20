@@ -19,15 +19,34 @@ const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
     const [imagesUploaded, setImagesUploaded] = useState([]);
+
     const { data: images, isSuccess: success } = useFetchPropertyImagesQuery(
         propertyId.propertyId,
         { skip }
     );
     const [addPropertyImage, { isSuccess, isLoading }] = useAddPropertyImageMutation();
     const [deletePropertyImage] = useDeletePropertyImageMutation();
+
     const navigate = useNavigate();
+
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
+
+    useEffect(() => {
+        if (isSuccess) {
+            setToggleForms('text');
+            navigate('/');
+        }
+    });
+
+    useEffect(() => {
+        if (propertyId.propertyId) {
+            setSkip(false);
+            if (success) {
+                setImagesUploaded([...images]);
+            }
+        }
+    }, [setSkip, propertyId, images, success, imageInputs]);
 
     const handleImageChange = (e, id) => {
         if (!allowedFileTypes.includes(e.target.files[0].type)) {
@@ -80,22 +99,6 @@ const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
         const updatedUploadedImages = imagesUploaded.filter((image) => image.id !== id);
         setImagesUploaded(updatedUploadedImages);
     };
-
-    useEffect(() => {
-        if (isSuccess) {
-            setToggleForms('text');
-            navigate('/');
-        }
-    });
-
-    useEffect(() => {
-        if (propertyId.propertyId) {
-            setSkip(false);
-            if (success) {
-                setImagesUploaded([...images]);
-            }
-        }
-    }, [setSkip, propertyId, images, success, imageInputs]);
 
     const handleSubmitImage = async (e) => {
         e.preventDefault();

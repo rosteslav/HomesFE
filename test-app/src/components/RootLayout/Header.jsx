@@ -7,6 +7,7 @@ import GuestLinks from './GuestLinks';
 
 const Header = () => {
     const user = useSelector((state) => state.authUser.data);
+    
     return (
         <>
             <header className='bg-gray-200'>

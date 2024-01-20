@@ -20,11 +20,13 @@ import RangeSlider from './RangeSlider';
 import SofiaSvgFilter from './SofiaSvgFilter';
 
 const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, role }) => {
-    const dispatch = useDispatch();
+    const [option, setOption] = useState();
+
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
+
     const filter = useSelector((state) => state.filter);
 
-    const [option, setOption] = useState();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {

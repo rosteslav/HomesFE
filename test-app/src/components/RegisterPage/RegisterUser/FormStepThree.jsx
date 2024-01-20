@@ -39,16 +39,17 @@ const FormStepThree = ({
 }) => {
     const [imageName, setImageName] = useState('Моля изберете снимка');
     const [chosenOption, setChosenOption] = useState();
+
     const [addUserImage, { data: userImage, isSuccess: isSuccessImage }] =
         useAddUserImageMutation();
     const [registerUser, { isLoading, isSuccess: isSuccessRegister }] = useRegisterUserMutation();
     const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin }] = useLoginMutation();
-    const boxRef = useRef(null);
-    const navigate = useNavigate();
-
     const { data: buyerPreferences } = useFetchBuyerPreferencesQuery(undefined, {
         skip: chosenRole != 'Купувач',
     });
+
+    const boxRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSuccessRegister) {
@@ -68,6 +69,19 @@ const FormStepThree = ({
             setComplete(false);
         }
     });
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (boxRef.current && !boxRef.current.contains(event.target)) {
+                setChosenOption(undefined);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const {
         register,
@@ -126,18 +140,6 @@ const FormStepThree = ({
         registerUser({ ...payLoad });
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (boxRef.current && !boxRef.current.contains(event.target)) {
-                setChosenOption(undefined);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
     const onChangeHandler = (e) => {
         if (chosenRole !== 'Купувач') {
             setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
@@ -146,6 +148,7 @@ const FormStepThree = ({
         }
         setValue(e.target.name, e.target.value);
     };
+
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
         formData.append('image', e.target.files[0]);

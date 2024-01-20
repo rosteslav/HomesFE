@@ -9,15 +9,16 @@ import 'rc-slider/assets/index.css';
 import { setFilterOption, updateFilterQueryData } from '../../store/features/slices/filter';
 
 const RangeSlider = ({ option, setPage }) => {
-    const filter = useSelector((state) => state.filter);
-    const dispatch = useDispatch();
     const [rangeValues, setRangeValues] = useState([]);
     const [min, setMin] = useState(0);
     const [max, setMax] = useState(0);
     const [step, setStep] = useState(0);
 
-    useEffect(() => {
+    const filter = useSelector((state) => state.filter);
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
         if (option) {
             if (filter.filter.data[option].options.length > 1) {
                 setRangeValues([
@@ -55,14 +56,14 @@ const RangeSlider = ({ option, setPage }) => {
     };
 
     const changeCompleteHandler = (values) => {
-        setPage(1)
+        setPage(1);
         dispatch(setFilterOption({ option, value: values }));
-        dispatch(updateFilterQueryData())
+        dispatch(updateFilterQueryData());
     };
 
     return (
         <div className='w-full'>
-            <div className='slider mx-auto  m-10 flex h-9 w-96 flex-col items-center justify-center'>
+            <div className='slider m-10  mx-auto flex h-9 w-96 flex-col items-center justify-center'>
                 <div className='slider mb-4 flex w-full justify-between'>
                     <p className='slider'>
                         От: {rangeValues[0]} {formatText()}

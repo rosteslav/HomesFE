@@ -13,8 +13,8 @@ const ReportedProperty = ({ propertyId, reports }) => {
     const [deleteReportsById] = useDeleteReportsByIdMutation();
     const { data: property, isLoading: isLoadingReportedProperty } =
         useFetchPropertyByIdQuery(propertyId);
-
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
+
     const onClickDeleteProperty = (id) => {
         const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
         if (isConfirmed) {

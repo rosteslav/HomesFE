@@ -26,21 +26,27 @@ import { validationPropertyReportSchema } from '../../../util/validationSchema';
 import notificationMessages, { successNotifications } from '../../../util/notificationMessages';
 
 const PropertiesDetails = () => {
-    const { detailsId } = useParams();
-    const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
-    const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
-    const [star, setStar] = useState(false);
-    const navigate = useNavigate();
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    const neighborhoodName = property?.neighbourhood;
     const iframeSrc = `https://www.google.com/maps/embed/v1/place?q=${neighborhoodName},Sofia&key=${apiKey}`;
-    const dispatch = useDispatch();
-    const likedProperties = useSelector((state) => state.likedProperties.data);
-    const user = useSelector((state) => state.authUser);
+
+    const { detailsId } = useParams();
+
+    const [star, setStar] = useState(false);
     const [report, setReport] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const [values, setValues] = useState({ reason: '' });
+
+    const { data: property, isLoading, isError, error } = useFetchPropertyByIdQuery(detailsId);
+    const [addPropertyReason, { isSuccess }] = useAddPropertyReasonMutation();
+
+    const likedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const neighborhoodName = property?.neighbourhood;
+    const pricePerSqm = property?.price / property?.space;
 
     useEffect(() => {
         if (user.data === null || user.data?.isAdmin === false) {
@@ -96,8 +102,6 @@ const PropertiesDetails = () => {
     const isClickedReport = () => {
         setIsClicked(!isClicked);
     };
-
-    const pricePerSqm = property?.price / property?.space;
 
     return (
         <section className='relative m-4 mt-10'>
