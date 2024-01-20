@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 
 // RTK Queries
 import { useLoginMutation } from '../../store/features/Api/authApi';
-import { propertiesApi } from '../../store/features/Api/propertiesApi';
 
 // Validation schema
 import { validationLoginSchema } from '../../util/validationSchema';
@@ -34,7 +33,6 @@ const LoginPage = () => {
             if (checkIsAdmin(data.token)) {
                 navigate('/dashboard');
             } else {
-                dispatch(propertiesApi.util.invalidateTags(['OwnProperties']));
                 navigate('/');
             }
         }
