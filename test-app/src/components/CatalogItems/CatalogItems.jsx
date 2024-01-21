@@ -196,7 +196,7 @@ const CatalogItems = () => {
                         properties.map((i, index) => {
                             if (showLikedProperties) {
                                 if (allLikedProperties.includes(i.id)) {
-                                    return <CatalogItem key={index} property={i} />;
+                                    return <CatalogItem key={index} star={isStar} property={i} />;
                                 }
                             }
                             if (properties.length === index + 1) {
