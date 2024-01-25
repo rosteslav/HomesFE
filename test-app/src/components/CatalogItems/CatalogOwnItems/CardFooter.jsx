@@ -1,4 +1,11 @@
+import { useState } from 'react';
+
 const CardFooter = ({ property }) => {
+    const [textState, setTextState] = useState(false);
+
+    const textDescriptionHandler = () => {
+        setTextState((state) => !state);
+    };
     return (
         <>
             <div className='flex items-center justify-between font-bold'>
@@ -28,10 +35,20 @@ const CardFooter = ({ property }) => {
                     <p>Изложение: {property?.exposure}</p>
                 </div>
             )}
-            <p>Допълнителна информация: {property?.description}</p>
+            <div className='flex items-center justify-between italic'>
+                <p
+                    onClick={textDescriptionHandler}
+                    id='description'
+                    className={`hover:cursor-pointer overflow-hidden ${
+                        textState === false ? 'text-ellipsis whitespace-nowrap' : ''
+                    }`}
+                >
+                    Допълнителна информация: {property?.description}
+                </p>
+            </div>
             {property && property.contactInfo && (
                 <div className='flex items-center'>
-                    <div className='italic flex-1'>
+                    <div className='flex-1 italic'>
                         <p className='mt-1'>
                             Име: {property?.contactInfo.firstName} {property.contactInfo.lastName}
                         </p>
