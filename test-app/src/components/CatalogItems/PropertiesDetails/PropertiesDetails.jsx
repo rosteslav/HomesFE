@@ -17,6 +17,7 @@ import DetailsImages from './DetailsImages';
 // UI
 import { TextSkeleton } from '../../../UI/Skeletons';
 import { changeLikedProperties } from '../../../store/features/slices/likedProperties';
+import ScrollToTopOnMount from '../../../UI/ScrollToTopOnMount';
 
 // Util functions
 import { validationPropertyReportSchema } from '../../../util/validationSchema';
@@ -97,6 +98,7 @@ const PropertiesDetails = () => {
 
     return (
         <section className='relative m-4 mt-10'>
+            <ScrollToTopOnMount key={detailsId} />
             <h1 className='inline-block text-3xl font-semibold'>
                 {property?.numberOfRooms} апартамент за продажба, {property?.space} m<sup>2</sup>
             </h1>
