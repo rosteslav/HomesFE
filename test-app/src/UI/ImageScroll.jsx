@@ -92,9 +92,9 @@ const ImageScroll = ({ images: img, propertyId, star }) => {
             >
                 <div className='relative flex h-64 w-full overflow-hidden rounded-t-lg'>
                     {images.length > 0 &&
-                        images.map((i) => {
+                        images.map((i , inx) => {
                             return (
-                                <div key={i} className='w-full flex-shrink-0 flex-grow'>
+                                <div key={i + inx} className='w-full flex-shrink-0 flex-grow'>
                                     <img
                                         className='h-full w-full  object-cover'
                                         src={i}
