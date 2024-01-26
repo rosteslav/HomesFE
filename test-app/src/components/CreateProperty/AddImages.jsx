@@ -183,16 +183,16 @@ const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
                                         <li className='relative my-5' key={image.id}>
                                             <div className='relative flex h-full overflow-hidden'>
                                                 <img
-                                                    className='flex-1 object-cover'
+                                                    className='flex-1 object-cover rounded-lg'
                                                     src={image.imageURL}
                                                     alt={`Local Image ${image.id}`}
                                                 />
                                             </div>
                                             <button
-                                                className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                                className='absolute bottom-2 left-2 mt-1 flex w-9 justify-center rounded-full border border-red-600 bg-white px-3 py-1 text-2xl text-red-600 transition-colors hover:bg-red-600 hover:text-white'
                                                 onClick={() => handleRemoveImageUploaded(image.id)}
                                             >
-                                                X
+                                                <i className='fas fa-times-circle'></i>
                                             </button>
                                         </li>
                                     )
@@ -203,7 +203,7 @@ const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
                                         <li className='relative my-5' key={input.id}>
                                             <div className='relative flex h-full overflow-hidden'>
                                                 <img
-                                                    className='flex-1 object-cover'
+                                                    className='flex-1 object-cover rounded-lg'
                                                     src={
                                                         URL.createObjectURL(input.file) ||
                                                         'https://fakeimg.pl/600x400'
@@ -212,10 +212,10 @@ const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
                                                 />
                                             </div>
                                             <button
-                                                className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                                className='absolute bottom-2 left-2 mt-1 flex w-9 justify-center rounded-full border border-red-600 bg-white px-3 py-1 text-2xl text-red-600 transition-colors hover:bg-red-600 hover:text-white'
                                                 onClick={() => handleRemoveImageInput(input.id)}
                                             >
-                                                X
+                                                <i className='fas fa-times-circle'></i>
                                             </button>
                                         </li>
                                     )
