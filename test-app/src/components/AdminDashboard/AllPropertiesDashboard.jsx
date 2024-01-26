@@ -91,7 +91,17 @@ const AllPropertiesDashboard = () => {
                 properties.map((i, index) => {
                     if (properties.length === index + 1) {
                         return (
-                            <CatalogItem reference={lastPropertyElement} key={index} property={i} />
+                            <div key={index}>
+                                <CatalogItem reference={lastPropertyElement} property={i} />
+                                <div className='m-auto w-fit'>
+                                    <button
+                                        onClick={() => onDeleteHandler(i.id)}
+                                        className='mb-2 me-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-700 dark:hover:bg-red-600 dark:focus:ring-red-900'
+                                    >
+                                        Изтриване
+                                    </button>
+                                </div>
+                            </div>
                         );
                     } else {
                         return (
