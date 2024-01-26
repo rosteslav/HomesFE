@@ -16,14 +16,14 @@ const ReportedProperty = ({ propertyId, reports }) => {
     const [removeOwnProperty] = useDeleteOwnPropertyMutation();
 
     const onClickDeleteProperty = (id) => {
-        const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
+        const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот?');
         if (isConfirmed) {
             removeOwnProperty(id);
             deleteReportsById(id);
         }
     };
     const onClickDeleteReportedProperty = (id) => {
-        const isConfirmed = confirm('Сигурни ли сте че искате да изтриете този имот');
+        const isConfirmed = confirm('Сигурни ли сте, че искате да изтриете докладваните нередности за този имот?');
         if (isConfirmed) {
             deleteReportsById(id);
         }
@@ -140,7 +140,7 @@ const ReportedProperty = ({ propertyId, reports }) => {
                                 onClick={() => onClickDeleteReportedProperty(propertyId)}
                                 className='mb-2 me-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium uppercase text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-900'
                             >
-                                Изтриване на нередностите
+                                Изтриване на докладваните нередности
                             </button>
                         </div>
                     </div>
