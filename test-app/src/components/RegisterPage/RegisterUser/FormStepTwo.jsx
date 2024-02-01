@@ -2,14 +2,18 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 
+// UI
 import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { validationRegisterSchemaStepTwo } from '../../../services/validationSchema';
 import FloatingField from '../../../UI/FloatingField';
+
+// Validation Schema
+import { validationRegisterSchemaStepTwo } from '../../../util/validationSchema';
 
 const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(validationRegisterSchemaStepTwo),
@@ -17,13 +21,13 @@ const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {
 
     const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-    const onSubmitHandler = (data) => {
-        console.log(data);
+    const onSubmitHandler = () => {
         setCurrentStep(3);
     };
 
     const onChangeHandler = (e) => {
         setStepTwoValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        setValue(e.target.name, e.target.value);
     };
 
     return (
@@ -70,7 +74,7 @@ const FormStepTwo = ({ setCurrentStep, stepTwoValues, setStepTwoValues }) => {
             />
             <div className='flex justify-between gap-10'>
                 <ButtonSecondary action={() => setCurrentStep(1)}>Назад</ButtonSecondary>
-                <ButtonPrimary>Напред</ButtonPrimary>
+                <ButtonPrimary isSubmit={true}>Напред</ButtonPrimary>
             </div>
         </form>
     );

@@ -22,6 +22,10 @@ const errors = {
         floor: 'Моля въведете етажа на имота',
         totalFloorsInBuilding: 'Моля въведете броя етажи на сградата',
         description: 'Моля въведете описание на имота',
+        purposes: 'Моля изберете причина за покупката',
+        regions: 'Моля изберете регион',
+        buildingTypes: 'Моля изберете вид строителство',
+        reason: 'Моля въведете информация за нередност',
     },
     positive: {
         numberOfRooms: 'Моля въведете положително число',
@@ -36,6 +40,7 @@ const errors = {
         space: 'Големината на имота трябва да е минимум 20',
         floor: 'Етажа трябва да е минимум 1',
         totalFloorsInBuilding: 'Брой етажи трябва да е минимум 1',
+        reason: 'Съобщението за нередност трябва да е минимум 10 символа',
     },
     oneOf: {
         password: 'Паролите не съвпадат.',
@@ -46,6 +51,7 @@ const errors = {
         floor: 'Етаж трябва да съдържа само цифри',
         totalFloorsInBuilding: 'Брой етажи трябва да съдържа само цифри',
         all: 'Моля въведете номер',
+        priceHigherEnd: 'Моля въведете цена',
     },
     max: {
         space: 'Максималната големина може да е 300',
@@ -67,7 +73,10 @@ export const validationLoginSchema = yup.object().shape({
 export const validationRegisterSchemaStepTwo = yup.object().shape({
     username: yup.string().required(errors.required.username),
     password: yup.string().min(3, errors.min.password).required(errors.required.password),
-    email: yup.string().email('Моля въведете валидна електронна поща').required(errors.required.email),
+    email: yup
+        .string()
+        .email('Моля въведете валидна електронна поща')
+        .required(errors.required.email),
     repPassword: yup
         .string()
         .oneOf([yup.ref('password'), null], errors.oneOf.password)
@@ -78,6 +87,15 @@ export const validationRegisterSchemaStepThree = yup.object().shape({
     firstName: yup.string().required(errors.required.firstName),
     lastName: yup.string().required(errors.required.lastName),
     phoneNumber: yup.string().required(errors.required.phoneNumber),
+});
+
+export const validationRegisterSchemaBuyerStepThree = yup.object().shape({
+    priceHigherEnd: yup
+        .number()
+        .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+        .nullable()
+        .typeError(errors.number.priceHigherEnd)
+        .positive(errors.positive.price),
 });
 
 export const validationRegisterAdminSchema = yup.object().shape({
@@ -132,6 +150,10 @@ export const validationCreatePropertySchema = yup.object().shape({
     garage: yup.string().required(errors.required.garage),
     heating: yup.string().required(errors.required.heating),
     neighbourhood: yup.string().required(errors.required.neighbourhood),
-    // exposure: yup.string().required(errors.required.exposure),
+    exposure: yup.string().required(errors.required.exposure),
     // brokerId: yup.string().required(errors.required.brokerId),
+});
+
+export const validationPropertyReportSchema = yup.object().shape({
+    reason: yup.string().min(10, errors.min.reason).required(errors.required.reason),
 });

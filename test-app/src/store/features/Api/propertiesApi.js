@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import toast from 'react-hot-toast';
-import notificationMessages from './notificationMessages';
+
+// Util functions
+import notificationMessages from '../../../util/notificationMessages';
 
 const baseUrl = import.meta.env.VITE_PROPERTIES_API;
 
@@ -16,6 +18,7 @@ const propertiesApi = createApi({
             return headers;
         },
     }),
+    tagTypes: ['OwnProperties'],
     endpoints(builder) {
         return {
             fetchAllProperties: builder.query({
@@ -62,14 +65,23 @@ const propertiesApi = createApi({
                 },
 
                 merge: (currentCache, newItems) => {
-                    currentCache.push(...newItems);
+                    if (currentCache != newItems) {
+                        currentCache.push(...newItems);
+                    }
                 },
                 forceRefetch({ currentArg, previousArg }) {
-                    return currentArg !== previousArg;
+                    if (currentArg.page != 1 && currentArg != previousArg) {
+                        return true;
+                    }
+                    return false;
                 },
             }),
             fetchOwnProperties: builder.query({
                 query: () => ({ url: '/properties' }),
+                providesTags: () => ['OwnProperties'],
+            }),
+            fetchRecommendedProperties: builder.query({
+                query: () => ({ url: '/properties/recommended' }),
             }),
             fetchPropertyOptions: builder.query({
                 query: () => ({ url: '/propertyOptions' }),
@@ -92,13 +104,25 @@ const propertiesApi = createApi({
                     try {
                         const { data: id } = await queryFulfilled;
                         data.id = id.id;
+                        const ownPropertyData = { ...data };
+                        const userData = getState().authUser.data;
+                        const contactInfo = {
+                            firstName: userData.claims?.username,
+                            lastName: userData.claims?.lastName,
+                            phoneNumber: userData.claims?.phoneNumber,
+                            email: userData.claims?.email,
+                            imageURL: userData.claims?.userImage,
+                        };
+                        if (!ownPropertyData.brokerId) {
+                            ownPropertyData.contactInfo = contactInfo;
+                        }
 
                         dispatch(
                             propertiesApi.util.updateQueryData(
                                 'fetchOwnProperties',
                                 undefined,
                                 (draftData) => {
-                                    draftData?.push(data);
+                                    draftData?.push(ownPropertyData);
                                 }
                             )
                         );
@@ -140,6 +164,18 @@ const propertiesApi = createApi({
                             propertiesApi.util.updateQueryData(
                                 'fetchAllProperties',
                                 getState().filter.queryData,
+                                (draftData) => {
+                                    return draftData?.filter((property) => property?.id !== data);
+                                }
+                            )
+                        );
+                        dispatch(
+                            propertiesApi.util.updateQueryData(
+                                'fetchAllProperties',
+                                {
+                                    orderBy: ['CreatedOnLocalTime'],
+                                    page: 1,
+                                },
                                 (draftData) => {
                                     return draftData?.filter((property) => property?.id !== data);
                                 }
@@ -199,6 +235,15 @@ const propertiesApi = createApi({
                     }
                 },
             }),
+            addPropertyReason: builder.mutation({
+                query: ({ detailsId, formData }) => {
+                    return {
+                        url: `/properties/${detailsId}/report`,
+                        method: 'POST',
+                        body: { reason: formData.reason },
+                    };
+                },
+            }),
         };
     },
 });
@@ -212,5 +257,7 @@ export const {
     useAddPropertyInfoMutation,
     useDeleteOwnPropertyMutation,
     useEditPropertyInfoMutation,
+    useFetchRecommendedPropertiesQuery,
+    useAddPropertyReasonMutation,
 } = propertiesApi;
 export { propertiesApi };

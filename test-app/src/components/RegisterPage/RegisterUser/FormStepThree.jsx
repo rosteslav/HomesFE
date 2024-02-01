@@ -4,18 +4,28 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { validationRegisterSchemaStepThree } from '../../../services/validationSchema';
-import { ButtonPrimary, ButtonSecondary } from '../../../UI';
-import { useAddUserImageMutation } from '../../../services/imagesApi';
+// RTK Queries
+import { useAddUserImageMutation } from '../../../store/features/Api/imagesApi';
 import {
     useFetchBuyerPreferencesQuery,
     useLoginMutation,
     useRegisterUserMutation,
-} from '../../../services/authApi';
+} from '../../../store/features/Api/authApi';
+
+// Validation Schema
+import {
+    validationRegisterSchemaBuyerStepThree,
+    validationRegisterSchemaStepThree,
+} from '../../../util/validationSchema';
+
+// UI
+import { ButtonPrimary, ButtonSecondary } from '../../../UI';
 import FloatingField from '../../../UI/FloatingField';
 import { ButtonFilter } from '../../../UI/ButtonsFilter';
-import { successNotifications } from '../../../services/notificationMessages';
 import Loader from '../../../UI/Loader';
+
+// Util functions
+import { successNotifications } from '../../../util/notificationMessages';
 
 const FormStepThree = ({
     setCurrentStep,
@@ -29,16 +39,17 @@ const FormStepThree = ({
 }) => {
     const [imageName, setImageName] = useState('Моля изберете снимка');
     const [chosenOption, setChosenOption] = useState();
+
     const [addUserImage, { data: userImage, isSuccess: isSuccessImage }] =
         useAddUserImageMutation();
     const [registerUser, { isLoading, isSuccess: isSuccessRegister }] = useRegisterUserMutation();
     const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin }] = useLoginMutation();
-    const boxRef = useRef(null);
-    const navigate = useNavigate();
-
     const { data: buyerPreferences } = useFetchBuyerPreferencesQuery(undefined, {
         skip: chosenRole != 'Купувач',
     });
+
+    const boxRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSuccessRegister) {
@@ -54,50 +65,10 @@ const FormStepThree = ({
                     password: stepTwoValues.password,
                 });
             }
-        }else {
-            setComplete(false)
-        }
-    });
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver:
-            chosenRole == 'Купувач' ? undefined : yupResolver(validationRegisterSchemaStepThree),
-    });
-
-    const onSubmitHandler = () => {
-        setComplete(true);
-        let payLoad = {
-            username: stepTwoValues.username,
-            email: stepTwoValues.email,
-            password: stepTwoValues.password,
-            role: chosenRole,
-        };
-        if (chosenRole == 'Купувач') {
-            payLoad.purpose =
-                stepThreeBuyerValues.purposes.length > 0
-                    ? stepThreeBuyerValues.purposes.join('/')
-                    : '';
-            payLoad.region =
-                stepThreeBuyerValues.regions.length > 0
-                    ? stepThreeBuyerValues.regions.join('/')
-                    : '';
-            payLoad.buildingType =
-                stepThreeBuyerValues.buildingTypes.length > 0
-                    ? stepThreeBuyerValues.buildingTypes.join('/')
-                    : '';
-            payLoad.priceHigherEnd = stepThreeBuyerValues.priceHigherEnd;
         } else {
-            payLoad = { ...payLoad, ...stepThreeValues };
-            if (isSuccessImage) {
-                payLoad.imageUrl = userImage.displayUrl;
-            }
+            setComplete(false);
         }
-        registerUser({ ...payLoad });
-    };
+    });
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -111,13 +82,73 @@ const FormStepThree = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
-    const onChangeHandler = (e) => {
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm({
+        resolver:
+            chosenRole == 'Купувач'
+                ? yupResolver(validationRegisterSchemaBuyerStepThree)
+                : yupResolver(validationRegisterSchemaStepThree),
+    });
+
+    const onSubmitHandler = () => {
+        setComplete(true);
+        let payLoad = {
+            username: stepTwoValues.username,
+            email: stepTwoValues.email,
+            password: stepTwoValues.password,
+            role: chosenRole,
+        };
         if (chosenRole == 'Купувач') {
-            setStepThreeBuyerValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+            if (stepThreeBuyerValues.purposes.length > 0) {
+                payLoad.purpose =
+                    stepThreeBuyerValues.purposes.length > 0
+                        ? stepThreeBuyerValues.purposes.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.numberOfRooms.length > 0) {
+                payLoad.numberOfRooms =
+                    stepThreeBuyerValues.numberOfRooms.length > 0
+                        ? stepThreeBuyerValues.numberOfRooms.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.regions.length > 0) {
+                payLoad.region =
+                    stepThreeBuyerValues.regions.length > 0
+                        ? stepThreeBuyerValues.regions.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.buildingTypes.length > 0) {
+                payLoad.buildingType =
+                    stepThreeBuyerValues.buildingTypes.length > 0
+                        ? stepThreeBuyerValues.buildingTypes.join('/')
+                        : '';
+            }
+            if (stepThreeBuyerValues.priceHigherEnd) {
+                payLoad.priceHigherEnd = stepThreeBuyerValues.priceHigherEnd;
+            }
         } else {
-            setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+            payLoad = { ...payLoad, ...stepThreeValues };
+            if (isSuccessImage) {
+                payLoad.imageUrl = userImage.displayUrl;
+            }
         }
+        registerUser({ ...payLoad });
     };
+
+    const onChangeHandler = (e) => {
+        if (chosenRole !== 'Купувач') {
+            setStepThreeValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        } else if (chosenRole === 'Купувач' && e.target.name === 'priceHigherEnd') {
+            setStepThreeBuyerValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        }
+        setValue(e.target.name, e.target.value);
+    };
+
     const onAddUserImageHandler = (e) => {
         const formData = new FormData();
         formData.append('image', e.target.files[0]);
@@ -135,7 +166,8 @@ const FormStepThree = ({
         if (
             chosenOption == 'purposes' ||
             chosenOption == 'regions' ||
-            chosenOption == 'buildingTypes'
+            chosenOption == 'buildingTypes' ||
+            chosenOption == 'numberOfRooms'
         ) {
             const currentValues = stepThreeBuyerValues[chosenOption];
             const currentPurposeIndex = currentValues.indexOf(value);
@@ -145,6 +177,17 @@ const FormStepThree = ({
                 currentValues.splice(currentPurposeIndex, 1);
             }
             setStepThreeBuyerValues((state) => ({ ...state, [chosenOption]: currentValues }));
+            if (currentValues.length > 0) {
+                setValue(chosenOption, currentValues.join('/'));
+            } else {
+                setValue(chosenOption, '');
+            }
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            setChosenOption(undefined);
         }
     };
 
@@ -167,14 +210,58 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'purposes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.purposes.map((value, index) => (
                                         <ButtonFilter
                                             key={index}
                                             isActive={stepThreeBuyerValues?.purposes?.includes(
+                                                value
+                                            )}
+                                            action={() => onUpdatePreferences(value)}
+                                        >
+                                            {value}
+                                        </ButtonFilter>
+                                    ))}
+                                <div
+                                    onClick={() => setChosenOption(undefined)}
+                                    className='absolute right-2 top-2 cursor-pointer text-red-600'
+                                >
+                                    x
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div onClick={onShowOptions}>
+                        <FloatingField
+                            placeholder='Тип / Брой стаи'
+                            name='numberOfRooms'
+                            type='text'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={stepThreeBuyerValues}
+                            errors={errors}
+                            readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
+                        />
+                        {chosenOption == 'numberOfRooms' && (
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
+                                {buyerPreferences &&
+                                    buyerPreferences?.numberOfRooms.map((value, index) => (
+                                        <ButtonFilter
+                                            key={index}
+                                            isActive={stepThreeBuyerValues?.numberOfRooms?.includes(
                                                 value
                                             )}
                                             action={() => onUpdatePreferences(value)}
@@ -201,9 +288,14 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'regions' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.regions.map((value, index) => (
                                         <ButtonFilter
@@ -235,9 +327,14 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={true}
+                            onFocus={onShowOptions}
+                            onKeyDown={handleKeyDown}
                         />
                         {chosenOption == 'buildingTypes' && (
-                            <div className='absolute z-40 w-96 bg-stone-100 pb-2'>
+                            <div
+                                onKeyDown={handleKeyDown}
+                                className='absolute z-40 w-96 bg-stone-100 pb-2'
+                            >
                                 {buyerPreferences &&
                                     buyerPreferences?.buildingTypes.map((value, index) => (
                                         <ButtonFilter
@@ -269,6 +366,7 @@ const FormStepThree = ({
                             values={stepThreeBuyerValues}
                             errors={errors}
                             readOnly={false}
+                            onFocus={onShowOptions}
                         />
                     </div>
                 </>
@@ -326,12 +424,14 @@ const FormStepThree = ({
                             </div>
                         )}
                     </div>
-                    {userImage && <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>}
+                    {userImage && (
+                        <img className='h-96 w-96 object-cover' src={userImage.displayUrl}></img>
+                    )}
                 </>
             )}
             <div className='flex justify-between gap-10'>
                 <ButtonSecondary action={() => setCurrentStep(2)}>Назад</ButtonSecondary>
-                <ButtonPrimary>Регистрация</ButtonPrimary>
+                <ButtonPrimary isSubmit={true}>Регистрация</ButtonPrimary>
             </div>
         </form>
     );

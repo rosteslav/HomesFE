@@ -1,39 +1,59 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { CatalogItem } from './CatalogItem/CatalogItem';
-import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
-import CatalogFilter from './CatalogFilter';
+// RTK Queries
 import {
     useFetchAllPropertiesQuery,
     useFetchOwnPropertiesQuery,
-} from '../../services/propertiesApi';
+    useFetchRecommendedPropertiesQuery,
+} from '../../store/features/Api/propertiesApi';
+
+// UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';
 
-export const CatalogItems = () => {
-    const [skip, setSkip] = useState(true);
-    const [page, setPage] = useState(1);
-    const [hasMorePages, setHasMorePages] = useState(false);
+// Components
+import CatalogItem from './CatalogItem/CatalogItem';
+import CatalogOwnItem from './CatalogOwnItems/CatalogOwnItem';
+import CatalogFilter from './CatalogFilter';
 
+const CatalogItems = () => {
+    const [page, setPage] = useState(1);
+    const [isStar, setIsStar] = useState(undefined);
+    const [hasMorePages, setHasMorePages] = useState(false);
+    const [showRecommendedProperties, setShowRecommendedProperties] = useState(true);
+    const [showLikedProperties, setShowLikedProperties] = useState(false);
+
+    const allLikedProperties = useSelector((state) => state.likedProperties.data);
+    const user = useSelector((state) => state.authUser);
     const queryData = useSelector((state) => state.filter.queryData);
 
     const { data: properties, isLoading: isLoadingProperties } = useFetchAllPropertiesQuery({
         ...queryData,
         page: page,
     });
+    const { data: recommendedProperties, isLoading: isLoadingRecommendedProperties } =
+        useFetchRecommendedPropertiesQuery(undefined, {
+            skip: user.data?.claims?.roles.includes('Купувач') ? false : true,
+        });
+    const { data: clientProperties, isLoading: isLoadingClientProperties } =
+        useFetchOwnPropertiesQuery(undefined, {
+            skip:
+                user.data?.claims?.roles.includes('Продавач') ||
+                user.data?.claims?.roles.includes('Брокер')
+                    ? false
+                    : true,
+        });
 
     const targetRef = useRef();
 
-    const { data: clientProperties, isLoading: isLoadingClientProperties } =
-        useFetchOwnPropertiesQuery(undefined, { skip });
-
-    const role = useSelector((state) => state.authUser.data?.claims?.roles);
-
     useEffect(() => {
-        if (role && (role[1] === 'Продавач' || role[1] === 'Брокер')) {
-            setSkip(false);
+        if (user?.data === null || user.data?.isAdmin === false) {
+            setIsStar(true);
+        } else {
+            setIsStar(undefined);
         }
-    }, [role]);
+    }, [user]);
 
     useEffect(() => {
         if (properties) {
@@ -91,9 +111,71 @@ export const CatalogItems = () => {
                     </div>
                 </div>
             )}
+            {(user.data === null || user.data?.claims?.roles.includes('Купувач')) && (
+                <div className='border-b-2  border-black'>
+                    <h2
+                        onClick={() =>
+                            setShowRecommendedProperties(
+                                (prevShowRecommendedProperties) => !prevShowRecommendedProperties
+                            )
+                        }
+                        className='m-4 cursor-pointer text-center text-2xl font-semibold'
+                    >
+                        Препоръчани за вас
+                    </h2>
+                    {!recommendedProperties && (
+                        <div
+                            className={`${
+                                showRecommendedProperties ? 'hidden' : ''
+                            } pb-3 text-center text-xl`}
+                        >
+                            <p className='mt-10 text-center text-sm text-gray-800'>
+                                Моля{' '}
+                                <Link
+                                    to={'auth/register'}
+                                    className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+                                >
+                                    регистрирайте се
+                                </Link>
+                                , за да получите препоръчани за Вас имоти.
+                            </p>
+                        </div>
+                    )}
+                    {recommendedProperties && recommendedProperties.length > 0 && (
+                        <div
+                            className={`${
+                                showRecommendedProperties ? '' : 'hidden'
+                            } mx-10 mt-4 grid gap-10  pb-10 md:grid-cols-2 lg:grid-cols-3`}
+                        >
+                            {isLoadingRecommendedProperties &&
+                                Array(6)
+                                    .fill()
+                                    .map((_, index) => (
+                                        <div
+                                            key={index}
+                                            className='h-64 w-full cursor-pointer object-cover'
+                                        >
+                                            <TextSkeleton />
+                                            <ImageSkeleton />
+                                            <TextSkeleton />
+                                            <TextSkeleton />
+                                        </div>
+                                    ))}
+                            {recommendedProperties.map((i, inx) => (
+                                <CatalogItem key={inx} property={i} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
 
             <h2 className='mt-4 text-center text-2xl font-semibold'>Обяви</h2>
-            <CatalogFilter setPage={setPage} />
+            <CatalogFilter
+                setPage={setPage}
+                showLikedProperties={showLikedProperties}
+                setShowLikedProperties={setShowLikedProperties}
+                user={user}
+            />
             {isLoadingProperties && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {Array(24)
@@ -110,19 +192,32 @@ export const CatalogItems = () => {
             )}
             {properties && properties.length > 0 && (
                 <div className='mx-10 mt-4 grid gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {properties.map((i, index) => {
-                        if (properties.length === index + 1) {
-                            return (
-                                <CatalogItem
-                                    reference={lastPropertyElement}
-                                    key={index}
-                                    property={i}
-                                />
-                            );
-                        } else {
-                            return <CatalogItem key={index} property={i} />;
-                        }
-                    })}
+                    {showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (showLikedProperties) {
+                                if (allLikedProperties.includes(i.id)) {
+                                    return <CatalogItem key={index} star={isStar} property={i} />;
+                                }
+                            }
+                            if (properties.length === index + 1) {
+                                return <div key={index} ref={lastPropertyElement}></div>;
+                            }
+                        })}
+                    {!showLikedProperties &&
+                        properties.map((i, index) => {
+                            if (properties.length === index + 1) {
+                                return (
+                                    <CatalogItem
+                                        reference={lastPropertyElement}
+                                        key={index}
+                                        property={i}
+                                        star={isStar}
+                                    />
+                                );
+                            } else {
+                                return <CatalogItem star={isStar} key={index} property={i} />;
+                            }
+                        })}
                 </div>
             )}
 
@@ -132,3 +227,5 @@ export const CatalogItems = () => {
         </section>
     );
 };
+
+export default CatalogItems;

@@ -1,7 +1,10 @@
+// Components
 import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
-import ImageScroll from '../../../UI/ImageScroll';
 import CardBtn from './CardBtn';
+
+// UI
+import ImageScroll from '../../../UI/ImageScroll';
 
 const CatalogOwnItem = ({ property }) => {
     return (

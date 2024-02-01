@@ -1,31 +1,49 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 
-import { validationLoginSchema } from '../../services/validationSchema';
+// RTK Queries
+import { useLoginMutation } from '../../store/features/Api/authApi';
+
+// Validation schema
+import { validationLoginSchema } from '../../util/validationSchema';
+
+// UI
 import Loader from '../../UI/Loader';
 import { ButtonPrimary } from '../../UI';
-import { useLoginMutation } from '../../services/authApi';
-import toast from 'react-hot-toast';
-import { successNotifications } from '../../services/notificationMessages';
+import FloatingField from '../../UI/FloatingField';
 
-export const LoginPage = () => {
+// Util functions
+import { successNotifications } from '../../util/notificationMessages';
+import { checkIsAdmin } from '../../util/auth';
+
+const LoginPage = () => {
+    const [values, setValues] = useState({ username: '', password: '' });
+    const [passwordVisibility, setPasswordVisibility] = useState(false);
+
+    const [login, { data, isLoading, isSuccess }] = useLoginMutation();
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [login, { data, isLoading, isSuccess }] = useLoginMutation();
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success(successNotifications('login'))
-            navigate('/');
+            toast.success(successNotifications('login'));
+            if (checkIsAdmin(data.token)) {
+                navigate('/dashboard');
+            } else {
+                navigate('/');
+            }
         }
     }, [isSuccess, data, dispatch, navigate]);
 
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(validationLoginSchema),
@@ -33,6 +51,11 @@ export const LoginPage = () => {
 
     const onSubmit = (formData) => {
         login(formData);
+    };
+
+    const onChangeHandler = (e) => {
+        setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+        setValue(e.target.name, e.target.value);
     };
 
     return (
@@ -47,54 +70,30 @@ export const LoginPage = () => {
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
                     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-                        <div>
-                            <label
-                                htmlFor='username'
-                                className='block text-sm font-medium leading-6 text-gray-900'
-                            >
-                                Потребителско име
-                            </label>
-                            <div className='mt-2'>
-                                <input
-                                    id='username'
-                                    {...register('username')}
-                                    type='text'
-                                    name='username'
-                                    className='formInput'
-                                />
-                                {errors.username && (
-                                    <p className='text-red-500'>{errors.username.message}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className='flex items-center justify-between'>
-                                <label
-                                    htmlFor='password'
-                                    className='block text-sm font-medium leading-6 text-gray-900'
-                                >
-                                    Парола
-                                </label>
-                            </div>
-                            <div className='mt-2'>
-                                <input
-                                    {...register('password')}
-                                    id='password'
-                                    type='password'
-                                    name='password'
-                                    className='formInput'
-                                />
-                                {errors.password && (
-                                    <p className='text-red-500'>{errors.password.message}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <ButtonPrimary>Вход</ButtonPrimary>
+                        <FloatingField
+                            placeholder='Потребителско име'
+                            name='username'
+                            type='text'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={values}
+                            errors={errors}
+                        />
+                        <FloatingField
+                            placeholder='Парола'
+                            name='password'
+                            type='password'
+                            onChangeHandler={onChangeHandler}
+                            register={register}
+                            values={values}
+                            errors={errors}
+                            passwordVisibility={passwordVisibility}
+                            setPasswordVisibility={setPasswordVisibility}
+                        />
+                        <ButtonPrimary isSubmit={true}>Вход</ButtonPrimary>
                     </form>
 
-                    <p className='mt-10 text-center text-sm text-gray-500'>
+                    <p className='mt-10 text-center text-sm text-gray-800'>
                         Ако нямате регистрация? Използвайте линка
                         <Link
                             className='ml-1 font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
@@ -108,3 +107,5 @@ export const LoginPage = () => {
         </>
     );
 };
+
+export default LoginPage;

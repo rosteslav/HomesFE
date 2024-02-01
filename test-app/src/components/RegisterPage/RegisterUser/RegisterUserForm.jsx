@@ -1,6 +1,9 @@
 import { useState } from 'react';
 
+// Css
 import './registerUserForm.css';
+
+// Components
 import FormStepOne from './FormStepOne';
 import FormStepTwo from './FormStepTwo';
 import FormStepThree from './FormStepThree';
@@ -23,6 +26,7 @@ const RegisterUserForm = () => {
     });
     const [stepThreeBuyerValues, setStepThreeBuyerValues] = useState({
         purposes: [],
+        numberOfRooms: [],
         regions: [],
         buildingTypes: [],
         priceHigherEnd: '',

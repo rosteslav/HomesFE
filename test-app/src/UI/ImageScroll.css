@@ -1,7 +1,16 @@
-.card-buttons {
-    visibility: hidden;
+.container {
+    transition: transform 0.5s ease-in-out;
 }
 
-.container:hover .card-buttons {
-    visibility: visible;
+.card-buttons,
+.star-button,
+.bottom-buttons {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.container:hover .card-buttons,
+.container:hover .star-button,
+.container:hover .bottom-buttons {
+    opacity: 1;
 }

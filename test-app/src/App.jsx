@@ -1,16 +1,18 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { LoginPage } from './components/LoginPage/LoginPage';
-import { CatalogItems } from './components/CatalogItems/CatalogItems';
+// Util functions
+import { restrictForAdmin, restrictLoginRegister } from './util/auth';
+
+// Components
+import LoginPage from './components/LoginPage/LoginPage';
+import CatalogItems from './components/CatalogItems/CatalogItems';
 import RootLayout from './components/RootLayout/RootLayout';
 import ErrorPage from './components/Error/ErrorPage';
-import { restrictLoginRegister } from './UI/auth';
-import { PropertiesDetails } from './components/CatalogItems/PropertiesDetails/PropertiesDetails';
-import { RegisterAdmin } from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
-import { CreateProperty } from './components/CreateProperty/CreateProperty';
-import { useDispatch } from 'react-redux';
-import { removeUser, setUserAutoLogin } from './store/features/authUser';
+import PropertiesDetails from './components/CatalogItems/PropertiesDetails/PropertiesDetails';
+import RegisterAdmin from './components/RegisterPage/RegisterAdmin/RegisterAdmin';
+import CreateProperty from './components/CreateProperty/CreateProperty';
 import RegisterUserForm from './components/RegisterPage/RegisterUser/RegisterUserForm';
+import Dashboard from './components/AdminDashboard/Dashboard';
 
 const router = createBrowserRouter([
     {
@@ -24,7 +26,11 @@ const router = createBrowserRouter([
                 path: 'auth',
                 loader: restrictLoginRegister,
                 children: [
-                    { path: 'register/*', element: <RegisterUserForm />, loader: restrictLoginRegister },
+                    {
+                        path: 'register/*',
+                        element: <RegisterUserForm />,
+                        loader: restrictLoginRegister,
+                    },
                     { path: 'login', element: <LoginPage />, loader: restrictLoginRegister },
                     {
                         path: 'register-admin',
@@ -34,28 +40,14 @@ const router = createBrowserRouter([
                 ],
             },
             { path: ':detailsId', element: <PropertiesDetails /> },
-            { path: 'createProperty', element: <CreateProperty />},
-            { path: 'createProperty/edit/:propertyId', element: <CreateProperty />}
+            { path: 'createProperty', element: <CreateProperty /> },
+            { path: 'createProperty/edit/:propertyId', element: <CreateProperty /> },
+            { path: 'dashboard', element: <Dashboard />, loader: restrictForAdmin },
         ],
     },
 ]);
 
 const App = () => {
-    const dispatch = useDispatch();
-    const userLocalStorage = localStorage.getItem('authToken');
-    let parsedUserData = JSON.parse(userLocalStorage);
-
-    if (parsedUserData) {
-        const expirationDate = new Date(parsedUserData.token.expiration);
-        const currentDate = new Date();
-
-        if (expirationDate.getTime() > currentDate.getTime()) {
-            dispatch(setUserAutoLogin(parsedUserData));
-        } else {
-            localStorage.removeItem('authToken');
-            dispatch(removeUser());
-        }
-    }
     return <RouterProvider router={router} />;
 };
 

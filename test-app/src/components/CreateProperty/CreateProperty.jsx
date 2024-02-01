@@ -1,46 +1,40 @@
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { validationCreatePropertySchema } from '../../services/validationSchema';
-import { ButtonPrimary } from '../../UI';
-import ButtonOptions from '../../UI/ButtonOptions';
-import Loader from '../../UI/Loader';
+// RTK Queries
 import {
     useAddPropertyInfoMutation,
     useEditPropertyInfoMutation,
     useFetchPropertyByIdQuery,
     useFetchPropertyOptionsQuery,
-} from '../../services/propertiesApi';
-import { AddImages } from './AddImages';
-import { useFetchBrokersOptionsQuery } from '../../services/authApi';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+} from '../../store/features/Api/propertiesApi';
+import { useFetchBrokersOptionsQuery } from '../../store/features/Api/authApi';
 
-export const CreateProperty = () => {
+// Validation schema
+import { validationCreatePropertySchema } from '../../util/validationSchema';
+
+// UI
+import { ButtonPrimary } from '../../UI';
+import ButtonOptions from '../../UI/ButtonOptions';
+import Loader from '../../UI/Loader';
+
+// Components
+import AddImages from './AddImages';
+
+// Map
+import SvgSofiaMap from '../../UI/SvgSofiaMap';
+
+const CreateProperty = () => {
+    const user = useSelector((state) => state.authUser.data);
     const propertyId = useParams();
+
     const [selectedExposure, setSelectedExposure] = useState([]);
     const [toggleExposure, setToggleExposure] = useState(true);
-    const user = useSelector((state) => state.authUser.data);
-    let isBroker = false;
-    if (user.claims?.roles) {
-        isBroker = user.claims.roles.some((role) => role === 'Брокер');
-    }
     const [conditionIsBroker, setConditionIsBroker] = useState(true);
     const [conditionIsEdit, setConditionIsEdit] = useState(true);
-    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
-        useAddPropertyInfoMutation();
-    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
-    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {
-        skip: conditionIsBroker,
-    });
-    const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
-        skip: conditionIsEdit,
-        refetchOnMountOrArgChange: true,
-    });
-    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
-        skip: conditionIsEdit,
-    });
     const [toggleButtons, setToggleButtons] = useState();
     const [toggleForms, setToggleForms] = useState('text');
     const [values, setValues] = useState({
@@ -61,6 +55,43 @@ export const CreateProperty = () => {
         content: '',
         id: null,
     });
+
+    const [addPropertyInfo, { isLoading, data: addPropertyInfoResult, isSuccess }] =
+        useAddPropertyInfoMutation();
+    const { data: propertyOptions } = useFetchPropertyOptionsQuery();
+    const { data: brokersList } = useFetchBrokersOptionsQuery(undefined, {
+        skip: conditionIsBroker,
+    });
+    const { data: property } = useFetchPropertyByIdQuery(propertyId.propertyId, {
+        skip: conditionIsEdit,
+        refetchOnMountOrArgChange: true,
+    });
+    const [editPropertyInfo, { isSuccess: success }] = useEditPropertyInfoMutation({
+        skip: conditionIsEdit,
+    });
+
+
+    const type = 'create';
+    let isBroker = false;
+    if (user.claims?.roles) {
+        isBroker = user.claims.roles.some((role) => role === 'Брокер');
+    }
+    const title = propertyId.propertyId ? 'Редактиране на имота' : 'Създаване на нов имот';
+
+    useEffect(() => {
+        if (!isBroker) {
+            setConditionIsBroker(false);
+        }
+    }, [isBroker]);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setToggleForms('images');
+        }
+        if (success) {
+            setToggleForms('images');
+        }
+    }, [isSuccess, success]);
 
     const {
         register,
@@ -110,28 +141,52 @@ export const CreateProperty = () => {
         }
     }, [propertyId, property, setValue]);
 
-    useEffect(() => {
-        if (!isBroker) {
-            setConditionIsBroker(false);
-        }
-    }, [isBroker]);
+    const handleMouseEnter = (e) => {
+        const elem = e.target;
+        const shouldExclude = elem.getAttribute('data-exclude') === 'true';
 
-    useEffect(() => {
-        if (isSuccess) {
-            setToggleForms('images');
+        if (!shouldExclude) {
+            elem.style.fill = '#604EFA';
         }
-        if (success) {
-            setToggleForms('images');
-        }
-    }, [isSuccess, success]);
+    };
 
-    const handleExposureChange = (e) => {
-        const value = e.target.value;
+    const handleMouseLeave = (e) => {
+        const elem = e.target;
+
+        const shouldExclude = elem.getAttribute('data-exclude') === 'true';
+
+        if (!shouldExclude) {
+            if (!elem.className.baseVal.includes('selectedNH')) {
+                elem.style.fill = '#AEA8BA';
+            }
+        }
+    };
+
+    const handleClick = (e) => {
+        const shouldExclude = e.target.getAttribute('data-exclude') === 'true';
+
+        if (!shouldExclude && e.target.tagName === 'path') {
+            setValues((state) => ({
+                ...state,
+                [e.target.parentElement.parentElement.parentElement.id]: e.target.textContent,
+            }));
+            setValue(e.target.parentElement.parentElement.parentElement.id, e.target.textContent);
+
+            setToggleButtons('');
+        }
+    };
+
+    const handleExposureClick = (e) => {
+        const value = e.target.textContent;
+        let joinStr = [];
         if (selectedExposure.includes(value)) {
             setSelectedExposure(selectedExposure.filter((item) => item !== value));
+            joinStr = selectedExposure.filter((item) => item !== value).join('/');
         } else {
             setSelectedExposure([...selectedExposure, value]);
+            joinStr = [...selectedExposure, value].join('/');
         }
+        setValue('exposure', joinStr);
     };
 
     const onSubmit = async (formData) => {
@@ -158,14 +213,11 @@ export const CreateProperty = () => {
     const onToggleOptions = (e) => {
         const optionName = e.target.name;
         const tagName = e.target.tagName;
-        const label = e.target.id;
         setToggleButtons(optionName);
-        if (e.target.id === 'exposure') {
+        if (optionName === 'exposure') {
             setToggleExposure(false);
-        } else {
-            if (optionName !== 'exposure' && tagName !== 'BUTTON' && label !== 'exposureLabel') {
-                setToggleExposure(true);
-            }
+        } else if (optionName !== 'exposure' && tagName !== 'BUTTON') {
+            setToggleExposure(true);
         }
     };
 
@@ -186,7 +238,6 @@ export const CreateProperty = () => {
             setValue(e.target.parentElement.id, content);
         }
     };
-    const title = propertyId.propertyId ? 'Редактиране на имота' : 'Създаване на нов имот';
     return (
         <>
             <h2 className='my-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -195,7 +246,7 @@ export const CreateProperty = () => {
             {isLoading && <Loader />}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`${toggleForms === 'text' ? '' : 'visibility: hidden'}`}
+                className={`${toggleForms === 'text' ? '' : 'visibility: hidden'} relative`}
             >
                 <div
                     onClick={onToggleOptions}
@@ -223,16 +274,16 @@ export const CreateProperty = () => {
                         </div>
                         <div
                             id='neighbourhood'
-                            onClick={onSubmitContent}
-                            className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
+                            className={`absolute mt-2 w-full bg-white ${
                                 toggleButtons === 'neighbourhood' ? '' : 'visibility: hidden'
                             }`}
                         >
-                            {propertyOptions &&
-                                propertyOptions.neighbourhood &&
-                                propertyOptions.neighbourhood.map((option) => (
-                                    <ButtonOptions key={option}>{option}</ButtonOptions>
-                                ))}
+                            <SvgSofiaMap
+                                handleMouseEnter={handleMouseEnter}
+                                handleMouseLeave={handleMouseLeave}
+                                handleClick={handleClick}
+                                type={type}
+                            />
                         </div>
                     </div>
                     <div>
@@ -521,8 +572,8 @@ export const CreateProperty = () => {
                                     <>
                                         <button
                                             type='button'
-                                            className='mb-2 me-2 mt-1 rounded-full border-4 px-5 py-2.5 text-sm font-medium  border-indigo-500 bg-indigo-600 text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
-                                            >
+                                            className='mb-2 me-2 mt-1 rounded-full border-4 border-indigo-500 bg-indigo-600 px-5 py-2.5  text-sm font-medium text-white hover:bg-indigo-600 focus:z-10 focus:outline-none focus:ring-4 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500'
+                                        >
                                             Без брокер
                                         </button>
                                         {brokersList.map((option) => (
@@ -536,50 +587,38 @@ export const CreateProperty = () => {
                         </div>
                     )}
                     <div>
-                        <h3 className='block text-sm font-medium leading-6 text-gray-900'>
+                        <label
+                            htmlFor='exposure'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                        >
                             Изложение
-                        </h3>
-
-                        <div>
-                            <div className='mt-2'>
-                                <p
-                                    id='exposure'
-                                    className='formInput mr-2 h-9 overflow-x-auto bg-white'
-                                >
-                                    {selectedExposure.join('/')}
-                                </p>
-                            </div>
+                        </label>
+                        <div className='mt-2'>
+                            <input
+                                {...register('exposure')}
+                                type='text'
+                                name='exposure'
+                                value={selectedExposure.join('/')}
+                                className='formInput'
+                                readOnly
+                            />
+                            {errors.exposure && (
+                                <p className='text-red-500'>{errors.exposure.message}</p>
+                            )}
                         </div>
-
-                        <ul
+                        <div
+                            id='exposure'
+                            onClick={handleExposureClick}
                             className={`absolute flex max-w-screen-2xl flex-wrap bg-white ${
                                 toggleExposure === false ? '' : 'visibility: hidden'
                             }`}
                         >
                             {propertyOptions &&
                                 propertyOptions.exposure &&
-                                propertyOptions.exposure.map((option, index) => (
-                                    <li className='relative' key={option}>
-                                        <input
-                                            {...register('exposure')}
-                                            id={index}
-                                            type='checkbox'
-                                            name='exposure'
-                                            value={option}
-                                            onChange={handleExposureChange}
-                                            checked={selectedExposure.includes(option)}
-                                            className='hidden'
-                                        />
-                                        <label
-                                            htmlFor={index}
-                                            id='exposureLabel'
-                                            className='labelStyle'
-                                        >
-                                            {option}
-                                        </label>
-                                    </li>
+                                propertyOptions.exposure.map((option) => (
+                                    <ButtonOptions key={option}>{option}</ButtonOptions>
                                 ))}
-                        </ul>
+                        </div>
                     </div>
                     <div className='flex gap-4'>
                         <div className='flex-1'>
@@ -657,8 +696,8 @@ export const CreateProperty = () => {
                         </div>
                     </div>
                 </div>
-                <div className='m-auto mt-4 max-w-lg'>
-                    <ButtonPrimary>Напред</ButtonPrimary>
+                <div className='mx-auto my-4 max-w-lg'>
+                    <ButtonPrimary isSubmit={'submit'}>Напред</ButtonPrimary>
                 </div>
             </form>
             <AddImages
@@ -670,3 +709,5 @@ export const CreateProperty = () => {
         </>
     );
 };
+
+export default CreateProperty;

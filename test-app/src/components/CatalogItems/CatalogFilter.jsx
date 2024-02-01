@@ -1,22 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { useFetchPropertiesFilterOptionsQuery } from '../../services/propertiesApi';
-import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+// RTK Queries
+import { useFetchPropertiesFilterOptionsQuery } from '../../store/features/Api/propertiesApi';
+
+// Redux slice
 import {
     loadAllOptions,
     resetFilter,
     setFilterOption,
     updateFilterQueryData,
-} from '../../store/features/filter';
-import RangeSlider from './RangeSlider';
+} from '../../store/features/slices/filter';
 
-const CatalogFilter = ({ setPage }) => {
-    const dispatch = useDispatch();
+// UI
+import { ButtonFilter, ButtonReset } from '../../UI/ButtonsFilter';
+
+// Components
+import RangeSlider from './RangeSlider';
+import SofiaSvgFilter from './SofiaSvgFilter';
+
+const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, user }) => {
+    const [option, setOption] = useState();
+
     const { data: propertiesFilterOptions, isSuccess } = useFetchPropertiesFilterOptionsQuery();
+
     const filter = useSelector((state) => state.filter);
 
-    const [option, setOption] = useState();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {
@@ -25,28 +35,34 @@ const CatalogFilter = ({ setPage }) => {
     });
 
     const optionsHandler = (option, value) => {
-        setPage(1);
-        dispatch(setFilterOption({ option, value }));
-        dispatch(updateFilterQueryData());
+        if (option !== 'neighbourhood') {
+            setPage(1);
+            dispatch(setFilterOption({ option, value }));
+            dispatch(updateFilterQueryData());
+        }
     };
 
     const selectedOptions = (option) => {
         if (option?.multiChoice && filter.filter.data[option.multiChoice].allOptions) {
             return (
                 <>
-                    {filter.filter.data[option.multiChoice].allOptions.map((x) => (
-                        <ButtonFilter
-                            isActive={
-                                filter.filter.data[option.multiChoice].options.includes(x)
-                                    ? true
-                                    : false
-                            }
-                            action={() => optionsHandler(option.multiChoice, x)}
-                            key={x}
-                        >
-                            {x}
-                        </ButtonFilter>
-                    ))}
+                    {option.multiChoice === 'neighbourhood' ? (
+                        <SofiaSvgFilter setPage={setPage} />
+                    ) : (
+                        filter.filter.data[option.multiChoice].allOptions.map((x) => (
+                            <ButtonFilter
+                                isActive={
+                                    filter.filter.data[option.multiChoice].options.includes(x)
+                                        ? true
+                                        : false
+                                }
+                                action={() => optionsHandler(option.multiChoice, x)}
+                                key={x}
+                            >
+                                {x}
+                            </ButtonFilter>
+                        ))
+                    )}
                 </>
             );
         } else if (option?.rangeChoice) {
@@ -100,7 +116,7 @@ const CatalogFilter = ({ setPage }) => {
         const targetTagName = e.target.tagName;
         const className = e.target.className;
 
-        if (targetTagName !== 'BUTTON') {
+        if (targetTagName !== 'BUTTON' && targetTagName !== 'svg' && targetTagName !== 'path') {
             if (className?.includes('slider')) {
                 return;
             }
@@ -290,10 +306,18 @@ const CatalogFilter = ({ setPage }) => {
                                         </svg>
                                     ))}
                             </ButtonFilter>
-
+                            {(user.data == null || user.data?.isAdmin === false) && (
+                                <ButtonFilter
+                                    isActive={showLikedProperties}
+                                    action={() => setShowLikedProperties((prev) => !prev)}
+                                >
+                                    Любими имоти
+                                </ButtonFilter>
+                            )}
                             <ButtonReset
                                 action={() => {
                                     dispatch(resetFilter());
+                                    setShowLikedProperties(false);
                                     setPage(1);
                                 }}
                             >

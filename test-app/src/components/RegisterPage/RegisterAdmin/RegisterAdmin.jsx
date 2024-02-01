@@ -3,23 +3,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { validationRegisterAdminSchema } from '../../../services/validationSchema';
-import Loader from '../../../UI/Loader';
-import {
-    selectedAdmin,
-    setData,
-} from '../../../store/slices/registerAdminSlice/registerAdminSlice';
-import { ButtonPrimary } from '../../../UI';
-import { useLoginMutation, useRegisterAdminMutation } from '../../../services/authApi';
 import toast from 'react-hot-toast';
-import { successNotifications } from '../../../services/notificationMessages';
 
-export const RegisterAdmin = () => {
-    const currRegisterAdminFormValues = useSelector(selectedAdmin);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+// RTK Queries
+import { useLoginMutation, useRegisterAdminMutation } from '../../../store/features/Api/authApi';
 
+// Redux Slices
+import { selectedAdmin, setData } from '../../../store/features/slices/registerAdminSlice';
+
+// Validation schema
+import { validationRegisterAdminSchema } from '../../../util/validationSchema';
+
+// UI
+import Loader from '../../../UI/Loader';
+import { ButtonPrimary } from '../../../UI';
+
+// Util functions
+import { successNotifications } from '../../../util/notificationMessages';
+
+const RegisterAdmin = () => {
     const [values, setValues] = useState({
         username: currRegisterAdminFormValues.username,
         email: currRegisterAdminFormValues.email,
@@ -29,14 +31,19 @@ export const RegisterAdmin = () => {
         phoneNumber: currRegisterAdminFormValues.phoneNumber,
     });
 
+    const currRegisterAdminFormValues = useSelector(selectedAdmin);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [registerAdmin, { isSuccess: isSuccessRegister, isLoading }] = useRegisterAdminMutation();
     const [login, { isSuccess: isSuccessLogin, isLoading: isLoadingLogin }] = useLoginMutation();
 
     useEffect(() => {
         if (isSuccessRegister) {
             if (isSuccessLogin) {
-                toast.success(successNotifications('register'))
-                toast.success(successNotifications('login'))
+                toast.success(successNotifications('register'));
+                toast.success(successNotifications('login'));
                 navigate('/');
             } else if (isLoadingLogin) {
                 console.log('loading');
@@ -229,3 +236,5 @@ export const RegisterAdmin = () => {
         </>
     );
 };
+
+export default RegisterAdmin;

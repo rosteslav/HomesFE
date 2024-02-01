@@ -1,27 +1,52 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { toast } from 'react-hot-toast';
+
+// RTK Queries
 import {
     useAddPropertyImageMutation,
     useDeletePropertyImageMutation,
     useFetchPropertyImagesQuery,
-} from '../../services/imagesApi';
+} from '../../store/features/Api/imagesApi';
+
+// UI
 import Loader from '../../UI/Loader';
 
-export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
+// Util functions
+import notificationMessages from '../../util/notificationMessages';
+
+const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId }) => {
     const [skip, setSkip] = useState(true);
     const [imageInputs, setImageInputs] = useState([{ id: 1, file: null }]);
     const [imagesUploaded, setImagesUploaded] = useState([]);
+
     const { data: images, isSuccess: success } = useFetchPropertyImagesQuery(
         propertyId.propertyId,
         { skip }
     );
     const [addPropertyImage, { isSuccess, isLoading }] = useAddPropertyImageMutation();
     const [deletePropertyImage] = useDeletePropertyImageMutation();
+
     const navigate = useNavigate();
+
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 32 * 1024 * 1024; // 32 MB
+
+    useEffect(() => {
+        if (isSuccess) {
+            setToggleForms('text');
+            navigate('/');
+        }
+    });
+
+    useEffect(() => {
+        if (propertyId.propertyId) {
+            setSkip(false);
+            if (success) {
+                setImagesUploaded([...images]);
+            }
+        }
+    }, [setSkip, propertyId, images, success, imageInputs]);
 
     const handleImageChange = (e, id) => {
         if (!allowedFileTypes.includes(e.target.files[0].type)) {
@@ -65,7 +90,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                 return image.imageURL;
             }
         });
-        console.log(imageURL);
+
         deletePropertyImage({
             id,
             propertyId: +propertyId.propertyId,
@@ -75,42 +100,40 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         setImagesUploaded(updatedUploadedImages);
     };
 
-    useEffect(() => {
-        if (isSuccess) {
+    const handleSubmitImage = async (e) => {
+        e.preventDefault();
+        const isConfirmed =
+            imageInputs[0].file === null && imagesUploaded.length === 0
+                ? confirm(
+                      'Не сте качили снимки! Имоти без снимки са по-трудно продаваеми и по-трудно се показват в препоръчани. Сигурни ли сте че искате да публикувате без снимки?'
+                  )
+                : true;
+        if (isConfirmed) {
+            try {
+                const propId = responseId ? responseId.id : propertyId.propertyId;
+                for (const i of imageInputs) {
+                    const formData = new FormData();
+                    if (i.file) {
+                        formData.append('image', i.file);
+                        await addPropertyImage({ propertyId: +propId, data: formData });
+                    } else {
+                        setToggleForms('text');
+                        navigate('/');
+                    }
+                }
+            } catch (error) {
+                toast.error(notificationMessages(error?.error?.status));
+            }
             setToggleForms('text');
             navigate('/');
         }
-    });
-
-    useEffect(() => {
-        if (propertyId.propertyId) {
-            setSkip(false);
-            if (success) {
-                setImagesUploaded([...images]);
-            }
-        }
-    }, [setSkip, propertyId, images, success, imageInputs]);
-
-    const handleSubmitImage = async (e) => {
-        e.preventDefault();
-        try {
-            const propId = responseId ? responseId.id : propertyId.propertyId;
-            for (const i of imageInputs) {
-                const formData = new FormData();
-                if (i.file) {
-                    formData.append('image', i.file);
-                    await addPropertyImage({ propertyId: +propId, data: formData });
-                }
-            }
-        } catch (err) {
-            console.log(`ERROR catch ${err.message}`);
-        }
-        setToggleForms('text');
-        navigate('/');
     };
     return (
         <>
             {isLoading && <Loader />}
+            <h2 className={`${toggleForms === 'images' ? '' : 'visibility: hidden'} text-center`}>
+                Имоти без снимки са по-трудно продаваеми и по-трудно се показват в препоръчани
+            </h2>
             <div
                 className={`m-5 flex justify-between ${
                     toggleForms === 'images' ? '' : 'visibility: hidden'
@@ -160,16 +183,16 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                                         <li className='relative my-5' key={image.id}>
                                             <div className='relative flex h-full overflow-hidden'>
                                                 <img
-                                                    className='flex-1 object-cover'
+                                                    className='flex-1 object-cover rounded-lg'
                                                     src={image.imageURL}
                                                     alt={`Local Image ${image.id}`}
                                                 />
                                             </div>
                                             <button
-                                                className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                                className='absolute bottom-2 left-2 mt-1 flex w-9 justify-center rounded-full border border-red-600 bg-white px-3 py-1 text-2xl text-red-600 transition-colors hover:bg-red-600 hover:text-white'
                                                 onClick={() => handleRemoveImageUploaded(image.id)}
                                             >
-                                                X
+                                                <i className='fas fa-times-circle'></i>
                                             </button>
                                         </li>
                                     )
@@ -180,7 +203,7 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                                         <li className='relative my-5' key={input.id}>
                                             <div className='relative flex h-full overflow-hidden'>
                                                 <img
-                                                    className='flex-1 object-cover'
+                                                    className='flex-1 object-cover rounded-lg'
                                                     src={
                                                         URL.createObjectURL(input.file) ||
                                                         'https://fakeimg.pl/600x400'
@@ -189,10 +212,10 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
                                                 />
                                             </div>
                                             <button
-                                                className='text-md absolute bottom-1 left-1 mt-1 flex w-0.5 justify-center rounded-md border border-red-600 bg-red-500 px-3 py-1 leading-6 text-white hover:font-bold'
+                                                className='absolute bottom-2 left-2 mt-1 flex w-9 justify-center rounded-full border border-red-600 bg-white px-3 py-1 text-2xl text-red-600 transition-colors hover:bg-red-600 hover:text-white'
                                                 onClick={() => handleRemoveImageInput(input.id)}
                                             >
-                                                X
+                                                <i className='fas fa-times-circle'></i>
                                             </button>
                                         </li>
                                     )
@@ -204,3 +227,5 @@ export const AddImages = ({ responseId, setToggleForms, toggleForms, propertyId 
         </>
     );
 };
+
+export default AddImages;
