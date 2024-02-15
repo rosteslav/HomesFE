@@ -126,9 +126,10 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, u
 
     return (
         <>
-            <div className='my-4 border-b-2 border-t-2 border-black'>
+            <div className='my-4 border-b-2 border-t-2 border-black overflow-auto w-full'>
                 {isSuccess && (
-                    <div className='mx-8 flex flex-wrap items-center justify-between'>
+                    <div className='mx-8 grid grid-cols-2 min-w-max'>
+                        <div className='col-span-2 flex flex-wrap items-center justify-between'>
                         <ButtonFilter
                             isActive={
                                 option?.multiChoice == 'neighbourhood' ||
@@ -220,6 +221,8 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, u
                         >
                             {filter.filter.data.heating.buttonContent}
                         </ButtonFilter>
+                        </div>
+                        <div className='flex flex-1 items-center justify-start'>
                         <ButtonFilter
                             isActive={
                                 option?.rangeChoice == 'price' ||
@@ -259,7 +262,7 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, u
                         >
                             {filter.filter.data.publishedOn.buttonContent}
                         </ButtonFilter>
-
+                        </div>
                         <div className='flex flex-1 items-center justify-end'>
                             <ButtonFilter
                                 isActive={
@@ -327,8 +330,10 @@ const CatalogFilter = ({ setPage, setShowLikedProperties, showLikedProperties, u
                     </div>
                 )}
             </div>
-            <div className='mx-8' onClick={refetchHandler}>
-                {selectedOptions(option)}
+            <div className='w-full overflow-auto'>
+                <div className='mx-8 min-w-max' onClick={refetchHandler}>
+                    {selectedOptions(option)}
+                </div>
             </div>
         </>
     );

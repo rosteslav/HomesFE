@@ -5,7 +5,7 @@ import { useFetchAllReportsQuery } from '../../store/features/Api/adminApi';
 import { useFetchAllPropertiesQuery } from '../../store/features/Api/propertiesApi';
 
 // Components
-import ReportedProperty from './reportedProperty';
+import ReportedProperty from './ReportedProperty';
 
 // UI
 import { ImageSkeleton, TextSkeleton } from '../../UI/Skeletons';

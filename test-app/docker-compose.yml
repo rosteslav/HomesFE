@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+ realreal:
+   image: realreal
+   build:
+     context: .
+     dockerfile: Dockerfile
+   container_name: realreal
+   ports:
+     - 80:8000
+   tty: true
